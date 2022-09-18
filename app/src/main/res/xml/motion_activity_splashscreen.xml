@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:autoTransition="animateToEnd"
+        motion:duration="4000">
+       <KeyFrameSet>
+           <KeyAttribute
+               motion:motionTarget="@+id/img_cookaholicslogo"
+               motion:framePosition="0"
+               android:scaleX="0" />
+           <KeyAttribute
+               motion:motionTarget="@+id/img_cookaholicslogo"
+               motion:framePosition="0"
+               android:scaleY=" 0" />
+           <KeyAttribute
+               motion:motionTarget="@+id/img_cookaholicslogo"
+               motion:framePosition="40"
+               android:scaleX="0.75" />
+           <KeyAttribute
+               motion:motionTarget="@+id/img_cookaholicslogo"
+               motion:framePosition="40"
+               android:scaleY="0.75" />
+           <KeyAttribute
+               motion:motionTarget="@+id/img_cookaholicslogo"
+               motion:framePosition="100"
+               android:scaleX="0.75" />
+           <KeyAttribute
+               motion:motionTarget="@+id/img_cookaholicslogo"
+               motion:framePosition="100"
+               android:scaleY="0.75" />
+           <KeyAttribute
+               motion:motionTarget="@+id/img_cookaholicslogo"
+               motion:framePosition="150"
+               android:scaleX="1.2" />
+           <KeyAttribute
+               motion:motionTarget="@+id/img_foodTop"
+               motion:framePosition="0"
+               android:alpha="0" />
+           <KeyAttribute
+               motion:motionTarget="@+id/img_foodTop"
+               motion:framePosition="60"
+               android:alpha="0" />
+           <KeyAttribute
+               motion:motionTarget="@+id/img_foodTop"
+               motion:framePosition="75"
+               android:alpha="1" />
+           <KeyAttribute
+               motion:motionTarget="@+id/img_foodBottom"
+               motion:framePosition="0"
+               android:alpha="0" />
+           <KeyAttribute
+               motion:motionTarget="@+id/img_foodBottom"
+               motion:framePosition="60"
+               android:alpha="0" />
+           <KeyAttribute
+               motion:motionTarget="@+id/img_foodBottom"
+               motion:framePosition="75"
+               android:alpha="1" />
+       </KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:layout_height="268dp"
+            android:layout_width="703dp"
+            android:id="@+id/img_foodTop"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:layout_height="264dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintHorizontal_bias="0.112"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="776dp"
+            android:id="@+id/img_foodBottom"
+            motion:layout_constraintBottom_toBottomOf="parent" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:layout_height="268dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintHorizontal_bias="0.0"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="701dp"
+            android:id="@+id/img_foodTop"
+            motion:layout_editor_absoluteX="2dp" />
+        <Constraint
+            android:layout_height="264dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintHorizontal_bias="0.112"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="776dp"
+            android:id="@+id/img_foodBottom"
+            motion:layout_constraintBottom_toBottomOf="parent" />
+    </ConstraintSet>
+</MotionScene>

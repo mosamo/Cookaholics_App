@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecipeActivity">
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="buttonClick"
+        android:text="Receive Info"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/txtRecipeCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="10sp"
+        android:fontFamily="@font/nunito_regular"
+        android:padding="20sp"
+        android:text="TextView"
+        android:textColor="#190000"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/button4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/llvHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#ff6600"
+        android:orientation="vertical"
+        android:paddingBottom="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingStart="8sp"
+            android:paddingBottom="4sp">
+
+            <TextView
+                android:id="@+id/txtRecipeName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="0dp"
+                android:fontFamily="@font/nunito_bold_main"
+                android:text="Recipe Name"
+                android:textColor="#FCFCFC"
+                android:textSize="34sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="8sp"
+            android:paddingEnd="8sp">
+
+            <TextView
+                android:id="@+id/txtRecipeTimestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@drawable/design_yellow_chip"
+                android:fontFamily="@font/nunito_bold_main"
+                android:paddingStart="8sp"
+                android:paddingTop="2sp"
+                android:paddingEnd="8sp"
+                android:paddingBottom="2sp"
+                android:text="Submitted: DD-MM-YYYY"
+                android:textColor="#fcfcfc"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txtRecipeCategoryXXX3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8sp"
+                android:layout_weight="1"
+                android:background="@drawable/design_yellow_chip"
+                android:fontFamily="@font/nunito_bold_main"
+                android:paddingStart="8sp"
+                android:paddingTop="2sp"
+                android:paddingEnd="6sp"
+                android:paddingBottom="2sp"
+                android:text="By: mr_long.username"
+                android:textColor="#fcfcfc"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llhSubHeader1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/design_orange_leaf"
+        android:elevation="4sp"
+        android:paddingStart="8sp"
+        android:paddingBottom="4sp"
+        app:layout_constraintTop_toBottomOf="@+id/llvHeader">
+
+        <TextView
+            android:id="@+id/txtRecipeCategoryXsadXX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_bold_main"
+            android:text="Step 1: Do the first step"
+            android:textColor="#fcfcfc"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llhSubHeader2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/design_orange_leaf"
+        android:elevation="4sp"
+        android:paddingStart="8sp"
+        android:paddingBottom="4sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llhSubHeader1">
+
+        <TextView
+            android:id="@+id/txtRecipeCategoryXdsXX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_bold_main"
+            android:text="Step 2: Do the second step"
+            android:textColor="#fcfcfc"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

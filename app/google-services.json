@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "699450218891",
+    "project_id": "cookaholics-capstone-d4931",
+    "storage_bucket": "cookaholics-capstone-d4931.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:699450218891:android:e44779cb9c48313003778e",
+        "android_client_info": {
+          "package_name": "com.mohamed_mosabeh.cookaholics_capstone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "699450218891-j5vjpboafb1go2p6og92tb9jkse2armf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqooypONQeU2NBw_At9DCaaFRlYYOL9oQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "699450218891-j5vjpboafb1go2p6og92tb9jkse2armf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

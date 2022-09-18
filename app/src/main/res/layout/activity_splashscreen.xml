@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <androidx.constraintlayout.motion.widget.MotionLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF9966"
+    app:layoutDescription="@xml/motion_activity_splashscreen"
+    tools:context=".SplashScreenActivity">
+
+<ImageView
+    android:id="@+id/img_cookaholicslogo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/vector_cookaholics_logo" />
+
+<ImageView
+android:id="@+id/img_foodTop"
+android:layout_width="721dp"
+android:layout_height="233dp"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintHorizontal_bias="0.197"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toTopOf="parent"
+app:srcCompat="@drawable/img_food_bg_top" />
+
+<ImageView
+android:id="@+id/img_foodBottom"
+android:layout_width="726dp"
+android:layout_height="280dp"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintHorizontal_bias="0.0"
+app:layout_constraintStart_toStartOf="parent"
+app:srcCompat="@drawable/img_food_bg_bottom"
+tools:layout_editor_absoluteY="463dp" />
+    </androidx.constraintlayout.motion.widget.MotionLayout>
