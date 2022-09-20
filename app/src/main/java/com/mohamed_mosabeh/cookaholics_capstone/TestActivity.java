@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mohamed_mosabeh.auth.AnonymousAuth;
+import com.mohamed_mosabeh.data_objects.Recipe;
+import com.mohamed_mosabeh.data_objects.Test;
 
 
 public class TestActivity extends AppCompatActivity {
@@ -37,7 +40,7 @@ public class TestActivity extends AppCompatActivity {
     
     
         database = FirebaseDatabase.getInstance("https://cookaholics-capstone-d4931-default-rtdb.asia-southeast1.firebasedatabase.app/");
-        reference = database.getReference("message");
+        reference = database.getReference("recipes");
     
         mAuth = FirebaseAuth.getInstance();
         AnonymousAuth.signIn(this, mAuth);
@@ -48,23 +51,18 @@ public class TestActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                final TextView testView = findViewById(R.id.txtTestView);
+                
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                Log.d("D", "Value is: " + value);
+                Recipe recipe = dataSnapshot.child("Ls9xSAkd9020Dkds").getValue(Recipe.class);
+                testView.setText(recipe.toString());
             }
         
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
                 Log.w("W", "Failed to read value.", error.toException());
-            }
-        });
-    
-        reference.setValue("zzz Test").addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(TestActivity.this, "Success", Toast.LENGTH_SHORT).show();
             }
         });
     }

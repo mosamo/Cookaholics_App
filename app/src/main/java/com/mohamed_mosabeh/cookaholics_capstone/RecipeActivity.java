@@ -27,7 +27,9 @@ public class RecipeActivity extends AppCompatActivity {
     
     // Views
     private TextView txtRecipeName;
+    private TextView txtRecipeUsername;
     private TextView txtRecipeCategory;
+    private TextView txtRecipeDescription;
     private TextView txtRecipeTimestamp;
     
     @Override
@@ -44,11 +46,12 @@ public class RecipeActivity extends AppCompatActivity {
         
         // Setting Views
         txtRecipeName = findViewById(R.id.txtRecipeName);
+        txtRecipeUsername = findViewById(R.id.txtRecipeUsername);
         txtRecipeCategory = findViewById(R.id.txtRecipeCategory);
         txtRecipeTimestamp = findViewById(R.id.txtRecipeTimestamp);
-    }
-    
-    public void buttonClick(View view) {
+        txtRecipeDescription = findViewById(R.id.txtRecipeDescription);
+        
+        // Loading Data
         LoadRecipe();
     }
     
@@ -63,15 +66,19 @@ public class RecipeActivity extends AppCompatActivity {
                     
                     // Value Importing
                     String recipe_name = snapshot.child("Ls9xSAkd9020Dkds").child("name").getValue(String.class);
+                    String recipe_username = snapshot.child("Ls9xSAkd9020Dkds").child("username").getValue(String.class);
                     String recipe_category = snapshot.child("Ls9xSAkd9020Dkds").child("category").getValue(String.class);
+                    String recipe_description = snapshot.child("Ls9xSAkd9020Dkds").child("description").getValue(String.class);
                     
                     txtRecipeName.setText(recipe_name);
                     txtRecipeCategory.setText(recipe_category);
+                    txtRecipeDescription.setText(recipe_description);
+                    txtRecipeUsername.setText("By " + recipe_username);
                     
                     // Timestamp Importing and Parsing
                     Long time = snapshot.child("Ls9xSAkd9020Dkds").child("timestamp").getValue(Long.class);
     
-                    SimpleDateFormat dataFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    SimpleDateFormat dataFormat = new SimpleDateFormat("dd MMM yyyy");
                     String timeString = dataFormat.format(new Date(time));
                     
                     txtRecipeTimestamp.setText(timeString);
