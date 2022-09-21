@@ -15,14 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Cookaholics_Capstone"
         tools:targetApi="31">
-        <!-- let's remove Exports later (set export to false) -Mohamed -->
         <activity
-            android:name=".ProfileActivity"
+            android:name=".OriginActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <!-- let's remove Exports later (set export to false) -Mohamed -->
+        
         <activity
             android:name=".SignUpActivity"
             android:exported="true">

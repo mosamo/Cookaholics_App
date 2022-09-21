@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape xmlns:android="http://schemas.android.com/apk/res/android">
-            <solid android:color="#ff9441"/>
+            <solid android:color="@color/official_cookaholics_rounded_leaf"/>
             <corners
                 android:bottomRightRadius="25dp"
                 android:bottomLeftRadius="0dp"

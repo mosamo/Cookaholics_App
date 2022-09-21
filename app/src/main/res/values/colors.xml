@@ -7,4 +7,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="official_cookaholics_saturated">#FF7C54</color>
+    <color name="official_cookaholics_rounded_leaf">#EC6527</color>
 </resources>
