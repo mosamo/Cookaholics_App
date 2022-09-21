@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Note: Bottom Navigation Menus never support more than 6 Items -->
+
+    <item
+        android:id="@+id/starred"
+        android:title="Starred"
+        android:icon="@drawable/ic_circle_star"/>
+    <item
+        android:id="@+id/recipes"
+        android:title="Recipes"
+        android:icon="@drawable/ic_room_service"/>
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_home_foreground"
+        android:title="Home"/>
+
+    <item
+        android:id="@+id/browse"
+        android:icon="@drawable/ic_glass_foreground"
+        android:title="Browse" />
+
+    <item
+        android:id="@+id/account"
+        android:icon="@drawable/ic_person_foreground"
+        android:title="Account" />
+</menu>

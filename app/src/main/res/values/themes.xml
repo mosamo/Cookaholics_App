@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+
     <style name="Theme.Cookaholics_Capstone" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
@@ -12,6 +13,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:navigationBarColor">@color/official_cookaholics_saturated</item>
     </style>
 
     <style name="Theme.Cookaholics_Capstone.NoActionBar">
@@ -22,4 +24,14 @@
     <style name="Theme.Cookaholics_Capstone.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Cookaholics_Capstone.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <!-- navigation bar colors -->
+    <style name="Bottom_Navigation" parent="ThemeOverlay.MaterialComponents.Light">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#FFFCFB</item>
+        <item name="colorPrimaryVariant">#E53935</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+    </style>
 </resources>
