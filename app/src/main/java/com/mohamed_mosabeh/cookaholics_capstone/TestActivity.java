@@ -24,8 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mohamed_mosabeh.auth.AnonymousAuth;
 import com.mohamed_mosabeh.data_objects.Recipe;
-import com.mohamed_mosabeh.data_objects.Test;
-
 
 public class TestActivity extends AppCompatActivity {
     
