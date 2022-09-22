@@ -1,4 +1,4 @@
-package com.mohamed_mosabeh.cookaholics_capstone;
+package com.mohamed_mosabeh.cookaholics_capstone.origin_fragments;
 
 import android.os.Bundle;
 
@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.data_objects.Recipe;
 
 public class CategoriesFragment extends Fragment {
@@ -49,7 +50,7 @@ public class CategoriesFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if (database == null) {
-            database = FirebaseDatabase.getInstance("https://cookaholics-capstone-d4931-default-rtdb.asia-southeast1.firebasedatabase.app/");
+            database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
             reference = database.getReference("recipes");
             fetchRecipe();
         } else {

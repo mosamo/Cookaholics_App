@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:measureAllChildren="false"
-    tools:context=".DefaultFragment">
+    tools:context=".origin_fragments.DefaultFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

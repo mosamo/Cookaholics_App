@@ -2,9 +2,11 @@ package com.mohamed_mosabeh.cookaholics_capstone;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +17,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mohamed_mosabeh.auth.AnonymousAuth;
+import com.mohamed_mosabeh.data_objects.Recipe;
+import com.mohamed_mosabeh.utils.RecipeInstructionsSwipeAdapter;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -32,13 +36,16 @@ public class RecipeActivity extends AppCompatActivity {
     private TextView txtRecipeDescription;
     private TextView txtRecipeTimestamp;
     
+    // Pager
+    private ViewPager2 viewPager;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
         
         // Firebase Variables
-        database = FirebaseDatabase.getInstance("https://cookaholics-capstone-d4931-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
         mAuth = FirebaseAuth.getInstance();
         
         // Signing in
@@ -63,7 +70,9 @@ public class RecipeActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot != null) {
-                    
+    
+    
+                    Recipe recipe = snapshot.child("Ls9xSAkd9020Dkds").getValue(Recipe.class);
                     // Value Importing
                     String recipe_name = snapshot.child("Ls9xSAkd9020Dkds").child("name").getValue(String.class);
                     String recipe_username = snapshot.child("Ls9xSAkd9020Dkds").child("username").getValue(String.class);
@@ -82,6 +91,15 @@ public class RecipeActivity extends AppCompatActivity {
                     String timeString = dataFormat.format(new Date(time));
                     
                     txtRecipeTimestamp.setText(timeString);
+                    
+                    // Pager Set up
+                    RecipeInstructionsSwipeAdapter adapter = new RecipeInstructionsSwipeAdapter(RecipeActivity.this, recipe);
+                    viewPager = findViewById(R.id.recipePager);
+                    viewPager.setAdapter(adapter);
+                    
+                    // Hide progress Bar
+                    final ProgressBar loading = findViewById(R.id.recipeLoadingProgress);
+                    loading.setVisibility(View.GONE);
                     
                 } else {
                     Toast.makeText(getApplicationContext(), "No Database Found", Toast.LENGTH_SHORT).show();

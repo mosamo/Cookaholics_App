@@ -1,19 +1,17 @@
 package com.mohamed_mosabeh.cookaholics_capstone;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.mohamed_mosabeh.auth.AnonymousAuth;
+import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.AccountFragment;
+import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.CategoriesFragment;
+import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.DefaultFragment;
+import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.SearchFragment;
 
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 public class OriginActivity extends AppCompatActivity {
     

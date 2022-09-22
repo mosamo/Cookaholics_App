@@ -23,6 +23,7 @@
         android:background="@color/official_cookaholics_saturated"
         android:hapticFeedbackEnabled="false"
         android:theme="@style/Bottom_Navigation"
+        app:itemIconSize="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
