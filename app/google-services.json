@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "699450218891",
+    "firebase_url": "https://cookaholics-capstone-d4931-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "cookaholics-capstone-d4931",
     "storage_bucket": "cookaholics-capstone-d4931.appspot.com"
   },
@@ -13,6 +14,22 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "699450218891-fu2h5nvokgiqm6uchob5ue4dm27eva61.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mohamed_mosabeh.cookaholics_capstone",
+            "certificate_hash": "89d0f36e30ac102e2ef0b3760405ceed259e713b"
+          }
+        },
+        {
+          "client_id": "699450218891-tpa9u01f433p2rk08qtgbtvn0gro11b1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mohamed_mosabeh.cookaholics_capstone",
+            "certificate_hash": "2ebda75d38ceb83239c7ded85a336d39eb6419c3"
+          }
+        },
         {
           "client_id": "699450218891-j5vjpboafb1go2p6og92tb9jkse2armf.apps.googleusercontent.com",
           "client_type": 3

@@ -11,4 +11,9 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- ... -->
+    <string name="facebook_application_id" translatable="false">2299532810212678</string>
+    <!-- Facebook Application ID, prefixed by 'fb'. Enables Chrome Custom tabs. -->
+    <string name="facebook_login_protocol_scheme" translatable="false">fb2299532810212678</string>
+    <string name="facebook_client_token">0df57918fac328dad5a1b71f8c009f03</string>
 </resources>
