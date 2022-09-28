@@ -33,7 +33,7 @@ public class PortalActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+                handler.post(new Runnable() {
                     @Override
                     public void run() {
                         if (user != null) {
@@ -56,11 +56,12 @@ public class PortalActivity extends AppCompatActivity {
                                     .createSignInIntentBuilder()
                                     .setIsSmartLockEnabled(false)
                                     .setAvailableProviders(providers)
+                                    .setTheme(R.style.Theme_Cookaholics_Capstone)
                                     .build();
                             signInLauncher.launch(signInIntent);
                         }
                     }
-                }, 1000);
+                });
             }
         };
     }
@@ -84,12 +85,13 @@ public class PortalActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Successfully signed in", Toast.LENGTH_SHORT).show();
 
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
             // ...
+
         } else if (result.getResultCode() == RESULT_CANCELED) {
             finish();
         } else {
-            Toast.makeText(getApplicationContext(), "signed in failed", Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(getApplicationContext(), "Failed to sign in", Toast.LENGTH_SHORT).show();
         }
     }
 
