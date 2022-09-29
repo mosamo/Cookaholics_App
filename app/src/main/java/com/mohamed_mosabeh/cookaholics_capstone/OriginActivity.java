@@ -20,8 +20,6 @@ public class OriginActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
 
-    private FirebaseAuth mAuth;
-    
     private AccountFragment accountFragment = new AccountFragment();
     private SearchFragment searchFragment = new SearchFragment();
     private DefaultFragment defaultFragment = new DefaultFragment();
@@ -32,9 +30,11 @@ public class OriginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_origin);
         
-        // Sign in has been implemented elsewhere
-        // mAuth = FirebaseAuth.getInstance();
-        // AnonymousAuth.signIn(this, mAuth);
+        FirebaseUser auth = FirebaseAuth.getInstance().getCurrentUser();
+        if (auth == null){
+            startActivity(new Intent(OriginActivity.this, PortalActivity.class));
+            finish();
+        }
         
         // Navigation View Set up
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
