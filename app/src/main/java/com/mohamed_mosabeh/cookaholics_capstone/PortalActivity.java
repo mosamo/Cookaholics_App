@@ -37,7 +37,9 @@ public class PortalActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (user != null) {
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            Intent intent = new Intent(getApplicationContext(), OriginActivity.class);
+                            intent.putExtra("uid", user.getUid());
+                            startActivity(intent);
                             Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_SHORT).show();
                             finish();
                         } else {
