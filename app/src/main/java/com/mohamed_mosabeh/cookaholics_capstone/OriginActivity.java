@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mohamed_mosabeh.auth.AnonymousAuth;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.AccountFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.CategoriesFragment;
@@ -12,12 +13,14 @@ import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.DefaultFragment
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HomeFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.SearchFragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 public class OriginActivity extends AppCompatActivity {
-    
+
     BottomNavigationView bottomNavigationView;
-    
+
     private FirebaseAuth mAuth;
     
     private HomeFragment homeFragment = new HomeFragment();
@@ -31,9 +34,9 @@ public class OriginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_origin);
         
-        // Signing in
-        mAuth = FirebaseAuth.getInstance();
-        AnonymousAuth.signIn(this, mAuth);
+        // Sign in has been implemented elsewhere
+        // mAuth = FirebaseAuth.getInstance();
+        // AnonymousAuth.signIn(this, mAuth);
         
         // Navigation View Set up
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -76,4 +79,15 @@ public class OriginActivity extends AppCompatActivity {
                         R.anim.slide_out_left)    // pop exit
                 .replace(R.id.flFragment, fragment).commit();
     }
+
+    public void signOut(View view) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null){
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            auth.signOut();
+            startActivity(new Intent(OriginActivity.this, PortalActivity.class));
+            finish();
+        }
+    }
+
 }

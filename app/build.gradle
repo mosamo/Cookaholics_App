@@ -33,6 +33,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
+    implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
     implementation 'com.google.android.gms:play-services-location:20.0.0'
     implementation platform('com.google.firebase:firebase-bom:30.4.1')
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -45,6 +47,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-storage:20.0.2'
     testImplementation 'junit:junit:4.13.2'
+    debugImplementation "androidx.fragment:fragment-testing:1.5.3"
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation "androidx.test:core:1.4.0"
 }
