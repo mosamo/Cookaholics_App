@@ -11,9 +11,27 @@
         android:id="@+id/txtTestView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="Categories"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/highlightedRecycler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/labelDecoration1" />
+
+    <TextView
+        android:id="@+id/labelDecoration1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Highlighted Recipes:"
+        android:textColor="@color/official_cookaholics_saturated"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

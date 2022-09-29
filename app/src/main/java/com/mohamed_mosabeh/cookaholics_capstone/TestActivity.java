@@ -47,22 +47,13 @@ public class TestActivity extends AppCompatActivity {
     
     public void mainButtonClick(View view) {
     
-        reference.addValueEventListener(new ValueEventListener() {
+        /*String s = database.getReference("recipes").push().getKey();
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        database.getReference("recipes").child(s).child("xx").setValue("s").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final TextView testView = findViewById(R.id.txtTestView);
-                
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                Recipe recipe = dataSnapshot.child("Ls9xSAkd9020Dkds").getValue(Recipe.class);
-                testView.setText(recipe.toString());
+            public void onSuccess(Void unused) {
+                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
             }
-        
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("W", "Failed to read value.", error.toException());
-            }
-        });
+        });*/
     }
 }

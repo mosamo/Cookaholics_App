@@ -2,11 +2,15 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape xmlns:android="http://schemas.android.com/apk/res/android">
-            <solid android:color="@color/official_cookaholics_rounded_leaf"/>
+            <gradient
+                android:type="linear"
+                android:angle="-45"
+                android:startColor="#FF9900"
+                android:endColor="#EF108B" />
             <corners
-                android:bottomRightRadius="25dp"
+                android:bottomRightRadius="0dp"
                 android:bottomLeftRadius="0dp"
-                android:topLeftRadius="0dp"
+                android:topLeftRadius="50dp"
                 android:topRightRadius="0dp"/>
         </shape>
     </item>

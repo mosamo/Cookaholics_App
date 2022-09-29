@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,9 @@ public class RecipeStepFragment extends Fragment {
         stepImage = view.findViewById(R.id.rsfImage);
         stepHeader = view.findViewById(R.id.rsfHeader);
         stepContent = view.findViewById(R.id.rsfContent);
+        
+        // adding scroll bar
+        stepContent.setMovementMethod(new ScrollingMovementMethod());
         
         // TODO: Implement Image Parsing
         //if (vRecipeStep.getImage_ref() != "no-image")

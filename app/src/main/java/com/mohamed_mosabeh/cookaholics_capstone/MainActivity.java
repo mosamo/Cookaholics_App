@@ -11,7 +11,7 @@ public class MainActivity extends AppCompatActivity {
     /* TODO: (You have all firebase priveleges)
          DUE DATE FOR FIRST ACTIVITY - 24 / September
           1. Home Screen--
-          1.5. Home Screen Design XML                         ⭐ Hamad
+          1.5. Home Screen Design XML                         ⭐ Mohamed
           3. Splash Screen                                    ⭐ Hamad   (Complete)
           4. Account Privileges
           5. Firebase Realtime Database Management            ⭐ Mohamed (Complete)
@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
             6.1 Recipe Screen Swipe Integration               ⭐ Mohamed (Complete)
           7. App Navigation Hierarchy                         ⭐ Mohamed
              7.1 Navigation Transition Animation
-          8. Search Recipe Screen                             ⭐ Mohamed
+          8. Search Recipe Screen                             ⭐  Hamad
             8.1 Screen XML
             8.2 Screen Java
           9. Manage Account Screen XML                        ⭐ Abdulla

@@ -9,6 +9,7 @@ import com.mohamed_mosabeh.auth.AnonymousAuth;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.AccountFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.CategoriesFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.DefaultFragment;
+import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HomeFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.SearchFragment;
 
 import android.os.Bundle;
@@ -19,8 +20,9 @@ public class OriginActivity extends AppCompatActivity {
     
     private FirebaseAuth mAuth;
     
-    private AccountFragment accountFragment = new AccountFragment();
+    private HomeFragment homeFragment = new HomeFragment();
     private SearchFragment searchFragment = new SearchFragment();
+    private AccountFragment accountFragment = new AccountFragment();
     private DefaultFragment defaultFragment = new DefaultFragment();
     private CategoriesFragment categoriesFragment = new CategoriesFragment();
     
@@ -52,12 +54,17 @@ public class OriginActivity extends AppCompatActivity {
                     switchFragment(categoriesFragment);
                     return true;
                 case R.id.home:
+                    switchFragment(homeFragment);
+                    return true;
                 case R.id.starred:
                     switchFragment(defaultFragment);
                     return true;
             }
             return false;
         });
+        
+        // default fragment to be showed
+        bottomNavigationView.setSelectedItemId(R.id.starred);
     }
     
     private void switchFragment(Fragment fragment) {

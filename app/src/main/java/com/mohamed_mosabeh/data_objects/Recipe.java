@@ -7,10 +7,14 @@ import java.util.ArrayList;
 public class Recipe {
     
     // attributes
+    private String id;
     private String name;
+    private String icon;
     private String category;
     private String description;
     private String username;
+    private int servings;
+    private int duration;
     private int likes;
     private int reports;
     private ArrayList<RecipeStep> steps = new ArrayList<RecipeStep>();
@@ -129,18 +133,19 @@ public class Recipe {
                 "\n\tSteps: " + getStepsString() +
                 "\n\tTags: " + getTags() +
                 "\n\ttimestamp: " + getTimestamp() +
+                "\n\tservings: " + getServings() +
+                "\n\tduration: " + getDuration() + " minutes" +
                 "\n\thighlighted: " + isHighlighted() +
+                "\n\ticon: " + getIcon() +
                 "\n}";
     }
     
-    // NotUsed
-    private String getTagsString() {
+    public String getTagsString() {
         if (tags.size() > 0) {
             String str = "";
             int i = 0;
             for (String tag : tags) {
-                str += "\n\t\t " + i++ + ":";
-                str += "\n\t\t\t Tag: " + tag;
+                str += "#" + tag + " ";
             }
             return str;
         }
@@ -160,5 +165,37 @@ public class Recipe {
             return str;
         }
         return "No Instructions";
+    }
+    
+    public String getId() {
+        return id;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    public int getServings() {
+        return servings;
+    }
+    
+    public void setServings(int servings) {
+        this.servings = servings;
+    }
+    
+    public int getDuration() {
+        return duration;
+    }
+    
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+    
+    public String getIcon() {
+        return icon;
+    }
+    
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }
