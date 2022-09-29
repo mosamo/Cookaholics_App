@@ -32,9 +32,9 @@ public class OriginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_origin);
         
-        // Signing in
-        mAuth = FirebaseAuth.getInstance();
-        AnonymousAuth.signIn(this, mAuth);
+        // Sign in has been implemented elsewhere
+        // mAuth = FirebaseAuth.getInstance();
+        // AnonymousAuth.signIn(this, mAuth);
         
         // Navigation View Set up
         bottomNavigationView = findViewById(R.id.bottomNavigationView);

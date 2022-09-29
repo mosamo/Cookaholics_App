@@ -39,6 +39,7 @@ public class PortalActivity extends AppCompatActivity {
                         if (user != null) {
                             Intent intent = new Intent(getApplicationContext(), OriginActivity.class);
                             intent.putExtra("uid", user.getUid());
+                            intent.putExtra("email", user.getEmail());
                             startActivity(intent);
                             Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_SHORT).show();
                             finish();
