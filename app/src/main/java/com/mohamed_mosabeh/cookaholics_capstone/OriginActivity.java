@@ -16,6 +16,7 @@ import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.SearchFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 public class OriginActivity extends AppCompatActivity {
 
@@ -33,6 +34,8 @@ public class OriginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_origin);
+    
+        Toast.makeText(this, "tesToast", Toast.LENGTH_SHORT).show();
         
         // Sign in has been implemented elsewhere
         // mAuth = FirebaseAuth.getInstance();

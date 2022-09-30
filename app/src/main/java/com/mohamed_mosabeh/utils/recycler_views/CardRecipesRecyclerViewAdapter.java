@@ -50,7 +50,6 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
     public void onBindViewHolder(@NonNull com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
         
-        // holder. image . setImageResource!
         
         holder.cardName.setText(recipe.getName());
         holder.cardLikes.setText(Integer.toString(recipe.getLikes()));
@@ -79,7 +78,7 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
             holder.highlightedFrame.setVisibility(View.VISIBLE);
         }
     
-        if (recipe.getIcon() != "no-image") {
+        if (!recipe.getIcon().equals("no-image")) {
             try {
                 final File tempfile = File.createTempFile(recipes.get(position).getId()+"_icon", "png");
                 final StorageReference storageRef = storage.getReference().child(recipe.getIcon());

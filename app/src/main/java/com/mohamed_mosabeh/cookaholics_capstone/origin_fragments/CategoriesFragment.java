@@ -88,7 +88,7 @@ public class CategoriesFragment extends Fragment {
             fetchRecipe();
         } else {
             testView.setText(mSecretString);
-            recyclerSetUp();
+            //recyclerSetUp();
         }
     }
     
@@ -105,7 +105,7 @@ public class CategoriesFragment extends Fragment {
                 mSecretString = recipe.toString();
     
     
-                recyclerSetUp();
+                //recyclerSetUp();
             }
         
             @Override

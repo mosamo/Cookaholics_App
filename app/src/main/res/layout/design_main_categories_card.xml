@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="8dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="2dp"
+        app:cardBackgroundColor="@color/purple_500"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/categorycard_categoryTxt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/design_california_square">
+
+        </FrameLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="52dp"
+            android:layout_height="51dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="0.5dp"
+            android:hapticFeedbackEnabled="true"
+            app:cardBackgroundColor="#9E1646"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
+            app:cardMaxElevation="8dp">
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/design_smoothie_square">
+
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/categorycard_categoryImage"
+                android:layout_width="30dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center" />
+
+            <ProgressBar
+                android:id="@+id/categorycard_progressbar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="#EFD9DB" />
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/categorycard_categoryTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="@font/nunito_bold_main"
+        android:gravity="center_horizontal"
+        android:text="Category"
+        android:textColor="#D61643"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
