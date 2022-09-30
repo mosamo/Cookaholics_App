@@ -60,6 +60,7 @@ public class HomeFragment extends Fragment {
     private TextView SeeAllWeeklyHottestTextView;
     private TextView featuredRecipeComment;
     private TextView featuredRecipeCurator;
+    private TextView featuredRecipeNameLabel;
     
     private ProgressBar WeeklyHottestProgress;
     private ProgressBar CategoriesProgress;
@@ -94,6 +95,7 @@ public class HomeFragment extends Fragment {
         featuredRecipeCurator = parent.findViewById(R.id.home_featuredRecipeCurator);
         FeaturedCommentProgressBar = parent.findViewById(R.id.home_featuredRecipeCommentProgressBar);
         FeaturedRecipeImageView = parent.findViewById(R.id.home_featuredRecipeImage);
+        featuredRecipeNameLabel = parent.findViewById(R.id.home_FeaturedRecipeNameLabel);
     }
     
     @Override
@@ -162,6 +164,7 @@ public class HomeFragment extends Fragment {
     private void SetUpFeaturedContainer(HighlightedRecipe hlRecipe) {
         featuredRecipeComment.setText("\"" + hlRecipe.getCurator_comment() + "\"");
         featuredRecipeCurator.setText("--" + hlRecipe.getCurator_name());
+        featuredRecipeNameLabel.setText(hlRecipe.getName());
     
     
         if (!hlRecipe.getIcon().equals("no-image")) {

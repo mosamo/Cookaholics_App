@@ -19,16 +19,65 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
+            <LinearLayout
+                android:id="@+id/home_userSettingsLL"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/design_user_leaf_up"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/home_userGreeting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/nunito_bold_main"
+                        android:maxLines="1"
+                        android:text="Welcome, Guest!"
+                        android:textColor="#4E4E4E"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/button6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="8dp"
+                        android:text="account" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view5"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_weight="3" />
+
+            </LinearLayout>
+
             <FrameLayout
                 android:id="@+id/frameLayout"
                 android:layout_width="0dp"
                 android:layout_height="152dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/home_userSettingsLL">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/home_CardRecipeOfTheWeek"
@@ -117,29 +166,45 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
-                <ImageView
-                    android:id="@+id/home_featuredRecipeImage"
+                <FrameLayout
                     android:layout_width="140dp"
                     android:layout_height="140dp"
                     android:layout_gravity="right"
                     android:layout_marginTop="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="#8A8A8A"
                     android:elevation="8dp"
-                    android:rotation="3"
-                    android:src="@drawable/blank_placeholder" />
+                    android:rotation="3">
 
-                <ProgressBar
-                    android:id="@+id/home_featuredProgressBar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="140dp"
-                    android:layout_height="80dp"
-                    android:layout_gravity="right|center_vertical"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginBottom="2dp"
-                    android:elevation="8dp"
-                    android:indeterminateTint="#C3BCBC" />
+                    <ImageView
+                        android:id="@+id/home_featuredRecipeImage"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        android:layout_gravity="right"
+                        android:layout_marginTop="4dp"
+                        android:background="#8A8A8A"
+                        android:src="@drawable/blank_placeholder" />
 
+                    <ProgressBar
+                        android:id="@+id/home_featuredProgressBar"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="140dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="right|center_vertical"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:indeterminateTint="#C3BCBC" />
+
+                    <TextView
+                        android:id="@+id/home_FeaturedRecipeNameLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:background="#DFDCDC"
+                        android:ellipsize="end"
+                        android:fontFamily="cursive"
+                        android:maxLines="1"
+                        android:textAlignment="center" />
+
+                </FrameLayout>
             </FrameLayout>
 
             <LinearLayout
@@ -163,6 +228,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/urbanist_light"
+                        android:letterSpacing="0.07"
                         android:text="Categories"
                         android:textColor="#353535"
                         android:textSize="20sp"
@@ -223,6 +289,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/urbanist_light"
+                        android:letterSpacing="0.07"
                         android:text="Weekly Hottest Recipes"
                         android:textColor="#353535"
                         android:textSize="20sp"
@@ -263,5 +330,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
