@@ -104,7 +104,7 @@ public class HomeFragment extends Fragment {
         // if there is no internet don't do anything
         if (database == null) {
             database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
-            storage = FirebaseStorage.getInstance("gs://cookaholics-capstone-d4931.appspot.com/");
+            storage = FirebaseStorage.getInstance(getString(R.string.firebase_storage));
             getData();
         } else {
             SetUpRecyclers();
@@ -207,7 +207,6 @@ public class HomeFragment extends Fragment {
     
     
     private void getWeeklyRecipesData() {
-        recipes.clear();
     
         DatabaseReference reference = database.getReference("recipes");
         Query latestEightRecipes = reference.orderByChild("timestamp").limitToLast(8);
@@ -215,6 +214,8 @@ public class HomeFragment extends Fragment {
         latestEightRecipes.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+    
+                recipes.clear();
                 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Recipe recipe = snapshot.getValue(Recipe.class);
@@ -234,15 +235,16 @@ public class HomeFragment extends Fragment {
     }
     
     private void getCategoriesData() {
-        categories.clear();
     
         DatabaseReference reference = database.getReference("categories");
-        Query firstTwentyCategories = reference.limitToFirst(20);
+        Query firstTwentyCategories = reference.limitToFirst(8);
     
         firstTwentyCategories.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-            
+    
+                categories.clear();
+                
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Category category = snapshot.getValue(Category.class);
                     category.setName(snapshot.getKey());

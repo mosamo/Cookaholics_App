@@ -6,11 +6,10 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mohamed_mosabeh.auth.AnonymousAuth;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.AccountFragment;
-import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.CategoriesFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.DefaultFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HomeFragment;
+import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.RecipesFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.SearchFragment;
 
 import android.content.Intent;
@@ -28,7 +27,7 @@ public class OriginActivity extends AppCompatActivity {
     private SearchFragment searchFragment = new SearchFragment();
     private AccountFragment accountFragment = new AccountFragment();
     private DefaultFragment defaultFragment = new DefaultFragment();
-    private CategoriesFragment categoriesFragment = new CategoriesFragment();
+    private RecipesFragment recipesFragment = new RecipesFragment();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public class OriginActivity extends AppCompatActivity {
                     switchFragment(searchFragment);
                     return true;
                 case R.id.recipes:
-                    switchFragment(categoriesFragment);
+                    switchFragment(recipesFragment);
                     return true;
                 case R.id.home:
                     switchFragment(homeFragment);

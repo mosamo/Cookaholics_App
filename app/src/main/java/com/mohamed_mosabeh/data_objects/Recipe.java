@@ -13,6 +13,7 @@ public class Recipe {
     private String category;
     private String description;
     private String username;
+    private String cuisine;
     private int servings;
     private int duration;
     private int likes;
@@ -126,17 +127,18 @@ public class Recipe {
         return "Recipe {" +
                 "\n\tName: " + getName() +
                 "\n\tCategory: " + getCategory() +
+                "\n\tCuisine: " + getCuisine() +
                 "\n\tDescription: " + getDescription() +
                 "\n\tUsername: " + getUsername() +
                 "\n\tLikes: " + getLikes() +
                 "\n\tReports: " + getReports() +
                 "\n\tSteps: " + getStepsString() +
                 "\n\tTags: " + getTags() +
+                "\n\ticon: " + getIcon() +
                 "\n\ttimestamp: " + getTimestamp() +
                 "\n\tservings: " + getServings() +
                 "\n\tduration: " + getDuration() + " minutes" +
                 "\n\thighlighted: " + isHighlighted() +
-                "\n\ticon: " + getIcon() +
                 "\n}";
     }
     
@@ -197,5 +199,13 @@ public class Recipe {
     
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+    
+    public String getCuisine() {
+        return cuisine;
+    }
+    
+    public void setCuisine(String cuisine) {
+        this.cuisine = cuisine;
     }
 }
