@@ -2,16 +2,13 @@ package com.mohamed_mosabeh.cookaholics_capstone;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mohamed_mosabeh.auth.AnonymousAuth;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.AccountFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.CategoriesFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.DefaultFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.SearchFragment;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -24,25 +21,25 @@ public class OriginActivity extends AppCompatActivity {
     private SearchFragment searchFragment = new SearchFragment();
     private DefaultFragment defaultFragment = new DefaultFragment();
     private CategoriesFragment categoriesFragment = new CategoriesFragment();
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_origin);
-        
+
         FirebaseUser auth = FirebaseAuth.getInstance().getCurrentUser();
         if (auth == null){
             startActivity(new Intent(OriginActivity.this, PortalActivity.class));
             finish();
         }
-        
+
         // Navigation View Set up
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        
+
         // Setting Selected Item before the Listener:
         // ..we don't want it to execute selection just yet!
         bottomNavigationView.setSelectedItemId(R.id.home);
-        
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.account:
@@ -62,7 +59,7 @@ public class OriginActivity extends AppCompatActivity {
             return false;
         });
     }
-    
+
     private void switchFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(
@@ -74,13 +71,18 @@ public class OriginActivity extends AppCompatActivity {
     }
 
     public void signOut(View view) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null){
-            FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser().isAnonymous())
+        {
+            auth.getCurrentUser().delete();
+            auth.signOut();
+            startActivity(new Intent(OriginActivity.this, PortalActivity.class));
+            finish();
+        }
+        else if (auth.getCurrentUser() != null){
             auth.signOut();
             startActivity(new Intent(OriginActivity.this, PortalActivity.class));
             finish();
         }
     }
-
 }

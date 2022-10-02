@@ -8,23 +8,81 @@
     tools:context=".origin_fragments.AccountFragment">
 
     <View
-        android:id="@+id/divider2"
-        android:layout_width="306dp"
+        android:id="@+id/divider"
+        android:layout_width="300dp"
         android:layout_height="1dp"
-        android:layout_marginStart="40dp"
         android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notes" />
+
+    <EditText
+        android:id="@+id/notes"
+        android:layout_width="252dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@null"
+        android:hint="Notes"
+        android:inputType="textMultiLine"
+        android:maxLines="12"
+        android:minHeight="48dp"
+        android:nestedScrollingEnabled="true"
+        android:textColor="#FF7F50"
+        android:textColorHighlight="#000000"
+        android:textColorHint="#FF7F50"
+        android:textColorLink="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/email"
         app:layout_constraintTop_toBottomOf="@+id/email" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notes"
+        app:layout_constraintBottom_toTopOf="@+id/notes"
+        app:layout_constraintStart_toStartOf="@+id/notes" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        app:layout_constraintBottom_toTopOf="@+id/email"
+        app:layout_constraintStart_toStartOf="@+id/email" />
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:hint="Email"
+        android:textColor="#FF7F50"
+        android:textColorHighlight="#000000"
+        android:textColorHint="#FF7F50"
+        android:textColorLink="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="300dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <View
         android:id="@+id/divider3"
-        android:layout_width="306dp"
+        android:layout_width="300dp"
         android:layout_height="1dp"
-        android:layout_marginBottom="40dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email" />
 
@@ -33,7 +91,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:background="@drawable/com_facebook_profile_picture_blank_square"
         android:contentDescription="Profile Picture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -44,55 +101,54 @@
         android:id="@+id/profile"
         android:layout_width="192dp"
         android:layout_height="32dp"
+        android:layout_marginTop="52dp"
         android:gravity="center"
         android:text="Profile"
-        android:textColor="#FF3F51B5"
+        android:textColor="#FF7F50"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.168" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/user"
-        android:layout_width="306dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="40dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="User"
-        android:textColor="#FF3F51B5"
+        android:hint="User ID"
+        android:textColor="#FF7F50"
         android:textColorHighlight="#000000"
-        android:textColorHint="#000000"
+        android:textColorHint="#FF7F50"
         android:textColorLink="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
 
     <TextView
-        android:id="@+id/email"
-        android:layout_width="306dp"
-        android:layout_height="34dp"
-        android:layout_marginStart="40dp"
+        android:id="@+id/name"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="Email"
-        android:textColor="#FF3F51B5"
+        android:hint="Name"
+        android:textColor="#FF7F50"
         android:textColorHighlight="#000000"
-        android:textColorHint="#000000"
+        android:textColorHint="#FF7F50"
         android:textColorLink="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user" />
 
     <View
         android:id="@+id/divider1"
-        android:layout_width="306dp"
+        android:layout_width="300dp"
         android:layout_height="1dp"
-        android:layout_marginStart="40dp"
         android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user" />
 
@@ -100,31 +156,42 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:text="Email"
-        app:layout_constraintBottom_toTopOf="@+id/email"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="Name"
+        app:layout_constraintBottom_toTopOf="@+id/name"
+        app:layout_constraintStart_toStartOf="@+id/name" />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:text="User"
+        android:text="User ID"
         app:layout_constraintBottom_toTopOf="@+id/user"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profilePicture"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toStartOf="@+id/user" />
 
     <Button
         android:id="@+id/signOutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:backgroundTint="#FF7F50"
         android:onClick="signOut"
         android:text="Sign Out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider3" />
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+    <ImageButton
+        android:id="@+id/saveNotes"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:backgroundTint="#00000000"
+        android:clickable="true"
+        android:contentDescription="Save Notes"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:src="@android:drawable/ic_menu_save"
+        app:layout_constraintStart_toEndOf="@+id/notes"
+        app:layout_constraintTop_toTopOf="@+id/notes"
+        app:tint="#FF7F50" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
