@@ -140,7 +140,7 @@
         android:id="@+id/llhSubHeader1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/design_california_leaf"
+        android:background="@drawable/design_recipe_header"
         android:elevation="4sp"
         android:paddingStart="8sp"
         android:paddingBottom="4sp"

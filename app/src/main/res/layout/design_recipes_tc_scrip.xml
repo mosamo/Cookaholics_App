@@ -6,32 +6,50 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="4dp"
-    android:layout_marginTop="4dp"
+    android:layout_marginTop="6dp"
     android:layout_marginEnd="4dp"
-    app:cardBackgroundColor="#C8C8C8"
+    android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="#FFFFFF"
     app:cardCornerRadius="54dp"
     app:cardElevation="10dp">
 
     <FrameLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/design_basic_scrip">
+        android:layout_gravity="center"
+        android:background="@drawable/design_tag_outer_frame"
+        android:padding="4dp">
 
-        <TextView
-            android:id="@+id/scrip_scripText"
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/nunito_bold_main"
-            android:paddingLeft="20dp"
-            android:paddingTop="4dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="4dp"
-            android:text="#no-text"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            app:cardBackgroundColor="#00631313"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:cardMaxElevation="0dp">
+
+            <TextView
+                android:id="@+id/scrip_scripText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/design_tag_inner_indent"
+                android:ellipsize="end"
+                android:fontFamily="@font/nunito_bold_main"
+                android:paddingLeft="16dp"
+                android:paddingTop="2dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="4dp"
+                android:text="No Text"
+                android:textColor="#FBFBFB"
+                android:textSize="20sp" />
+
+        </androidx.cardview.widget.CardView>
+
     </FrameLayout>
 
 </androidx.cardview.widget.CardView>

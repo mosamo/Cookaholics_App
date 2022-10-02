@@ -9,11 +9,11 @@ public class Category {
         return image;
     }
     
-    public void setImage(String image) {
+    final public void setImage(String image) {
         this.image = image;
     }
     
-    public int getHits() {
+    final public int getHits() {
         return hits;
     }
     

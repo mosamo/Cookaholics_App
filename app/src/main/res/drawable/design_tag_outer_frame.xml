@@ -9,7 +9,6 @@
                 android:centerColor="#F15B97"
                 android:startColor="#FFD27A"
                 android:endColor="#C53B11" />
-
             <corners android:bottomLeftRadius="6dp"
                 android:bottomRightRadius="6dp"
                 android:topLeftRadius="6dp"
@@ -35,9 +34,10 @@
 
             </corners>
             <stroke android:width="4dp"
-                android:color="#FFF">
+                android:color="#FAFFFFFF">
+
             </stroke>
-            <solid android:color="#457C032E" />
+            <solid android:color="#00C5252B" />
         </shape>
     </item>
 

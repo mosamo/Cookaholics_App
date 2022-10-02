@@ -26,7 +26,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/design_california_square">
+            android:background="@drawable/design_category_outer_square">
 
         </FrameLayout>
 
@@ -45,7 +45,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/design_smoothie_square">
+                android:background="@drawable/design_category_inner_square">
 
             </FrameLayout>
 

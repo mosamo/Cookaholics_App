@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mohamed_mosabeh.auth.AnonymousAuth;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.AccountFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.DefaultFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HomeFragment;
@@ -37,8 +38,8 @@ public class OriginActivity extends AppCompatActivity {
         Toast.makeText(this, "tesToast", Toast.LENGTH_SHORT).show();
         
         // Sign in has been implemented elsewhere
-        // mAuth = FirebaseAuth.getInstance();
-        // AnonymousAuth.signIn(this, mAuth);
+        mAuth = FirebaseAuth.getInstance();
+        AnonymousAuth.signIn(this, mAuth);
         
         // Navigation View Set up
         bottomNavigationView = findViewById(R.id.bottomNavigationView);

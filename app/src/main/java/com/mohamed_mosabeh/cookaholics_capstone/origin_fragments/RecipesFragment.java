@@ -24,8 +24,12 @@ import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.Cuisine;
 import com.mohamed_mosabeh.data_objects.Recipe;
+import com.mohamed_mosabeh.data_objects.Tag;
 import com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.CuisineRecipesRecyclerViewAdapter;
+import com.mohamed_mosabeh.utils.recycler_views.TagsRecipesRecyclerViewAdapter;
+
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 
@@ -35,10 +39,16 @@ public class RecipesFragment extends Fragment {
     private FirebaseStorage storage;
     
     private ArrayList<Cuisine> cuisines = new ArrayList<>();
+    private ArrayList<Tag> tags = new ArrayList<>();
+    
     private RecyclerView CuisineRecycler;
+    private RecyclerView TagRecycler;
+    
     private RecyclerView.Adapter CuisineAdapter;
+    private RecyclerView.Adapter TagAdapter;
     
     private ProgressBar CusineProgressBar;
+    private ProgressBar TagProgressBar;
     
     public RecipesFragment() {
         // Required empty public constructor
@@ -59,6 +69,8 @@ public class RecipesFragment extends Fragment {
     private void SetUpViews(View parent) {
         CuisineRecycler = parent.findViewById(R.id.rec_cusineRecycler);
         CusineProgressBar = parent.findViewById(R.id.rec_cusineProgress);
+        TagRecycler = parent.findViewById(R.id.rec_tagsRecycler);
+        TagProgressBar = parent.findViewById(R.id.rec_tagsProgress);
     }
     
     @Override
@@ -76,10 +88,40 @@ public class RecipesFragment extends Fragment {
     
     private void SetUpRecyclers() {
         CuisineRecyclerSetUp(cuisines);
+        TagsRecyclerSetUp(tags);
     }
     
     private void getData() {
         getCuisinesData();
+        getTagsData();
+    }
+    
+    private void getTagsData() {
+        DatabaseReference reference = database.getReference("tags");
+        Query topTenTags = reference.orderByChild("hits").limitToLast(10);
+    
+        topTenTags.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+            
+                tags.clear();
+            
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Tag tag = snapshot.getValue(Tag.class);
+                    tag.setName(snapshot.getKey());
+                
+                    tags.add(tag);
+                }
+            
+                TagsRecyclerSetUp(tags);
+            }
+        
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("W", "Failed to read value.", error.toException());
+            }
+        });
     }
     
     private void getCuisinesData() {
@@ -118,4 +160,14 @@ public class RecipesFragment extends Fragment {
         
         CusineProgressBar.setVisibility(View.GONE);
     }
+    
+    private void TagsRecyclerSetUp(ArrayList<Tag> tags) {
+        TagRecycler.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+        
+        TagAdapter = new TagsRecipesRecyclerViewAdapter(tags);
+        TagRecycler.setAdapter(TagAdapter);
+        
+        TagProgressBar.setVisibility(View.GONE);
+    }
+    
 }
