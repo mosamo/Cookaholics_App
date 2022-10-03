@@ -47,10 +47,8 @@ public class TagsRecipesRecyclerViewAdapter extends RecyclerView.Adapter<TagsRec
         
         TextView textContent;
         
-        
         public TagsRecipesViewHolder(@NonNull View itemView) {
             super(itemView);
-    
             textContent = itemView.findViewById(R.id.scrip_scripText);
         }
     }

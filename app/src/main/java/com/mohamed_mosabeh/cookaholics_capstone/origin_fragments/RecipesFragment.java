@@ -3,6 +3,7 @@ package com.mohamed_mosabeh.cookaholics_capstone.origin_fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,15 +21,12 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
-import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.Cuisine;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.data_objects.Tag;
-import com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter;
+import com.mohamed_mosabeh.utils.recycler_views.CardRecipesSmallRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.CuisineRecipesRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.TagsRecipesRecyclerViewAdapter;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 
@@ -40,18 +37,21 @@ public class RecipesFragment extends Fragment {
     
     private ArrayList<Cuisine> cuisines = new ArrayList<>();
     private ArrayList<Tag> tags = new ArrayList<>();
+    private ArrayList<Recipe> new_recipes = new ArrayList<>();
     
     private RecyclerView CuisineRecycler;
     private RecyclerView TagRecycler;
+    private RecyclerView NewRecipesRecycler;
     
     private RecyclerView.Adapter CuisineAdapter;
     private RecyclerView.Adapter TagAdapter;
+    private RecyclerView.Adapter NewRecipesAdapter;
     
-    private ProgressBar CusineProgressBar;
+    private ProgressBar CuisineProgressBar;
     private ProgressBar TagProgressBar;
+    private ProgressBar NewRecipesProgressBar;
     
     public RecipesFragment() {
-        // Required empty public constructor
     }
     
     @Override
@@ -67,10 +67,16 @@ public class RecipesFragment extends Fragment {
     }
     
     private void SetUpViews(View parent) {
+        
         CuisineRecycler = parent.findViewById(R.id.rec_cusineRecycler);
-        CusineProgressBar = parent.findViewById(R.id.rec_cusineProgress);
+        CuisineProgressBar = parent.findViewById(R.id.rec_cusineProgress);
+        
         TagRecycler = parent.findViewById(R.id.rec_tagsRecycler);
         TagProgressBar = parent.findViewById(R.id.rec_tagsProgress);
+        
+        NewRecipesRecycler = parent.findViewById(R.id.rec_newRecipesRecycler);
+        NewRecipesProgressBar = parent.findViewById(R.id.rec_newRecipesProgress);
+    
     }
     
     @Override
@@ -82,18 +88,56 @@ public class RecipesFragment extends Fragment {
             getData();
         } else {
             SetUpRecyclers();
-            //killProgressBars();
         }
     }
     
     private void SetUpRecyclers() {
         CuisineRecyclerSetUp(cuisines);
         TagsRecyclerSetUp(tags);
+        NewRecipesRecyclerSetUp(new_recipes);
+    }
+    
+    private void NewRecipesRecyclerSetUp(ArrayList<Recipe> new_recipes) {
+        NewRecipesRecycler.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 2, GridLayoutManager.HORIZONTAL, false));
+
+        NewRecipesAdapter = new CardRecipesSmallRecyclerViewAdapter(new_recipes, storage);
+        NewRecipesRecycler.setAdapter(NewRecipesAdapter);
+
+        NewRecipesProgressBar.setVisibility(View.GONE);
     }
     
     private void getData() {
         getCuisinesData();
         getTagsData();
+        getNewestRecipesData();
+    }
+    
+    private void getNewestRecipesData() {
+    
+        DatabaseReference reference = database.getReference("recipes");
+        Query newestTenRecipes = reference.orderByChild("timestamp").limitToLast(10);
+    
+        newestTenRecipes.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+            
+                new_recipes.clear();
+            
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Recipe recipe = snapshot.getValue(Recipe.class);
+                    recipe.setId(snapshot.getKey());
+                    new_recipes.add(recipe);
+                }
+            
+                NewRecipesRecyclerSetUp(new_recipes);
+            }
+        
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("W", "Failed to read value.", error.toException());
+            }
+        });
     }
     
     private void getTagsData() {
@@ -156,14 +200,16 @@ public class RecipesFragment extends Fragment {
         CuisineRecycler.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
     
         CuisineAdapter = new CuisineRecipesRecyclerViewAdapter(cuisines);
+    
+    
         CuisineRecycler.setAdapter(CuisineAdapter);
         
-        CusineProgressBar.setVisibility(View.GONE);
+        CuisineProgressBar.setVisibility(View.GONE);
     }
     
     private void TagsRecyclerSetUp(ArrayList<Tag> tags) {
         TagRecycler.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-        
+    
         TagAdapter = new TagsRecipesRecyclerViewAdapter(tags);
         TagRecycler.setAdapter(TagAdapter);
         

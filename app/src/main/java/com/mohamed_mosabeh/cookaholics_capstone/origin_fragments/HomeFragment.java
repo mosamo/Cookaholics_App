@@ -118,8 +118,6 @@ public class HomeFragment extends Fragment {
         SetUpFeaturedContainer(featuredRecipe);
     }
     
-    
-    
     private void killProgressBars() {
         WeeklyHottestProgress.setVisibility(View.GONE);
         CategoriesProgress.setVisibility(View.GONE);
