@@ -38,7 +38,6 @@ public class PortalActivity extends AppCompatActivity {
                     public void run() {
                         if (user != null) {
                             Intent intent = new Intent(getApplicationContext(), OriginActivity.class);
-                            intent.putExtra("pfp", user.getPhotoUrl());
                             intent.putExtra("uid", user.getUid());
                             intent.putExtra("name", user.getDisplayName());
                             intent.putExtra("email", user.getEmail());
@@ -53,7 +52,7 @@ public class PortalActivity extends AppCompatActivity {
                                     new AuthUI.IdpConfig.GoogleBuilder().build(),
                                     new AuthUI.IdpConfig.FacebookBuilder().build(),
                                     new AuthUI.IdpConfig.TwitterBuilder().build(),
-                                    new AuthUI.IdpConfig.GitHubBuilder().build()
+                                    new AuthUI.IdpConfig.YahooBuilder().build()
                             );
 
                             // Create and launch sign-in intent
