@@ -2,10 +2,7 @@ package com.mohamed_mosabeh.cookaholics_capstone;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.AccountFragment;
@@ -16,14 +13,11 @@ import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.SearchFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 public class OriginActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
 
-    private FirebaseAuth mAuth;
-    
     private HomeFragment homeFragment = new HomeFragment();
     private SearchFragment searchFragment = new SearchFragment();
     private AccountFragment accountFragment = new AccountFragment();
