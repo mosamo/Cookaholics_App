@@ -3,19 +3,22 @@ package com.mohamed_mosabeh.cookaholics_capstone;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mohamed_mosabeh.auth.AnonymousAuth;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.AccountFragment;
-import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.CategoriesFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.DefaultFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HomeFragment;
+import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.RecipesFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.SearchFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 public class OriginActivity extends AppCompatActivity {
 
@@ -27,15 +30,22 @@ public class OriginActivity extends AppCompatActivity {
     private SearchFragment searchFragment = new SearchFragment();
     private AccountFragment accountFragment = new AccountFragment();
     private DefaultFragment defaultFragment = new DefaultFragment();
-    private CategoriesFragment categoriesFragment = new CategoriesFragment();
+    private RecipesFragment recipesFragment = new RecipesFragment();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_origin);
         
+        // Sign in has been implemented elsewhere
         mAuth = FirebaseAuth.getInstance();
-        AnonymousAuth.signIn(this, mAuth);
+//        AnonymousAuth.signIn(this, mAuth);
+        mAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                Toast.makeText(OriginActivity.this, "Logged", Toast.LENGTH_SHORT).show();
+            }
+        });
         
         // Navigation View Set up
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -53,7 +63,7 @@ public class OriginActivity extends AppCompatActivity {
                     switchFragment(searchFragment);
                     return true;
                 case R.id.recipes:
-                    switchFragment(categoriesFragment);
+                    switchFragment(recipesFragment);
                     return true;
                 case R.id.home:
                     switchFragment(homeFragment);

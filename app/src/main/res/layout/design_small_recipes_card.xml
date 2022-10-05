@@ -18,14 +18,14 @@
             android:layout_gravity="top">
 
             <TextView
-                android:id="@+id/lblRecipe0031"
+                android:id="@+id/lblRecipe0032"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/design_recipe_header"
                 android:fontFamily="@font/urbanist_light"
                 android:gravity="center"
                 android:letterSpacing="0.1"
-                android:text="Recipe"
+                android:text="New Recipe"
                 android:textColor="#F3F3F3"
                 android:textSize="18sp"
                 android:textStyle="bold">
@@ -35,7 +35,7 @@
         </FrameLayout>
 
         <LinearLayout
-            android:id="@+id/linearlayoutMarginReducer"
+            android:id="@+id/linearlayoutMarginReducerSmall"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="25dp"
@@ -59,14 +59,14 @@
                     app:cardMaxElevation="0dp">
 
                     <ImageView
-                        android:id="@+id/recipeCard_imageView"
+                        android:id="@+id/recipeCardSmall_imageView"
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
                         android:scaleType="centerCrop"
                         android:background="@drawable/blank_placeholder"/>
 
                     <TextView
-                        android:id="@+id/recipestxt_Likes"
+                        android:id="@+id/recipestxtSmall_Likes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
@@ -88,7 +88,7 @@
                         android:textStyle="bold" />
 
                     <ProgressBar
-                        android:id="@+id/recipeCard_hotprogressbar"
+                        android:id="@+id/recipeCardSmall_hotprogressbar"
                         style="?android:attr/progressBarStyle"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
@@ -101,7 +101,7 @@
 
 
             <TextView
-                android:id="@+id/recipesCardRecipeName"
+                android:id="@+id/recipesCardSmallRecipeName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -122,7 +122,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/recipesCardRecipeMinutes"
+                    android:id="@+id/recipesCardSmallRecipeMinutes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -139,7 +139,7 @@
                     android:layout_weight="1" />
 
                 <TextView
-                    android:id="@+id/recipesCardRecipeServings"
+                    android:id="@+id/recipesCardSmallRecipeServings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -163,65 +163,6 @@
             </LinearLayout>
 
 
-            <View
-                android:id="@+id/view91"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                android:background="#B3B3B3" />
-
-
-            <TextView
-                android:id="@+id/recipes_cardtxtCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_bold_main"
-                android:text="Category"
-                android:textColor="#FB8A00"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/recipes_cardTagList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/nunito_bold_main"
-                android:maxLines="1"
-                android:text="#tag #tag-2 #tag-3 "
-                android:textColor="@color/offical_cookaholics_yellow_1"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/card_highlighted_frame"
-            android:layout_width="180dp"
-            android:layout_height="30dp"
-            android:layout_gravity="bottom|right"
-            android:visibility="invisible">
-
-            <TextView
-                android:id="@+id/recipestxt_highlighted"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/design_recipe_highlighted_footer"
-                android:drawableStart="@drawable/ic_circle_star"
-                android:fontFamily="@font/urbanist_light"
-                android:gravity="center"
-                android:letterSpacing="0.1"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"
-                android:text="Highlighted Recipe"
-                android:textColor="#F3F3F3"
-                android:textSize="12sp"
-                android:textStyle="bold">
-
-            </TextView>
-
-        </FrameLayout>
-
-    </androidx.cardview.widget.CardView>
+</androidx.cardview.widget.CardView>

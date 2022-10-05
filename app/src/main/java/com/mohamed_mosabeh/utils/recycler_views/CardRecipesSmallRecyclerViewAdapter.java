@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,26 +27,26 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder> {
+public class CardRecipesSmallRecyclerViewAdapter extends RecyclerView.Adapter<CardRecipesSmallRecyclerViewAdapter.CardRecipesSmallViewHolder> {
     
     ArrayList<Recipe> recipes;
     FirebaseStorage storage;
     
-    public CardRecipesRecyclerViewAdapter(ArrayList<Recipe> recipes, FirebaseStorage storage) {
+    public CardRecipesSmallRecyclerViewAdapter(ArrayList<Recipe> recipes, FirebaseStorage storage) {
         this.recipes = recipes;
         this.storage = storage;
     }
     
     @NonNull
     @Override
-    public com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_main_recipes_card, parent, false);
-        com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder viewHolder = new com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder(view);
+    public CardRecipesSmallRecyclerViewAdapter.CardRecipesSmallViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_small_recipes_card, parent, false);
+        CardRecipesSmallRecyclerViewAdapter.CardRecipesSmallViewHolder viewHolder = new CardRecipesSmallRecyclerViewAdapter.CardRecipesSmallViewHolder(view);
         return viewHolder;
     }
     
     @Override
-    public void onBindViewHolder(@NonNull com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CardRecipesSmallRecyclerViewAdapter.CardRecipesSmallViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
         
         
@@ -57,26 +56,6 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
 
         String servingsPlural = recipe.getServings() > 1 ? " Servings" : " Serving";
         holder.cardServings.setText(recipe.getServings() + servingsPlural);
-
-        holder.cardCategory.setText(recipe.getCategory());
-        holder.cardTagLists.setText(recipe.getTagsString());
-
-
-        if (!recipe.isHighlighted()) {
-            holder.highlightedFrame.setVisibility(View.GONE);
-
-            // You can also set bottom margin to 0dp if it is GONE
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.MATCH_PARENT,
-//                    LinearLayout.LayoutParams.MATCH_PARENT
-//            );
-//
-//            params.setMargins(0, 25, 0, 0);
-//            holder.marginReducer.setLayoutParams(params);
-
-        } else {
-            holder.highlightedFrame.setVisibility(View.VISIBLE);
-        }
     
         if (!recipe.getIcon().equals("no-image")) {
             try {
@@ -121,7 +100,7 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
         return recipes.size();
     }
     
-    public static class CardRecipesViewHolder extends RecyclerView.ViewHolder {
+    public static class CardRecipesSmallViewHolder extends RecyclerView.ViewHolder {
     
         TextView cardName;
         TextView cardLikes;
@@ -129,29 +108,20 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
         TextView cardMinutes;
         TextView cardServings;
         
-        TextView cardCategory;
-        TextView cardTagLists;
-        
         ImageView cardImage;
         
         ProgressBar cardProgress;
         
-        FrameLayout highlightedFrame;
-        LinearLayout marginReducer;
         
-        public CardRecipesViewHolder(@NonNull View itemView) {
+        public CardRecipesSmallViewHolder(@NonNull View itemView) {
             super(itemView);
     
-            cardLikes = itemView.findViewById(R.id.recipestxt_Likes);
-            cardName = itemView.findViewById(R.id.recipesCardRecipeName);
-            cardMinutes = itemView.findViewById(R.id.recipesCardRecipeMinutes);
-            cardServings = itemView.findViewById(R.id.recipesCardRecipeServings);
-            cardCategory = itemView.findViewById(R.id.recipes_cardtxtCategory);
-            cardTagLists = itemView.findViewById(R.id.recipes_cardTagList);
-            highlightedFrame = itemView.findViewById(R.id.card_highlighted_frame);
-            marginReducer = itemView.findViewById(R.id.linearlayoutMarginReducer);
-            cardImage = itemView.findViewById(R.id.recipeCard_imageView);
-            cardProgress = itemView.findViewById(R.id.recipeCard_hotprogressbar);
+            cardLikes = itemView.findViewById(R.id.recipestxtSmall_Likes);
+            cardName = itemView.findViewById(R.id.recipesCardSmallRecipeName);
+            cardMinutes = itemView.findViewById(R.id.recipesCardSmallRecipeMinutes);
+            cardServings = itemView.findViewById(R.id.recipesCardSmallRecipeServings);
+            cardImage = itemView.findViewById(R.id.recipeCardSmall_imageView);
+            cardProgress = itemView.findViewById(R.id.recipeCardSmall_hotprogressbar);
         }
     }
     
