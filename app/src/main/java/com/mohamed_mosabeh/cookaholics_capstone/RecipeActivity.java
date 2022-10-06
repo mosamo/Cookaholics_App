@@ -77,7 +77,7 @@ public class RecipeActivity extends AppCompatActivity {
                     txtRecipeName.setText(recipe.getName());
                     txtRecipeCategory.setText(recipe.getCategory());
                     txtRecipeDescription.setText(recipe.getDescription());
-                    txtRecipeUsername.setText("By " + recipe.getUsername());
+                    txtRecipeUsername.setText("By " + recipe.getDisplay_name());
                     
                     // Timestamp Importing and Parsing
                     Long time = recipe.getTimestamp();

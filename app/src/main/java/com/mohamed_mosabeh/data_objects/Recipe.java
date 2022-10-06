@@ -8,14 +8,20 @@ public class Recipe {
     
     // attributes
     private String id;
-    private String name;
-    private String icon;
     private String category;
+    
     private String description;
-    private String username;
-    private String cuisine;
-    private int servings;
     private int duration;
+    private String icon;
+    private String name;
+    private int servings;
+    private Long timestamp;
+    private String user_id;
+    private String display_name;
+    private ArrayList<String> tags = new ArrayList<String>();
+    
+    
+    private String cuisine;
     private int likes;
     private int reports;
     private ArrayList<RecipeStep> steps = new ArrayList<RecipeStep>();
@@ -24,8 +30,6 @@ public class Recipe {
     // so we are using String instead of Tag this is for performance reasons..
     // ..and we extremely rarely need tag data in recipe page
     
-    private ArrayList<String> tags = new ArrayList<String>();
-    private Long timestamp;
     private boolean highlighted;
     
     // Getters and Setters
@@ -53,29 +57,20 @@ public class Recipe {
         this.description = description;
     }
     
-    public String getUsername() {
-        return username;
-    }
-    
-    public void setUsername(String username) {
-        // shouldn't be settable
-        this.username = username;
-    }
-    
-    public int getLikes() {
+    public final int getLikes() {
         return likes;
     }
     
-    public void setLikes(int likes) {
+    public final void setLikes(int likes) {
         // shouldn't be settable
         this.likes = likes;
     }
     
-    public int getReports() {
+    public final int getReports() {
         return reports;
     }
     
-    public void setReports(int reports) {
+    public final void setReports(int reports) {
         // shouldn't be settable
         this.reports = reports;
     }
@@ -93,14 +88,14 @@ public class Recipe {
         }
     }
     
-    public ArrayList<RecipeStep> getSteps() {
+    public final ArrayList<RecipeStep> getSteps() {
         if (steps.size() == 0) {
             return null;
         }
         return steps;
     }
     
-    public void setSteps(@Nullable ArrayList<RecipeStep> steps) {
+    public final void setSteps(@Nullable ArrayList<RecipeStep> steps) {
         if (steps != null) {
             this.steps = steps;
         }
@@ -114,11 +109,11 @@ public class Recipe {
         this.timestamp = timestamp;
     }
     
-    public boolean isHighlighted() {
+    public final boolean isHighlighted() {
         return highlighted;
     }
     
-    public void setHighlighted(boolean highlighted) {
+    public final void setHighlighted(boolean highlighted) {
         this.highlighted = highlighted;
     }
     
@@ -129,7 +124,8 @@ public class Recipe {
                 "\n\tCategory: " + getCategory() +
                 "\n\tCuisine: " + getCuisine() +
                 "\n\tDescription: " + getDescription() +
-                "\n\tUsername: " + getUsername() +
+                "\n\tUsername: " + getDisplay_name() +
+                "\n\tUser Id: " + getUser_id() +
                 "\n\tLikes: " + getLikes() +
                 "\n\tReports: " + getReports() +
                 "\n\tSteps: " + getStepsString() +
@@ -201,11 +197,27 @@ public class Recipe {
         this.icon = icon;
     }
     
-    public String getCuisine() {
+    public final String getCuisine() {
         return cuisine;
     }
     
-    public void setCuisine(String cuisine) {
+    public final void setCuisine(String cuisine) {
         this.cuisine = cuisine;
+    }
+    
+    public String getDisplay_name() {
+        return display_name;
+    }
+    
+    public void setDisplay_name(String display_name) {
+        this.display_name = display_name;
+    }
+    
+    public String getUser_id() {
+        return user_id;
+    }
+    
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 }
