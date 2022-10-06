@@ -85,13 +85,7 @@ public class PortalActivity extends AppCompatActivity {
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
         IdpResponse response = result.getIdpResponse();
         if (result.getResultCode() == RESULT_OK) {
-
             Toast.makeText(getApplicationContext(), "Successfully signed in", Toast.LENGTH_SHORT).show();
-
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-            // ...
-
         } else if (result.getResultCode() == RESULT_CANCELED) {
             finish();
         } else {
