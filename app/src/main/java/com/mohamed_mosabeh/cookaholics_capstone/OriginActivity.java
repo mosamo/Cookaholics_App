@@ -79,17 +79,11 @@ public class OriginActivity extends AppCompatActivity {
 
     public void signOut(View view) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser().isAnonymous())
-        {
+        if (auth.getCurrentUser().isAnonymous()) {
             auth.getCurrentUser().delete();
-            auth.signOut();
-            startActivity(new Intent(OriginActivity.this, PortalActivity.class));
-            finish();
         }
-        else if (auth.getCurrentUser() != null){
-            auth.signOut();
-            startActivity(new Intent(OriginActivity.this, PortalActivity.class));
-            finish();
-        }
+        auth.signOut();
+        startActivity(new Intent(OriginActivity.this, PortalActivity.class));
+        finish();
     }
 }
