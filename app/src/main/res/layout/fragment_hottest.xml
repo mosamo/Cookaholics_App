@@ -43,7 +43,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/urbanist_light"
                         android:letterSpacing="0.07"
-                        android:text="Hottest Recipes"
+                        android:text="Most Liked Recipes of All Time"
                         android:textColor="#BA55D3"
                         android:textSize="20sp"
                         android:textStyle="bold" />

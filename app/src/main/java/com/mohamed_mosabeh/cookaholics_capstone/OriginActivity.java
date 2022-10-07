@@ -58,7 +58,7 @@ public class OriginActivity extends AppCompatActivity {
                 case R.id.home:
                     switchFragment(homeFragment);
                     return true;
-                case R.id.starred:
+                case R.id.hottest:
                     switchFragment(hottestFragment);
                     return true;
             }
@@ -66,7 +66,7 @@ public class OriginActivity extends AppCompatActivity {
         });
         
         // default fragment to be showed
-        bottomNavigationView.setSelectedItemId(R.id.starred);
+        bottomNavigationView.setSelectedItemId(R.id.hottest);
     }
 
     private void switchFragment(Fragment fragment) {

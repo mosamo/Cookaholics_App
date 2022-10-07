@@ -11,7 +11,7 @@
                 android:bottomRightRadius="0dp"
                 android:bottomLeftRadius="0dp"
                 android:topLeftRadius="50dp"
-                android:topRightRadius="0dp"/>
+                android:topRightRadius="25dp"/>
         </shape>
     </item>
 </selector>
