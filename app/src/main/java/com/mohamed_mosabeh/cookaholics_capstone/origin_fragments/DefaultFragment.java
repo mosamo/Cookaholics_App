@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.mohamed_mosabeh.cookaholics_capstone.R;
-import com.mohamed_mosabeh.cookaholics_capstone.RecipeActivity;
+import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 
 
 public class DefaultFragment extends Fragment  {
@@ -29,7 +29,7 @@ public class DefaultFragment extends Fragment  {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), RecipeActivity.class);
+                Intent intent = new Intent(getActivity(), RecipeStepsActivity.class);
                 startActivity(intent);
             }
         });
