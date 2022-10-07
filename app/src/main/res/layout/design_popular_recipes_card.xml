@@ -92,7 +92,7 @@
             android:maxLines="1"
             android:minLines="1"
             android:text="Default Recipe Name"
-            android:textColor="#404040"
+            android:textColor="#BA55D3"
             android:textSize="18sp"
             android:textStyle="bold"></TextView>
 
@@ -111,7 +111,7 @@
                 android:fontFamily="@font/nunito_regular"
                 android:maxLines="1"
                 android:text="X Minutes"
-                android:textColor="#8E8E8E"
+                android:textColor="#8B8685"
                 android:textSize="12sp"></TextView>
 
             <View
@@ -127,7 +127,7 @@
                 android:fontFamily="@font/nunito_regular"
                 android:maxLines="1"
                 android:text="Y Servings"
-                android:textColor="#8E8E8E"
+                android:textColor="#8B8685"
                 android:textSize="12sp"></TextView>
 
             <View
