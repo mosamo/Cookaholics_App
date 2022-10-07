@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.AccountFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.DefaultFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HomeFragment;
+import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HottestFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.RecipesFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.SearchFragment;
 import android.content.Intent;
@@ -23,6 +24,7 @@ public class OriginActivity extends AppCompatActivity {
     private AccountFragment accountFragment = new AccountFragment();
     private DefaultFragment defaultFragment = new DefaultFragment();
     private RecipesFragment recipesFragment = new RecipesFragment();
+    private HottestFragment hottestFragment = new HottestFragment();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,7 @@ public class OriginActivity extends AppCompatActivity {
                     switchFragment(homeFragment);
                     return true;
                 case R.id.starred:
-                    switchFragment(defaultFragment);
+                    switchFragment(hottestFragment);
                     return true;
             }
             return false;
