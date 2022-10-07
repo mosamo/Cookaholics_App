@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mohamed_mosabeh.cookaholics_capstone.R;
-import com.mohamed_mosabeh.data_objects.Cuisine;
 import com.mohamed_mosabeh.data_objects.Tag;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class TagsRecipesRecyclerViewAdapter extends RecyclerView.Adapter<TagsRec
     @NonNull
     @Override
     public TagsRecipesRecyclerViewAdapter.TagsRecipesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_recipes_tc_scrip, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_recipes_tag_scrip, parent, false);
         TagsRecipesRecyclerViewAdapter.TagsRecipesViewHolder viewHolder = new TagsRecipesRecyclerViewAdapter.TagsRecipesViewHolder(view);
         return viewHolder;
     }

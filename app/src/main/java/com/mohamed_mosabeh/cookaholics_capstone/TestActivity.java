@@ -47,13 +47,13 @@ public class TestActivity extends AppCompatActivity {
     
     public void mainButtonClick(View view) {
     
-        /*String s = database.getReference("recipes").push().getKey();
+        String s = database.getReference("recipes").push().getKey();
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
         database.getReference("recipes").child(s).child("xx").setValue("s").addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
     }
 }

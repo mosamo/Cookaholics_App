@@ -100,7 +100,7 @@ public class RecipesFragment extends Fragment {
     private void NewRecipesRecyclerSetUp(ArrayList<Recipe> new_recipes) {
         NewRecipesRecycler.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 2, GridLayoutManager.HORIZONTAL, false));
 
-        NewRecipesAdapter = new CardRecipesSmallRecyclerViewAdapter(new_recipes, storage);
+        NewRecipesAdapter = new CardRecipesSmallRecyclerViewAdapter(new_recipes, storage, "New Recipe");
         NewRecipesRecycler.setAdapter(NewRecipesAdapter);
 
         NewRecipesProgressBar.setVisibility(View.GONE);

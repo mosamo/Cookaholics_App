@@ -31,10 +31,12 @@ public class CardRecipesSmallRecyclerViewAdapter extends RecyclerView.Adapter<Ca
     
     ArrayList<Recipe> recipes;
     FirebaseStorage storage;
+    String topLabel;
     
-    public CardRecipesSmallRecyclerViewAdapter(ArrayList<Recipe> recipes, FirebaseStorage storage) {
+    public CardRecipesSmallRecyclerViewAdapter(ArrayList<Recipe> recipes, FirebaseStorage storage, String topLabel) {
         this.recipes = recipes;
         this.storage = storage;
+        this.topLabel = topLabel;
     }
     
     @NonNull
@@ -49,6 +51,7 @@ public class CardRecipesSmallRecyclerViewAdapter extends RecyclerView.Adapter<Ca
     public void onBindViewHolder(@NonNull CardRecipesSmallRecyclerViewAdapter.CardRecipesSmallViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
         
+        holder.cardTopLabel.setText(topLabel);
         
         holder.cardName.setText(recipe.getName());
         holder.cardLikes.setText(Integer.toString(recipe.getLikes()));
@@ -107,6 +110,8 @@ public class CardRecipesSmallRecyclerViewAdapter extends RecyclerView.Adapter<Ca
         
         TextView cardMinutes;
         TextView cardServings;
+    
+        TextView cardTopLabel;
         
         ImageView cardImage;
         
@@ -122,6 +127,7 @@ public class CardRecipesSmallRecyclerViewAdapter extends RecyclerView.Adapter<Ca
             cardServings = itemView.findViewById(R.id.recipesCardSmallRecipeServings);
             cardImage = itemView.findViewById(R.id.recipeCardSmall_imageView);
             cardProgress = itemView.findViewById(R.id.recipeCardSmall_hotprogressbar);
+            cardTopLabel = itemView.findViewById(R.id.smallrec_upmostLabel);
         }
     }
     
