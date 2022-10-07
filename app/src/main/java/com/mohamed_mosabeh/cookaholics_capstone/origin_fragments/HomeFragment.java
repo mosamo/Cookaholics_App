@@ -1,5 +1,6 @@
 package com.mohamed_mosabeh.cookaholics_capstone.origin_fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -29,21 +30,22 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.mohamed_mosabeh.cookaholics_capstone.OriginActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
+import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.HighlightedRecipe;
 import com.mohamed_mosabeh.data_objects.Recipe;
+import com.mohamed_mosabeh.utils.RecyclerRecipeClickInterface;
 import com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.CategoryMainRecyclerViewAdapter;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements RecyclerRecipeClickInterface {
     
     private FirebaseDatabase database;
     private FirebaseStorage storage;
@@ -281,4 +283,9 @@ public class HomeFragment extends Fragment {
         CategoriesProgress.setVisibility(View.GONE);
     }
     
+    @Override
+    public void onItemRecipeClick(int position) {
+        if (recipes.size() > 0) {
+        }
+    }
 }

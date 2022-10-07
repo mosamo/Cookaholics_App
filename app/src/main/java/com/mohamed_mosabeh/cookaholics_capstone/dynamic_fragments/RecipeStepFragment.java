@@ -60,8 +60,10 @@ public class RecipeStepFragment extends Fragment {
             ((ViewGroup) progressBarRSF.getParent()).removeView(progressBarRSF);
         }
         
-        if (vRecipeStep.getImage_ref().equals("no-image"))
+        if (vRecipeStep.getImage_ref().equals("no-image")) {
             ((ViewGroup) progressBarRSF.getParent()).removeView(progressBarRSF);
+            stepImage.setImageResource(R.drawable.placeholder);
+        }
         
         stepContent.setMovementMethod(new ScrollingMovementMethod());
         stepContent.setText(vRecipeStep.getContent());
@@ -96,7 +98,8 @@ public class RecipeStepFragment extends Fragment {
                     // Kill Progress
                     if (progressBarRSF != null)
                         ((ViewGroup) progressBarRSF.getParent()).removeView(progressBarRSF);
-                    
+    
+    
                     stepImage.setImageResource(R.drawable.placeholder);
                 }
             });

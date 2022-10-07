@@ -22,6 +22,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.data_objects.Recipe;
+import com.mohamed_mosabeh.utils.RecyclerRecipeClickInterface;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,17 +34,20 @@ public class CardRecipesSmallRecyclerViewAdapter extends RecyclerView.Adapter<Ca
     FirebaseStorage storage;
     String topLabel;
     
-    public CardRecipesSmallRecyclerViewAdapter(ArrayList<Recipe> recipes, FirebaseStorage storage, String topLabel) {
+    private final RecyclerRecipeClickInterface recyclerClickInterface;
+    
+    public CardRecipesSmallRecyclerViewAdapter(ArrayList<Recipe> recipes, FirebaseStorage storage, RecyclerRecipeClickInterface recyclerClickInterface, String topLabel) {
         this.recipes = recipes;
         this.storage = storage;
         this.topLabel = topLabel;
+        this.recyclerClickInterface = recyclerClickInterface;
     }
     
     @NonNull
     @Override
     public CardRecipesSmallRecyclerViewAdapter.CardRecipesSmallViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_small_recipes_card, parent, false);
-        CardRecipesSmallRecyclerViewAdapter.CardRecipesSmallViewHolder viewHolder = new CardRecipesSmallRecyclerViewAdapter.CardRecipesSmallViewHolder(view);
+        CardRecipesSmallRecyclerViewAdapter.CardRecipesSmallViewHolder viewHolder = new CardRecipesSmallRecyclerViewAdapter.CardRecipesSmallViewHolder(view, recyclerClickInterface);
         return viewHolder;
     }
     
@@ -118,7 +122,7 @@ public class CardRecipesSmallRecyclerViewAdapter extends RecyclerView.Adapter<Ca
         ProgressBar cardProgress;
         
         
-        public CardRecipesSmallViewHolder(@NonNull View itemView) {
+        public CardRecipesSmallViewHolder(@NonNull View itemView, RecyclerRecipeClickInterface mClickInterface) {
             super(itemView);
     
             cardLikes = itemView.findViewById(R.id.recipestxtSmall_Likes);
@@ -128,6 +132,17 @@ public class CardRecipesSmallRecyclerViewAdapter extends RecyclerView.Adapter<Ca
             cardImage = itemView.findViewById(R.id.recipeCardSmall_imageView);
             cardProgress = itemView.findViewById(R.id.recipeCardSmall_hotprogressbar);
             cardTopLabel = itemView.findViewById(R.id.smallrec_upmostLabel);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mClickInterface != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            mClickInterface.onItemRecipeClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
     

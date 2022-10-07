@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -38,10 +39,17 @@ public class RecipeStepsActivity extends AppCompatActivity {
     // Pager
     private ViewPager2 viewPager;
     
+    // Variable
+    private String recipe_id;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_steps);
+        
+        // Getting Recipe Details
+        Intent intent = getIntent();
+        recipe_id = intent.getStringExtra("recipe_id");
         
         // Firebase Variables
         database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
@@ -68,7 +76,7 @@ public class RecipeStepsActivity extends AppCompatActivity {
                 if (snapshot != null) {
     
     
-                    Recipe recipe = snapshot.child("Ls9xSAkd9020Dkds").getValue(Recipe.class);
+                    Recipe recipe = snapshot.child(recipe_id).getValue(Recipe.class);
                     
                     // Value Setting
                     txtRecipeName.setText(recipe.getName());
