@@ -2,15 +2,17 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <!-- unused -->
             <gradient
                 android:type="linear"
                 android:angle="-45"
-                android:startColor="#FA8831"
-                android:endColor="#EF108B" /><!-- up FF7F50 FF9900-->
+                android:startColor="#EF108B"
+                android:centerColor="#EF1044"
+                android:endColor="#FA8831" />
             <corners
                 android:bottomRightRadius="0dp"
                 android:bottomLeftRadius="0dp"
-                android:topLeftRadius="50dp"
+                android:topLeftRadius="0dp"
                 android:topRightRadius="0dp"/>
         </shape>
     </item>

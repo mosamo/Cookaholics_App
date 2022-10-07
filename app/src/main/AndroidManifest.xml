@@ -36,7 +36,7 @@
             android:name=".SplashScreenActivity"
             android:exported="true" />
         <activity
-            android:name=".RecipeActivity"
+            android:name=".RecipeStepsActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
