@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mohamed_mosabeh.cookaholics_capstone.R;
+import com.mohamed_mosabeh.cookaholics_capstone.SubmitActivity;
 import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.Cuisine;
 
@@ -22,6 +23,7 @@ import java.util.List;
 
 public class RecipeFormFragment extends Fragment {
     
+    private SubmitActivity parent;
     
     private final long DEFAULT_TIME = 978292800000L;
     
@@ -33,35 +35,15 @@ public class RecipeFormFragment extends Fragment {
     
     private ImageButton imageButton;
     
+    
     public RecipeFormFragment() {
+    }
+    
+    public RecipeFormFragment(SubmitActivity parent) {
+        this.parent = parent;
         cuisineSpinnerItems.add("None");
         categorySpinnerItems.add("None");
     }
-    
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment RecipeFormFragment.
-     */
-//    // TODO: Rename and change types and number of parameters
-//    public static RecipeFormFragment newInstance(String param1, String param2) {
-//        RecipeFormFragment fragment = new RecipeFormFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-    /*
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }*/
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

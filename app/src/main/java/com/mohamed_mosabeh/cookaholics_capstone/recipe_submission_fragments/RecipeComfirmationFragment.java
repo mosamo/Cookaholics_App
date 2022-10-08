@@ -14,14 +14,14 @@ import com.mohamed_mosabeh.cookaholics_capstone.SubmitActivity;
 
 public class RecipeComfirmationFragment extends Fragment {
     
-    private RecipeFormFragment recipeFormFragment;
+    private SubmitActivity parent;
     
     public RecipeComfirmationFragment() {
     
     }
     
-    public RecipeComfirmationFragment(RecipeFormFragment rff) {
-        this.recipeFormFragment = rff;
+    public RecipeComfirmationFragment(SubmitActivity parent) {
+        this.parent = parent;
     }
     
     @Override
@@ -39,8 +39,7 @@ public class RecipeComfirmationFragment extends Fragment {
         switchFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SubmitActivity submitActivity = (SubmitActivity) getActivity();
-                submitActivity.goBackToForm();
+                parent.mReturnToForm();
             }
         });
         

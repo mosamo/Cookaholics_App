@@ -44,7 +44,6 @@
                         android:id="@+id/rsub_upmostHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="1dp"
                         android:layout_weight="1"
@@ -52,6 +51,7 @@
                         android:fontFamily="@font/nunito_bold_main"
                         android:maxLines="1"
                         android:text="Recipe Submission:"
+                        android:textAlignment="center"
                         android:textColor="#4E4E4E"
                         android:textSize="24sp" />
 
@@ -82,15 +82,79 @@
 
             </FrameLayout>
 
+            <FrameLayout
+                android:id="@+id/rsub_ContainerSteps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/design_submission_form_container_bottom"
+                android:paddingLeft="6dp"
+                android:paddingTop="8dp"
+                android:paddingRight="6dp"
+                android:paddingBottom="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rsub_fragment">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:id="@+id/rsub_bottomLL"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <FrameLayout
+                            android:id="@+id/rsub_StepsFragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        </FrameLayout>
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/rsub_removeStepButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:backgroundTint="#6C6DCF"
+                        android:drawableLeft="@drawable/ic_minus_sign_main"
+                        android:text="REMOVE STEP"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rsub_bottomLL" />
+
+                    <Button
+                        android:id="@+id/rsub_addStepButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:backgroundTint="#6C6DCF"
+                        android:drawableLeft="@drawable/ic_plus_sign_main"
+                        android:text="Add STEP"
+                        app:layout_constraintStart_toEndOf="@+id/rsub_removeStepButton"
+                        app:layout_constraintTop_toBottomOf="@id/rsub_bottomLL" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </FrameLayout>
+
             <Button
                 android:id="@+id/rsub_SubmitButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
+                android:onClick="mSubmitRecipe"
                 android:text="Submit Recipe"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rsub_fragment"
-                android:onClick="mSubmitRecipe"/>
+                app:layout_constraintTop_toBottomOf="@+id/rsub_ContainerSteps" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
