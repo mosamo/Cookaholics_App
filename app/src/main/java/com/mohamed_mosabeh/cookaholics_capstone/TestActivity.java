@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.mohamed_mosabeh.auth.AnonymousAuth;
 import com.mohamed_mosabeh.data_objects.Recipe;
@@ -40,6 +42,13 @@ public class TestActivity extends AppCompatActivity {
     
         database = FirebaseDatabase.getInstance("https://cookaholics-capstone-d4931-default-rtdb.asia-southeast1.firebasedatabase.app/");
         reference = database.getReference("recipes");
+    
+        Button b =  findViewById(R.id.xxxbutton);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
     
         mAuth = FirebaseAuth.getInstance();
         AnonymousAuth.signIn(this, mAuth);

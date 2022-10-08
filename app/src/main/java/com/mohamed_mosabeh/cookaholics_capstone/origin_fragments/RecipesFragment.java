@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
+import com.mohamed_mosabeh.cookaholics_capstone.SubmitActivity;
 import com.mohamed_mosabeh.data_objects.Cuisine;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.data_objects.Tag;
@@ -55,6 +57,8 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
     private ProgressBar TagProgressBar;
     private ProgressBar NewRecipesProgressBar;
     
+    private Button btnRecipeSubmission;
+    
     public RecipesFragment() {
     }
     
@@ -81,6 +85,14 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
         NewRecipesRecycler = parent.findViewById(R.id.rec_newRecipesRecycler);
         NewRecipesProgressBar = parent.findViewById(R.id.rec_newRecipesProgress);
     
+        btnRecipeSubmission = parent.findViewById(R.id.rec_RecipeSubmission);
+        btnRecipeSubmission.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SubmitActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     
     @Override

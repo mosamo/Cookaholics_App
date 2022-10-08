@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".recipe_submission_fragments.RecipeFormFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/rsblabel1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_bold_main"
+            android:paddingLeft="2dp"
+            android:paddingRight="4dp"
+            android:text="Recipe Name:"
+            android:textColor="#686868"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/rsub_recipeName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:hint="Name.."
+            android:inputType="textPersonName"
+            android:maxLength="30"
+            android:minHeight="48dp"
+            android:textColor="#333333"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:id="@+id/rsblabel2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_bold_main"
+                android:paddingLeft="2dp"
+                android:paddingRight="4dp"
+                android:text="Duration:"
+                android:textAlignment="center"
+                android:textColor="#686868"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/rsub_duration"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="60"
+                android:inputType="number"
+                android:maxLength="3"
+                android:maxLines="1"
+                android:textAlignment="center"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <TextView
+                android:id="@+id/rsblabel3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:fontFamily="@font/nunito_bold_main"
+                android:paddingLeft="2dp"
+                android:paddingRight="4dp"
+                android:text="Minutes"
+                android:textColor="#939393"
+                android:textSize="12sp" />
+
+            <View
+                android:id="@+id/view11"
+                android:layout_width="20dp"
+                android:layout_height="10dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/rsblabel4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_bold_main"
+                android:paddingLeft="2dp"
+                android:paddingRight="4dp"
+                android:text="Servings:"
+                android:textAlignment="center"
+                android:textColor="#686868"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/editTextNumber2"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="2"
+                android:inputType="number"
+                android:maxLength="1"
+                android:maxLines="1"
+                android:textAlignment="center"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <View
+                android:id="@+id/view12"
+                android:layout_width="5dp"
+                android:layout_height="10dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="4dp">
+
+            <TextView
+                android:id="@+id/rsblabel9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_bold_main"
+                android:paddingLeft="2dp"
+                android:paddingRight="4dp"
+                android:text="Cuisine:"
+                android:textAlignment="center"
+                android:textColor="#686868"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/rsub_cuisinesSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+            <TextView
+                android:id="@+id/rsblabel6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_bold_main"
+                android:paddingLeft="2dp"
+                android:paddingRight="4dp"
+                android:text="Category:"
+                android:textAlignment="center"
+                android:textColor="#686868"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/rsub_categorySpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="24dp">
+
+            <TextView
+                android:id="@+id/rsblabel7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_bold_main"
+                android:paddingLeft="2dp"
+                android:paddingRight="4dp"
+                android:text="Tags:"
+                android:textAlignment="textStart"
+                android:textColor="#686868"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/rsub_recipeTags"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-,"
+                android:ems="10"
+                android:fontFamily="sans-serif"
+                android:hint="Enter Tags.."
+                android:inputType="textPersonName"
+                android:maxLength="25"
+                android:minHeight="48dp"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <TextView
+                android:id="@+id/rsblabel8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_bold_main"
+                android:paddingLeft="2dp"
+                android:paddingRight="4dp"
+                android:text="(for multiple tags seperate by commas: vegan,keto,no-sugar)"
+                android:textAlignment="center"
+                android:textColor="#979797"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="24dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/rsblabel15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_bold_main"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="4dp"
+                    android:text="Description:"
+                    android:textAlignment="center"
+                    android:textColor="#686868"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/rsub_recipeDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,. "
+                    android:ellipsize="none"
+                    android:ems="10"
+                    android:hint="Recipe Description.."
+                    android:inputType="textMultiLine"
+                    android:maxLength="70"
+                    android:maxLines="4"
+                    android:textAlignment="center"
+                    android:textSize="14sp"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/rsblabel5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_bold_main"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="4dp"
+                    android:text="Icon:"
+                    android:textAlignment="center"
+                    android:textColor="#686868"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/rsub_RecipeUpload"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:contentDescription="upload"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/plus_placeholder" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
