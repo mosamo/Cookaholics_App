@@ -130,7 +130,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="120dp"
                             android:background="@drawable/blank_placeholder"
-                            android:scaleType="fitCenter" />
+                            android:scaleType="centerCrop" />
 
                         <ProgressBar
                             android:id="@+id/imageView_progressBar"

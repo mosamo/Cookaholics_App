@@ -200,7 +200,7 @@ public class HottestFragment extends Fragment {
         WHR_Text.setText("This " + recipe.getCuisine() + " " + recipe.getCategory() + " recipe is liked by many!");
         WHR_Name.setText(recipe.getName());
 
-        if (recipe.getIcon().equals("no-image")) {
+        if (!recipe.getIcon().equals("no-image")) {
             try {
                 final File tempfile = File.createTempFile(recipe.getId()+"_icon", "png");
                 final StorageReference storageRef = storage.getReference().child(recipe.getIcon());
