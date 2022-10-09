@@ -50,17 +50,18 @@ public class HottestFragment extends Fragment {
     private ArrayList<Recipe> hottest_recipes = new ArrayList<>();
     private RecyclerView HottestRecipesRecycler;
     private RecyclerView.Adapter HottestRecipesAdapter;
-
     private ProgressBar HottestRecipesProgressBar;
 
     private Recipe WeekHottestRecipe;
-    private TextView WHR_Tags;
+    private TextView WHR_Label;
     private TextView WHR_Name;
     private TextView WHR_Text;
-    private ImageView WHR_ImageView;
+    private TextView WHR_Tags;
     private MaterialCardView WHR_CardView;
+    private ImageView WHR_ImageView;
     private ProgressBar WHR_ImageProgress;
     private ProgressBar WHR_ProgressBar;
+    private DataSnapshot WHR_DataSnapshot;
 
     public HottestFragment(){}
 
@@ -76,6 +77,7 @@ public class HottestFragment extends Fragment {
     }
 
     private void SetUpViews(View parent) {
+        WHR_Label = parent.findViewById(R.id.rec_lblRecipe);
         WHR_Tags = parent.findViewById(R.id.wideCard_tags);
         WHR_Name = parent.findViewById(R.id.wideCard_name);
         WHR_Text = parent.findViewById(R.id.wideCard_text);
@@ -153,49 +155,85 @@ public class HottestFragment extends Fragment {
     private void getWeekHottestRecipeData()
     {
         Timestamp timestamp = new Timestamp(new Date().getTime());
-        System.out.println(timestamp);
-
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(timestamp.getTime());
         cal.add(Calendar.DAY_OF_WEEK, -7);
 
         DatabaseReference reference = database.getReference("recipes");
-
         Query weekRecipes = reference.orderByChild("timestamp").startAt(cal.getTimeInMillis());
 
         weekRecipes.addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
 
-            ArrayList<Recipe> week_recipes = new ArrayList<>();
+            WHR_DataSnapshot = dataSnapshot;
+            if (WHR_DataSnapshot.exists())
+            {
+                ArrayList<Recipe> week_recipes = new ArrayList<>();
 
-            for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                Recipe recipe = snapshot.getValue(Recipe.class);
-                recipe.setId(snapshot.getKey());
-                week_recipes.add(recipe);
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Recipe recipe = snapshot.getValue(Recipe.class);
+                    recipe.setId(snapshot.getKey());
+                    week_recipes.add(recipe);
+                }
+
+                Collections.sort(week_recipes, new SortByLikes());
+
+                int last = week_recipes.size() - 1;
+
+                WeekHottestRecipe = week_recipes.get(last);
+
+                WHR_ProgressBar.setVisibility(View.GONE);
+                WHR_CardView.setVisibility(View.VISIBLE);
+                SetUpWideCard(WeekHottestRecipe);
             }
+            else {
+                Query hottestRecipe = reference.orderByChild("likes").limitToLast(1);
+                hottestRecipe.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Recipe recipe = new Recipe();
 
-            Collections.sort(week_recipes, new SortByLikes());
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            recipe = snapshot.getValue(Recipe.class);
+                            recipe.setId(snapshot.getKey());
+                        }
 
-            int last = week_recipes.size() - 1;
+                        WeekHottestRecipe = recipe;
 
-            WeekHottestRecipe = week_recipes.get(last);
+                        WHR_Label.setText("Most Liked Recipe");
+                        WHR_ProgressBar.setVisibility(View.GONE);
+                        WHR_CardView.setVisibility(View.VISIBLE);
+                        SetUpWideCard(WeekHottestRecipe);
+                    }
 
-            WHR_ProgressBar.setVisibility(View.GONE);
-            WHR_CardView.setVisibility(View.VISIBLE);
-            SetUpWideCard(WeekHottestRecipe);
-
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Failed to read value
+                        Log.w("W", "Failed to read value.", error.toException());
+                    }
+                });
+            }
         }
 
         @Override
-        public void onCancelled(DatabaseError error) {
+        public void onCancelled(DatabaseError error)
+        {
             // Failed to read value
             Log.w("W", "Failed to read value.", error.toException());
         }
-    });
+        });
     }
 
     private void SetUpWideCard(Recipe recipe) {
+        if (!WHR_DataSnapshot.exists())
+        {
+            WHR_Label.setText("Most Liked Recipe");
+        }
+        else
+        {
+            WHR_Label.setText("Recipe of the Week");
+        }
         WHR_Tags.setText(recipe.getTagsString());
         WHR_Text.setText("This " + recipe.getCuisine() + " " + recipe.getCategory() + " recipe is liked by many!");
         WHR_Name.setText(recipe.getName());
