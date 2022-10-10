@@ -11,4 +11,6 @@
     <color name="official_cookaholics_rounded_leaf">#43A047</color>
     <color name="offical_cookaholics_drawable_tint_1">#FF8045</color>
     <color name="offical_cookaholics_yellow_1">#FDBA35</color>
+    <color name="comfort_blue">#6C6DCF</color>
+    <color name="comfort_grey">#A2A2A2</color>
 </resources>

@@ -1,17 +1,26 @@
 package com.mohamed_mosabeh.cookaholics_capstone;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,8 +32,7 @@ import com.mohamed_mosabeh.cookaholics_capstone.recipe_submission_fragments.Reci
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_submission_fragments.RecipeFormStepFragment;
 import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.Cuisine;
-
-import org.objectweb.asm.tree.analysis.Frame;
+import com.mohamed_mosabeh.utils.ImageManipulation;
 
 import java.util.ArrayList;
 
@@ -32,8 +40,13 @@ public class SubmitActivity extends AppCompatActivity {
     
     private FirebaseDatabase database;
     
+    private ImageManipulation controlImages = new ImageManipulation(this);
+    private ArrayList<ImageView> listImageViews = new ArrayList<ImageView>();
+    
     private RecipeFormFragment recipeFormFragment = new RecipeFormFragment(this);
     private RecipeComfirmationFragment recipeComfirmationFragment = new RecipeComfirmationFragment(this);
+    
+    public final int IMAGE_RESULT_STARTING_CODE = 600;
     
     private final int STEPS_LOWER_LIMIT = 2;
     private final int STEPS_UPPER_LIMIT = 10;
@@ -67,15 +80,21 @@ public class SubmitActivity extends AppCompatActivity {
                 addStep();
             }
         });
-        // Each Recipe should have at least 2 steps
-        for (int i = 0; i < STEPS_LOWER_LIMIT; i++)
-            addStep();
-        
+    
+        // Create Recipe Form Fragment
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.rsub_fragment, recipeFormFragment).commit();
         
+        // Create Recipe Steps Form Fragment
+        // Each Recipe should have at least 2 steps (2 Fragments created)
+        for (int i = 0; i < STEPS_LOWER_LIMIT; i++)
+            addStep();
+    
+        mControlButtonStatus(btnDelStep, false);
         fetchFormSetupData();
     }
+    
+    
     
     
     public void mReturnToForm() {
@@ -166,25 +185,34 @@ public class SubmitActivity extends AppCompatActivity {
             int last = listFragments.size() - 1;
             // add FrameLayout to LinearLayout
             bottomLinear.addView(listFragments.get(last));
-        } else {
-            Toast.makeText(this, "Cannot have more than " + STEPS_UPPER_LIMIT + " Steps!", Toast.LENGTH_SHORT).show();
-            Button b = findViewById(R.id.rsub_addStepButton);
-            b.setEnabled(false);
+    
+            if (listFragments.size() == STEPS_UPPER_LIMIT) {
+                mControlButtonStatus(btnAddStep, false);
+            } else {
+                mControlButtonStatus(btnDelStep, true);
+            }
         }
     }
     
     private void removeStep() {
         if (listFragments.size() > STEPS_LOWER_LIMIT) {
             // index of last element
-            int last = listFragments.size() - 1;
+            int lastFragmentIndex = listFragments.size() - 1;
             // remove FrameLayout from LinearLayout
-            bottomLinear.removeView(listFragments.get(last));
+            bottomLinear.removeView(listFragments.get(lastFragmentIndex));
             // remove last FrameLayout from ArrayList
-            listFragments.remove(last);
-        } else {
-            Toast.makeText(this, "Cannot have less than " + STEPS_LOWER_LIMIT + " Steps!", Toast.LENGTH_SHORT).show();
+            listFragments.remove(lastFragmentIndex);
+            
+            // remove last image;
+            int lastImageIndex = listImageViews.size() - 1;
+            listImageViews.remove(lastImageIndex);
+    
+            if (listFragments.size() == STEPS_LOWER_LIMIT) {
+                mControlButtonStatus(btnDelStep, false);
+            } else {
+                mControlButtonStatus(btnAddStep, true);
+            }
         }
-        
     }
     
     private FrameLayout createFrame() {
@@ -200,8 +228,33 @@ public class SubmitActivity extends AppCompatActivity {
         int number = listFragments.size() + 1;
         
         getSupportFragmentManager().beginTransaction()
-                .replace(generatedId, new RecipeFormStepFragment(number)).commit();
+                .replace(generatedId, new RecipeFormStepFragment(this, number)).commit();
         
         return frame;
+    }
+    
+    private void mControlButtonStatus(Button button, boolean status) {
+        if (status) {
+            button.setEnabled(true);
+            button.setBackgroundColor(getResources().getColor(R.color.comfort_blue));
+        } else {
+            button.setEnabled(false);
+            button.setBackgroundColor(getResources().getColor(R.color.comfort_grey));
+        }
+    }
+    
+    public void registerNewImage(ImageView image) {
+        listImageViews.add(image);
+    }
+    
+    public ImageManipulation getActivityImageManipulator() {
+        return controlImages;
+    }
+    
+    private void showSnackbarMessage(String message) {
+        ConstraintLayout root = findViewById(R.id.rsub_rootCons);
+        Snackbar snackbar = Snackbar
+                .make(root, message, Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 }

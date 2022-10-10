@@ -59,24 +59,11 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
         holder.cardServings.setText(recipe.getServings() + servingsPlural);
 
         holder.cardCategory.setText(recipe.getCategory());
-        holder.cardTagLists.setText(recipe.getTagsString());
+        
+        holder.cardTagLists.setText(recipe.getTagsString().equals("No Tags") ? "" : recipe.getTagsString());
 
-
-        if (!recipe.isHighlighted()) {
-            holder.highlightedFrame.setVisibility(View.GONE);
-
-            // You can also set bottom margin to 0dp if it is GONE
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.MATCH_PARENT,
-//                    LinearLayout.LayoutParams.MATCH_PARENT
-//            );
-//
-//            params.setMargins(0, 25, 0, 0);
-//            holder.marginReducer.setLayoutParams(params);
-
-        } else {
-            holder.highlightedFrame.setVisibility(View.VISIBLE);
-        }
+        holder.highlightedFrame.setVisibility(recipe.isHighlighted() ? View.GONE : View.VISIBLE);
+        
     
         if (!recipe.getIcon().equals("no-image")) {
             try {

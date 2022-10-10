@@ -1,13 +1,23 @@
 package com.mohamed_mosabeh.cookaholics_capstone.recipe_submission_fragments;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -16,15 +26,22 @@ import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.cookaholics_capstone.SubmitActivity;
 import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.Cuisine;
+import com.mohamed_mosabeh.utils.ImageManipulation;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class RecipeFormFragment extends Fragment {
     
     private SubmitActivity parent;
     
+    // Regex pattern (for tags): letters and middle hyphens ([comma] letters and middle hyphen)+
+    private final Pattern regex = Pattern.compile("^([a-zA-Z]{1,}([\\-]{1}([a-zA-Z]){1,}){0,}){1,}([,]{1}([a-zA-Z]{1,}([\\-]{1}([a-zA-Z]){1,}){0,}){1,}){0,}$");
     private final long DEFAULT_TIME = 978292800000L;
     
     private Spinner SpinnerCuisines;
@@ -35,6 +52,10 @@ public class RecipeFormFragment extends Fragment {
     
     private ImageButton imageButton;
     
+    private EditText recipeNameEdit;
+    private EditText recipeDurationEdit;
+    private EditText recipeServingsEdit;
+    private EditText recipeTagsEdit;
     
     public RecipeFormFragment() {
     }
@@ -58,14 +79,11 @@ public class RecipeFormFragment extends Fragment {
     
     private void SetUpViews(View view) {
         
-        imageButton = view.findViewById(R.id.rsub_RecipeUpload);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageButton.setImageResource(R.drawable.placeholder);
-                Toast.makeText(getActivity(), "Toasty!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        
+        recipeNameEdit = view.findViewById(R.id.rsub_recipeName);
+        recipeDurationEdit = view.findViewById(R.id.rsub_duration);
+        recipeServingsEdit = view.findViewById(R.id.rsub_servings);
+        recipeTagsEdit = view.findViewById(R.id.rsub_recipeTags);
         
         // Cuisine Spinner Setup
         SpinnerCuisines = view.findViewById(R.id.rsub_cuisinesSpinner);
@@ -78,7 +96,83 @@ public class RecipeFormFragment extends Fragment {
         ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categorySpinnerItems);
         categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         SpinnerCategories.setAdapter(categoriesAdapter);
+    
+        
+        
+        // imageButton
+        imageButton = view.findViewById(R.id.rsub_RecipeUpload);
+        parent.registerNewImage(imageButton);
+    
+        // Result launcher
+        ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+                new ActivityResultCallback<Uri>() {
+                    @Override
+                    public void onActivityResult(Uri uri) {
+                        try {
+                            ImageManipulation im = parent.getActivityImageManipulator();
+                            Bitmap bitmap = im.UriToBitmap(uri);
+                            Bitmap small = ImageManipulation.scaleSizeSquare(bitmap, ImageManipulation.SMALL_BITMAP_SIZE, false);
+                            imageButton.setImageBitmap(small);
+                        } catch (IOException e) {
+                            Log.w("ImageManipulator:", e.getMessage());
+                        }
+                    }
+                });
+        
+        // Image linking
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (parent.getActivityImageManipulator().checkStoragePermission())
+                    mGetContent.launch("image/*");
+            }
+        });
     }
+    
+    private boolean validateRecipeName() {
+        if (recipeNameEdit.getText().toString().trim().isEmpty()) {
+            recipeNameEdit.setError("Cannot leave recipe name empty!");
+            return false;
+        } else
+            return true;
+    }
+    
+    private boolean validateMoreThanZero(EditText editText) {
+        if (editText.getText().toString().trim().isEmpty()) {
+            editText.setError("Cannot be Empty!");
+            return false;
+        }
+        
+        int number = Integer.parseInt(editText.getText().toString());
+        if (number < 1) {
+            editText.setError("Cannot be less than 1");
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean validateTags() {
+        String str = recipeTagsEdit.getText().toString();
+        
+        if (!str.isEmpty()) {
+            Matcher matcher = regex.matcher(str);
+            
+            if (matcher.matches()) {
+                // TODO: use below line when submitting
+                List<String> tagsList = Arrays.asList(str.split(","));
+                Toast.makeText(parent, tagsList.toString(), Toast.LENGTH_SHORT).show();
+                return true;
+            } else {
+                recipeTagsEdit.setError("Tags Improperly formatted!\nExample: tag,tag-b,tag-c");
+                return false;
+            }
+        }
+        
+        //trim
+        return true;
+    }
+    
+    
     
     public void addCuisinesDropdownData(ArrayList<Cuisine> cuisines) {
         cuisineSpinnerItems.clear();
@@ -106,5 +200,13 @@ public class RecipeFormFragment extends Fragment {
         categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categoriesAdapter.notifyDataSetChanged();
         SpinnerCategories.setAdapter(categoriesAdapter);
+    }
+    
+    public boolean validateMainForm() {
+        // if any of the following is false: then false is returned
+        return validateRecipeName() &&
+               validateMoreThanZero(recipeDurationEdit) &&
+               validateMoreThanZero(recipeServingsEdit) &&
+               validateTags();
     }
 }

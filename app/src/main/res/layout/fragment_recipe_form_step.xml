@@ -28,7 +28,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/nunito_bold_main"
-                    android:text="Step Title:"
+                    android:text="Step Title*:"
                     android:textAlignment="textStart"
                     android:textColor="#686868"
                     android:textSize="16sp" />
@@ -85,7 +85,7 @@
                     android:fontFamily="@font/nunito_bold_main"
                     android:paddingLeft="2dp"
                     android:paddingRight="4dp"
-                    android:text="Step Instructions:"
+                    android:text="Step Instructions*:"
                     android:textAlignment="center"
                     android:textColor="#686868"
                     android:textSize="16sp" />
@@ -126,11 +126,11 @@
 
                 <ImageButton
                     android:id="@+id/rfsf_uploadImage"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:contentDescription="upload"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/plus_placeholder" />
+                    android:src="@drawable/ic_plus_sign_main" />
             </LinearLayout>
 
         </LinearLayout>
