@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +35,8 @@ import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.Cuisine;
 import com.mohamed_mosabeh.utils.ImageManipulation;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 
 public class SubmitActivity extends AppCompatActivity {
@@ -44,8 +47,9 @@ public class SubmitActivity extends AppCompatActivity {
     private ArrayList<ImageView> listImageViews = new ArrayList<ImageView>();
     
     private RecipeFormFragment recipeFormFragment = new RecipeFormFragment(this);
-    private RecipeComfirmationFragment recipeComfirmationFragment = new RecipeComfirmationFragment(this);
     
+    // this can be used for older devices that use request codes
+    // but we are not using deprecated APIs in our app:
     public final int IMAGE_RESULT_STARTING_CODE = 600;
     
     private final int STEPS_LOWER_LIMIT = 2;
@@ -56,6 +60,7 @@ public class SubmitActivity extends AppCompatActivity {
     
     private LinearLayout bottomLinear;
     private ArrayList<FrameLayout> listFragments = new ArrayList<>();
+    private ArrayList<RecipeFormStepFragment> stepFragments = new ArrayList<>();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,18 +168,28 @@ public class SubmitActivity extends AppCompatActivity {
         });
     }
     
+    // called by SubmitButton OnClick
     public void mSubmitRecipe(View view) {
-        boolean success = true;
+        ArrayList<Boolean> validationResults = new ArrayList<>();
         
-        if (success) {
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(
-                            R.anim.slide_from_right,  // enter
-                            R.anim.slide_out_left,    // exit
-                            R.anim.slide_from_right,  // pop enter
-                            R.anim.slide_out_left)    // pop exit
-                    .replace(R.id.rsub_fragment, recipeComfirmationFragment).commit();
+        validationResults.add(recipeFormFragment.validateMainForm());
+        
+        for (RecipeFormStepFragment fragment : stepFragments ) {
+            validationResults.add(fragment.validateStepForm());
         }
+        
+        // check if all is valid!
+        for (Boolean valid : validationResults) {
+            if (valid == false)
+                return;
+        }
+        
+        mSuccessfulSubmission();
+    }
+    
+    public void mSuccessfulSubmission() {
+        // TODO: request Recipe Object from fragments
+        Toast.makeText(this, "All is Valid", Toast.LENGTH_SHORT).show();
     }
     
     private void addStep() {
@@ -200,10 +215,11 @@ public class SubmitActivity extends AppCompatActivity {
             int lastFragmentIndex = listFragments.size() - 1;
             // remove FrameLayout from LinearLayout
             bottomLinear.removeView(listFragments.get(lastFragmentIndex));
-            // remove last FrameLayout from ArrayList
+            // remove last Fragment and FrameLayout from ArrayList
+            stepFragments.remove(lastFragmentIndex);
             listFragments.remove(lastFragmentIndex);
             
-            // remove last image;
+            // remove last image; (this uses a different index due to there being more images than steps (1 more)
             int lastImageIndex = listImageViews.size() - 1;
             listImageViews.remove(lastImageIndex);
     
@@ -227,8 +243,10 @@ public class SubmitActivity extends AppCompatActivity {
         
         int number = listFragments.size() + 1;
         
-        getSupportFragmentManager().beginTransaction()
-                .replace(generatedId, new RecipeFormStepFragment(this, number)).commit();
+        RecipeFormStepFragment rfsf = new RecipeFormStepFragment(this, number);
+        stepFragments.add(rfsf);
+        
+        getSupportFragmentManager().beginTransaction().replace(generatedId, rfsf).commit();
         
         return frame;
     }
@@ -249,12 +267,5 @@ public class SubmitActivity extends AppCompatActivity {
     
     public ImageManipulation getActivityImageManipulator() {
         return controlImages;
-    }
-    
-    private void showSnackbarMessage(String message) {
-        ConstraintLayout root = findViewById(R.id.rsub_rootCons);
-        Snackbar snackbar = Snackbar
-                .make(root, message, Snackbar.LENGTH_SHORT);
-        snackbar.show();
     }
 }

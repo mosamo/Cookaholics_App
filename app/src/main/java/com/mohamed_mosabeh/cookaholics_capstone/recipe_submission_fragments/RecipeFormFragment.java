@@ -108,13 +108,15 @@ public class RecipeFormFragment extends Fragment {
                 new ActivityResultCallback<Uri>() {
                     @Override
                     public void onActivityResult(Uri uri) {
-                        try {
-                            ImageManipulation im = parent.getActivityImageManipulator();
-                            Bitmap bitmap = im.UriToBitmap(uri);
-                            Bitmap small = ImageManipulation.scaleSizeSquare(bitmap, ImageManipulation.SMALL_BITMAP_SIZE, false);
-                            imageButton.setImageBitmap(small);
-                        } catch (IOException e) {
-                            Log.w("ImageManipulator:", e.getMessage());
+                        if (uri != null) {
+                            try {
+                                ImageManipulation im = parent.getActivityImageManipulator();
+                                Bitmap bitmap = im.UriToBitmap(uri);
+                                Bitmap small = ImageManipulation.scaleSizeSquare(bitmap, ImageManipulation.SMALL_BITMAP_SIZE, false);
+                                imageButton.setImageBitmap(small);
+                            } catch (IOException e) {
+                                Log.w("ImageManipulator:", e.getMessage());
+                            }
                         }
                     }
                 });
@@ -203,10 +205,16 @@ public class RecipeFormFragment extends Fragment {
     }
     
     public boolean validateMainForm() {
-        // if any of the following is false: then false is returned
-        return validateRecipeName() &&
-               validateMoreThanZero(recipeDurationEdit) &&
-               validateMoreThanZero(recipeServingsEdit) &&
-               validateTags();
+        
+        boolean [] validate = {validateRecipeName(), validateMoreThanZero(recipeDurationEdit), validateMoreThanZero(recipeServingsEdit), validateTags()};
+        
+        // checks if all of them are true
+        // if not the method returns false
+        for (boolean b : validate)
+            if (!b)
+                return false;
+        // we cannot use the "x() && y() && z()" notation due to the fact
+        // that it stops upon finding first false
+        return true;
     }
 }

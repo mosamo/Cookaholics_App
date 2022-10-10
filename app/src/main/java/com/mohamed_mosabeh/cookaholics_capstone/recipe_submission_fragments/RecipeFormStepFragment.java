@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +32,9 @@ public class RecipeFormStepFragment extends Fragment {
     private TextView stepNumberLabel;
     
     private ImageView stepImage;
+    
+    private EditText stepHeader;
+    private EditText stepContent;
     
     public RecipeFormStepFragment() {
     }
@@ -63,13 +67,15 @@ public class RecipeFormStepFragment extends Fragment {
                 new ActivityResultCallback<Uri>() {
                     @Override
                     public void onActivityResult(Uri uri) {
-                        try {
-                            ImageManipulation im = parent.getActivityImageManipulator();
-                            Bitmap bitmap = im.UriToBitmap(uri);
-                            Bitmap small = ImageManipulation.scaleSizeSquare(bitmap, ImageManipulation.MEDIUM_BITMAP_SIZE, false);
-                            stepImage.setImageBitmap(small);
-                        } catch (IOException e) {
-                            Log.w("ImageManipulator:", e.getMessage());
+                        if (uri != null) {
+                            try {
+                                ImageManipulation im = parent.getActivityImageManipulator();
+                                Bitmap bitmap = im.UriToBitmap(uri);
+                                Bitmap small = ImageManipulation.scaleSizeSquare(bitmap, ImageManipulation.MEDIUM_BITMAP_SIZE, false);
+                                stepImage.setImageBitmap(small);
+                            } catch (IOException e) {
+                                Log.w("ImageManipulator:", e.getMessage());
+                            }
                         }
                     }
                 });
@@ -80,5 +86,39 @@ public class RecipeFormStepFragment extends Fragment {
                     mGetContent.launch("image/*");
             }
         });
+        
+        // EditTexts
+        stepHeader = view.findViewById(R.id.rfsf_header);
+        stepContent = view.findViewById(R.id.rfsf_content);
+    }
+    
+    // we can simply reuse the same method instead of having two different ones
+    // but I'm leaving them as seperate incase we want to change that in the future
+    
+    private boolean validateStepHeader() {
+        if (stepHeader.getText().toString().trim().isEmpty()) {
+            stepHeader.setError("Cannot leave Step Header empty!");
+            return false;
+        } else
+            return true;
+    }
+    
+    private boolean validateStepContent() {
+        if (stepContent.getText().toString().trim().isEmpty()) {
+            stepContent.setError("Cannot leave Instructions empty!");
+            return false;
+        } else
+            return true;
+    }
+    
+    public boolean validateStepForm() {
+        boolean [] validate = {validateStepHeader(), validateStepContent()};
+        
+        for (boolean b : validate)
+            if (!b)
+                return false;
+        // we cannot use the "x() && y() && z()" notation due to the fact
+        // that it stops upon finding first false
+        return true;
     }
 }

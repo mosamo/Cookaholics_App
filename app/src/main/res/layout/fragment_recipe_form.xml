@@ -237,7 +237,7 @@
                     android:id="@+id/rsub_recipeDescription"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,. "
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,.0123456789 "
                     android:ellipsize="none"
                     android:ems="10"
                     android:hint="Recipe Description.."
