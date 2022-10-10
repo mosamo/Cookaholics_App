@@ -1,16 +1,8 @@
 package com.mohamed_mosabeh.cookaholics_capstone;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,18 +13,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_submission_fragments.RecipeComfirmationFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_submission_fragments.RecipeFormFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_submission_fragments.RecipeFormStepFragment;
 import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.Cuisine;
+import com.mohamed_mosabeh.data_objects.Recipe;
+import com.mohamed_mosabeh.data_objects.RecipeStep;
 import com.mohamed_mosabeh.utils.ImageManipulation;
 
 import org.checkerframework.checker.units.qual.A;
@@ -57,6 +54,7 @@ public class SubmitActivity extends AppCompatActivity {
     
     private Button btnDelStep;
     private Button btnAddStep;
+    private Button btnSubmit;
     
     private LinearLayout bottomLinear;
     private ArrayList<FrameLayout> listFragments = new ArrayList<>();
@@ -71,6 +69,7 @@ public class SubmitActivity extends AppCompatActivity {
         
         // Views
         bottomLinear = findViewById(R.id.rsub_bottomLL);
+        btnSubmit = findViewById(R.id.rsub_SubmitButton);
         btnDelStep = findViewById(R.id.rsub_removeStepButton);
         btnDelStep.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +84,8 @@ public class SubmitActivity extends AppCompatActivity {
                 addStep();
             }
         });
+        
+        
     
         // Create Recipe Form Fragment
         getSupportFragmentManager().beginTransaction()
@@ -170,6 +171,9 @@ public class SubmitActivity extends AppCompatActivity {
     
     // called by SubmitButton OnClick
     public void mSubmitRecipe(View view) {
+        
+        btnSubmit.setEnabled(false);
+        
         ArrayList<Boolean> validationResults = new ArrayList<>();
         
         validationResults.add(recipeFormFragment.validateMainForm());
@@ -180,16 +184,49 @@ public class SubmitActivity extends AppCompatActivity {
         
         // check if all is valid!
         for (Boolean valid : validationResults) {
-            if (valid == false)
+            if (valid == false) {
+                btnSubmit.setEnabled(true);
                 return;
+            }
         }
         
         mSuccessfulSubmission();
     }
     
     public void mSuccessfulSubmission() {
-        // TODO: request Recipe Object from fragments
-        Toast.makeText(this, "All is Valid", Toast.LENGTH_SHORT).show();
+        
+        // Change Views
+        final FrameLayout blueArea = findViewById(R.id.rsub_ContainerSteps);
+        
+        blueArea.setVisibility(View.GONE);
+        btnSubmit.setVisibility(View.GONE);
+        
+        // create Recipe Object
+        Recipe recipe = recipeFormFragment.getGeneratedRecipe();
+        // add Steps to Recipe Object
+        ArrayList<RecipeStep> steps = new ArrayList<>();
+        for (RecipeFormStepFragment step : stepFragments) {
+            steps.add(step.getGeneratedStep());
+        }
+        recipe.setSteps(steps);
+    
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_from_right,  // enter
+                        R.anim.slide_out_left,    // exit
+                        R.anim.slide_from_right,  // pop enter
+                        R.anim.slide_out_left)    // pop exit
+                .replace(R.id.rsub_fragment, new RecipeComfirmationFragment(this)).commit();
+        
+        // Submit to database;
+        DatabaseReference reference = database.getReference("recipes");
+//        String id = reference.push().getKey();
+        reference.push().setValue(recipe).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("Database Error", e.getMessage());
+            }
+        });
     }
     
     private void addStep() {

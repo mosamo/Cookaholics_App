@@ -26,6 +26,7 @@ import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.cookaholics_capstone.SubmitActivity;
 import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.Cuisine;
+import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.utils.ImageManipulation;
 
 import java.io.IOException;
@@ -56,6 +57,7 @@ public class RecipeFormFragment extends Fragment {
     private EditText recipeDurationEdit;
     private EditText recipeServingsEdit;
     private EditText recipeTagsEdit;
+    private EditText recipeDescriptionEdit;
     
     public RecipeFormFragment() {
     }
@@ -84,6 +86,7 @@ public class RecipeFormFragment extends Fragment {
         recipeDurationEdit = view.findViewById(R.id.rsub_duration);
         recipeServingsEdit = view.findViewById(R.id.rsub_servings);
         recipeTagsEdit = view.findViewById(R.id.rsub_recipeTags);
+        recipeDescriptionEdit = view.findViewById(R.id.rsub_recipeDescription);
         
         // Cuisine Spinner Setup
         SpinnerCuisines = view.findViewById(R.id.rsub_cuisinesSpinner);
@@ -112,10 +115,13 @@ public class RecipeFormFragment extends Fragment {
                             try {
                                 ImageManipulation im = parent.getActivityImageManipulator();
                                 Bitmap bitmap = im.UriToBitmap(uri);
-                                Bitmap small = ImageManipulation.scaleSizeSquare(bitmap, ImageManipulation.SMALL_BITMAP_SIZE, false);
+                                Bitmap small = ImageManipulation.scaleSizeSquare(bitmap, ImageManipulation.VERY_SMALL_BITMAP_SIZE, false);
+                                imageButton.setTag("filled");
                                 imageButton.setImageBitmap(small);
                             } catch (IOException e) {
                                 Log.w("ImageManipulator:", e.getMessage());
+                            } catch (Exception e) {
+                                Log.w("Image Error", e.getMessage());
                             }
                         }
                     }
@@ -213,8 +219,34 @@ public class RecipeFormFragment extends Fragment {
         for (boolean b : validate)
             if (!b)
                 return false;
-        // we cannot use the "x() && y() && z()" notation due to the fact
+        // we cannot use the "return x() && y() && z()" notation due to the fact
         // that it stops upon finding first false
         return true;
+    }
+    
+    public Recipe getGeneratedRecipe() {
+        Recipe recipe = new Recipe();
+        // Required Values
+        recipe.setName(recipeNameEdit.getText().toString().trim());
+        recipe.setDuration(Integer.parseInt(recipeDurationEdit.getText().toString()));
+        recipe.setServings(Integer.parseInt(recipeServingsEdit.getText().toString()));
+        recipe.setCuisine(SpinnerCuisines.getSelectedItem().toString());
+        recipe.setCategory(SpinnerCategories.getSelectedItem().toString());
+        // Optional Values
+        if (recipeDescriptionEdit.getText().toString().trim().isEmpty())
+            recipe.setDescription("");
+        else
+            recipe.setDescription(recipeDescriptionEdit.getText().toString().trim());
+        // Tags Saving
+        if (!recipeTagsEdit.getText().toString().trim().isEmpty()) {
+            String [] tagsArray = recipeTagsEdit.getText().toString().split(",");
+            ArrayList <String> tagsList = new ArrayList<>();
+            for (String tag : tagsArray) {
+                tagsList.add(tag);
+            }
+            recipe.setTags(tagsList);
+        }
+        recipe.setIcon("no-image");
+        return recipe;
     }
 }

@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.AccountFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.DefaultFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HomeFragment;
@@ -19,7 +21,7 @@ public class OriginActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
 
-    private HomeFragment homeFragment = new HomeFragment();
+    private HomeFragment homeFragment;
     private SearchFragment searchFragment = new SearchFragment();
     private AccountFragment accountFragment = new AccountFragment();
     private DefaultFragment defaultFragment = new DefaultFragment();
@@ -36,6 +38,11 @@ public class OriginActivity extends AppCompatActivity {
             startActivity(new Intent(OriginActivity.this, PortalActivity.class));
             finish();
         }
+        
+        FirebaseStorage storage = FirebaseStorage.getInstance(getString(R.string.firebase_storage));
+        FirebaseDatabase database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
+        
+        homeFragment = new HomeFragment(this, database, storage);
 
         // Navigation View Set up
         bottomNavigationView = findViewById(R.id.bottomNavigationView);

@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.cookaholics_capstone.SubmitActivity;
+import com.mohamed_mosabeh.data_objects.Recipe;
+import com.mohamed_mosabeh.data_objects.RecipeStep;
 import com.mohamed_mosabeh.utils.ImageManipulation;
 
 import java.io.IOException;
@@ -72,9 +74,12 @@ public class RecipeFormStepFragment extends Fragment {
                                 ImageManipulation im = parent.getActivityImageManipulator();
                                 Bitmap bitmap = im.UriToBitmap(uri);
                                 Bitmap small = ImageManipulation.scaleSizeSquare(bitmap, ImageManipulation.MEDIUM_BITMAP_SIZE, false);
+                                stepImage.setTag("filled");
                                 stepImage.setImageBitmap(small);
                             } catch (IOException e) {
                                 Log.w("ImageManipulator:", e.getMessage());
+                            } catch (Exception e) {
+                                Log.w("Image Error:", e.getMessage());
                             }
                         }
                     }
@@ -117,8 +122,18 @@ public class RecipeFormStepFragment extends Fragment {
         for (boolean b : validate)
             if (!b)
                 return false;
-        // we cannot use the "x() && y() && z()" notation due to the fact
+        // we cannot use the "return x() && y() && z()" notation due to the fact
         // that it stops upon finding first false
         return true;
+    }
+    
+    public RecipeStep getGeneratedStep() {
+        RecipeStep step = new RecipeStep();
+        
+        step.setHeader(stepHeader.getText().toString().trim());
+        step.setContent(stepContent.getText().toString().trim());
+        step.setImage_ref("no-image");
+        
+        return step;
     }
 }

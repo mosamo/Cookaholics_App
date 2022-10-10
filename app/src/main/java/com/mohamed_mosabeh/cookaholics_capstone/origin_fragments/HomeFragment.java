@@ -73,7 +73,15 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     
     private HighlightedRecipe featuredRecipe;
     
+    private OriginActivity parent;
+    
     public HomeFragment() {
+    }
+    
+    public HomeFragment(OriginActivity parent, FirebaseDatabase database, FirebaseStorage storage) {
+        this.parent = parent;
+        this.database = database;
+        this.storage = storage;
     }
     
     @Override
