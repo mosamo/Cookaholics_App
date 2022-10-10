@@ -31,11 +31,21 @@ import java.util.ArrayList;
 public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder> {
     
     ArrayList<Recipe> recipes;
-    FirebaseStorage storage;
+    ArrayList<Bitmap> savedImages = new ArrayList<>();
+    ArrayList<CardRecipesViewHolder> holders = new ArrayList<>();
     
-    public CardRecipesRecyclerViewAdapter(ArrayList<Recipe> recipes, FirebaseStorage storage) {
+    public CardRecipesRecyclerViewAdapter(ArrayList<Recipe> recipes) {
         this.recipes = recipes;
-        this.storage = storage;
+    }
+    
+    public void bindImagesToHolders(ArrayList<Bitmap> bitmaps) {
+        for (int i = 0; i < holders.size(); i++) {
+            holders.get(i).cardImage.setImageBitmap(bitmaps.get(i));
+        }
+    }
+    
+    public void reset() {
+        holders.clear();
     }
     
     @NonNull
@@ -49,7 +59,7 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
     @Override
     public void onBindViewHolder(@NonNull com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
-        
+        holders.add(holder);
         
         holder.cardName.setText(recipe.getName());
         holder.cardLikes.setText(Integer.toString(recipe.getLikes()));
@@ -64,43 +74,14 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
 
         holder.highlightedFrame.setVisibility(recipe.isHighlighted() ? View.GONE : View.VISIBLE);
         
-    
         if (!recipe.getIcon().equals("no-image")) {
-            try {
-                final File tempfile = File.createTempFile(recipes.get(position).getId()+"_icon", "png");
-                final StorageReference storageRef = storage.getReference().child(recipe.getIcon());
-                storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
-                        holder.cardImage.setImageBitmap(bitmap);
-                        
-                        ProgressBar p = holder.cardProgress;
-                        ((ViewGroup) p.getParent()).removeView(p);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Firebase Storage", "Couldn't Fetch File: " + e.getMessage());
-                        
-                        // Kill Progress
-                        ProgressBar p = holder.cardProgress;
-                        ((ViewGroup) p.getParent()).removeView(p);
-                        holder.cardImage.setImageResource(R.drawable.placeholder);
-                    }
-                });
-                
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            // Kill Progress
-            ProgressBar p = holder.cardProgress;
-            ((ViewGroup) p.getParent()).removeView(p);
             holder.cardImage.setImageResource(R.drawable.placeholder);
+            KillProgressBar(holder.cardProgress);
         }
+    }
+    
+    public void KillProgressBar(ProgressBar p) {
+        ((ViewGroup) p.getParent()).removeView(p);
     }
     
     @Override

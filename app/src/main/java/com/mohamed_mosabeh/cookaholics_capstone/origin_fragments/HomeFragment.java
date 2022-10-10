@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -53,11 +54,16 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     private RecyclerView WeeklyRecycler;
     private RecyclerView CategoryRecycler;
     
-    private RecyclerView.Adapter recipeAdapter;
-    private RecyclerView.Adapter categoryAdapter;
     
     private ArrayList<Recipe> recipes = new ArrayList<>();
+    private ArrayList<Bitmap> recipeImages = new ArrayList<>();
+    
     private ArrayList<Category> categories = new ArrayList<>();
+    
+    
+    private RecyclerView.Adapter recipeAdapter = new CardRecipesRecyclerViewAdapter(recipes);
+    private CardRecipesRecyclerViewAdapter mRecipeAdapter = (CardRecipesRecyclerViewAdapter) recipeAdapter;
+    private RecyclerView.Adapter categoryAdapter;
     
     private TextView SeeAllWeeklyHottestTextView;
     private TextView featuredRecipeComment;
@@ -82,7 +88,9 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         this.parent = parent;
         this.database = database;
         this.storage = storage;
+        getData();
     }
+    
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,6 +104,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     
     private void SetUpViews(View parent) {
         WeeklyRecycler = parent.findViewById(R.id.home_weeklyRecyclerView);
+        
         CategoryRecycler = parent.findViewById(R.id.home_categoriesRecyclerView);
         SeeAllWeeklyHottestTextView = parent.findViewById(R.id.home_recipeSeeAllWeeklyHottest);
         WeeklyHottestProgress = parent.findViewById(R.id.home_weeklyHottestProgress);
@@ -106,40 +115,62 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         FeaturedCommentProgressBar = parent.findViewById(R.id.home_featuredRecipeCommentProgressBar);
         FeaturedRecipeImageView = parent.findViewById(R.id.home_featuredRecipeImage);
         featuredRecipeNameLabel = parent.findViewById(R.id.home_FeaturedRecipeNameLabel);
+        
+        SetUpRecyclers();
+        SetUpBindListeners();
+    }
+    
+    private void SetUpBindListeners() {
+        WeeklyRecycler
+                .getViewTreeObserver()
+                .addOnGlobalLayoutListener(
+                        new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                mRecipeAdapter.bindImagesToHolders(recipeImages);
+                                WeeklyRecycler
+                                        .getViewTreeObserver()
+                                        .removeOnGlobalLayoutListener(this);
+                                WeeklyHottestProgress.setVisibility(View.GONE);
+                            }
+                        });
+    }
+    
+    @Override
+    public void onPause() {
+        super.onPause();
+        mRecipeAdapter.reset();
     }
     
     @Override
     public void onStart() {
         super.onStart();
+    
         // if there is no internet don't do anything
+        /*
         if (database == null) {
             database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
             storage = FirebaseStorage.getInstance(getString(R.string.firebase_storage));
             getData();
         } else {
+            
             SetUpRecyclers();
             killProgressBars();
-        }
+        }*/
     }
     
     private void SetUpRecyclers() {
         WeeklyRecyclerSetUp(recipes);
-        CategoryRecyclerSetUp(categories);
-        SetUpFeaturedContainer(featuredRecipe);
-    }
-    
-    private void killProgressBars() {
-        WeeklyHottestProgress.setVisibility(View.GONE);
-        CategoriesProgress.setVisibility(View.GONE);
-        FeaturedCommentProgressBar.setVisibility(View.GONE);
+        //CategoryRecyclerSetUp(categories);
+        //SetUpFeaturedContainer(featuredRecipe);
     }
     
     private void getData() {
-        getFeaturedRecipeData();
+        //getFeaturedRecipeData();
         getWeeklyRecipesData();
-        getCategoriesData();
+        //getCategoriesData();
     }
-    
+    /*
     private void getFeaturedRecipeData() {
     
         DatabaseReference reference = database.getReference("highlighted-recipes");
@@ -148,7 +179,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         LastHighlightedRecipe.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-    
+                
                 HighlightedRecipe hlRecipe = new HighlightedRecipe();
                 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
@@ -167,8 +198,8 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     
             }
         });
-    }
-    
+    }*/
+    /*
     private void SetUpFeaturedContainer(HighlightedRecipe hlRecipe) {
         featuredRecipeComment.setText("\"" + hlRecipe.getCurator_comment() + "\"");
         featuredRecipeCurator.setText("--" + hlRecipe.getCurator_name());
@@ -212,7 +243,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
             FeaturedRecipeImageView.setImageResource(R.drawable.placeholder);
         }
     }
-    
+    */
     
     private void getWeeklyRecipesData() {
     
@@ -231,6 +262,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                     recipes.add(recipe);
                 }
                 
+                fetchRecipesImages(recipes);
                 WeeklyRecyclerSetUp(recipes);
             }
             
@@ -242,6 +274,33 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         });
     }
     
+    private void fetchRecipesImages(ArrayList<Recipe> rs) {
+        for (Recipe r : rs) {
+            try {
+                final File tempfile = File.createTempFile(r.getId() + "_icon", "png");
+                final StorageReference storageRef = storage.getReference().child(r.getIcon());
+                storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
+                        recipeImages.add(bitmap);
+                        mRecipeAdapter.bindImagesToHolders(recipeImages);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Firebase Storage", "Couldn't Fetch File: " + e.getMessage());
+                    }
+                });
+            } catch (IOException e) {
+                Log.w("File Download Issue", e.getMessage());
+            } catch (Exception e) {
+                Log.w("File Download Issue", e.getMessage());
+            }
+        }
+    }
+    
+    /*
     private void getCategoriesData() {
     
         DatabaseReference reference = database.getReference("categories");
@@ -271,15 +330,17 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         });
     }
     
-    private void WeeklyRecyclerSetUp(ArrayList<Recipe> recipes) {
-        //recycler.setHasFixedSize(true);
-        // not sure if correct context
-        WeeklyRecycler.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-        
-        recipeAdapter = new CardRecipesRecyclerViewAdapter(recipes, storage);
-        WeeklyRecycler.setAdapter(recipeAdapter);
+     */
     
-        WeeklyHottestProgress.setVisibility(View.GONE);
+    private void WeeklyRecyclerSetUp(ArrayList<Recipe> recipes) {
+        if (WeeklyRecycler != null) {
+            try {
+                WeeklyRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+                WeeklyRecycler.setAdapter(recipeAdapter);
+            } catch (Exception e) {
+                Log.w("Recycler Exception", e.getMessage());
+            }
+        }
     }
     
     private void CategoryRecyclerSetUp(ArrayList<Category> categories) {
