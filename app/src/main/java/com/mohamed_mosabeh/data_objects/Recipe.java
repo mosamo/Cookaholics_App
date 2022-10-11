@@ -1,5 +1,7 @@
 package com.mohamed_mosabeh.data_objects;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class Recipe {
     // ..and we extremely rarely need tag data in recipe page
     
     private boolean highlighted;
+    private Bitmap picture;
     
     // Getters and Setters
     public String getName() {
@@ -219,5 +222,13 @@ public class Recipe {
     
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+    
+    public Bitmap getPicture() {
+        return picture;
+    }
+    
+    public void setPicture(Bitmap picture) {
+        this.picture = picture;
     }
 }

@@ -15,40 +15,35 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mohamed_mosabeh.cookaholics_capstone.R;
+import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder> {
     
     ArrayList<Recipe> recipes;
-    ArrayList<CardRecipesViewHolder> holders = new ArrayList<>();
     private final RecyclerRecipeClickInterface recyclerClickInterface;
+    private Map<Recipe, ProgressBar> progressBarMap = new HashMap<>();
     
     public CardRecipesRecyclerViewAdapter(ArrayList<Recipe> recipes, RecyclerRecipeClickInterface recyclerClickInterface) {
         this.recipes = recipes;
         this.recyclerClickInterface = recyclerClickInterface;
     }
     
-    public void bindImagesToHolders(ArrayList<Bitmap> bitmaps) {
-        for (int i = 0; i < holders.size(); i++) {
-            try {
-                holders.get(i).cardImage.setImageBitmap(bitmaps.get(i));
-                if (holders.get(i).cardProgress != null)
-                    KillProgressBar(holders.get(i).cardProgress);
-            } catch (IndexOutOfBoundsException e) {
-                Log.i("CardRecipesRecycler", "Could not bind Image!");
-            }
-        }
-    }
-    
-    public void reset() {
-        holders.clear();
+    public Map<Recipe, ProgressBar> getProgressBarMap() {
+        return progressBarMap;
     }
     
     public void KillProgressBar(ProgressBar p) {
-        p.setVisibility(View.GONE);
+        try {
+            p.setVisibility(View.GONE);
+        } catch (NullPointerException npe) {
+            Log.i("View Not Found", "View not initiated yet!");
+        }
     }
     
     @NonNull
@@ -62,7 +57,6 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
     @Override
     public void onBindViewHolder(@NonNull com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
-        holders.add(holder);
         
         holder.cardName.setText(recipe.getName());
         holder.cardLikes.setText(Integer.toString(recipe.getLikes()));
@@ -78,9 +72,17 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
         holder.highlightedFrame.setVisibility(recipe.isHighlighted() ? View.GONE : View.VISIBLE);
         
         if (recipe.getIcon().equals("no-image")) {
+            // If there is no Image: put placeholder
             holder.cardImage.setImageResource(R.drawable.placeholder);
             KillProgressBar(holder.cardProgress);
+        } else if (recipe.getPicture() != null) {
+            // If there is an Image: put it
+            holder.cardImage.setImageBitmap(recipe.getPicture());
+            KillProgressBar(holder.cardProgress);
         }
+        // else means: an Image is coming soon: wait for it to be auto-bound
+        
+        progressBarMap.put(recipe, holder.cardProgress);
     }
     
     @Override
@@ -128,7 +130,6 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
                             recyclerClickInterface.onItemRecipeClick(position);
                         }
                     }
-        
                 }
             });
         }

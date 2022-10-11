@@ -58,10 +58,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     
     
     private ArrayList<Recipe> recipes = new ArrayList<>();
-    private ArrayList<Bitmap> recipeImages = new ArrayList<>();
-    
     private ArrayList<Category> categories = new ArrayList<>();
-    private ArrayList<Bitmap> categoryImages = new ArrayList<>();
     
     
     private RecyclerView.Adapter recipeAdapter = new CardRecipesRecyclerViewAdapter(recipes, this);
@@ -149,7 +146,6 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                         new ViewTreeObserver.OnGlobalLayoutListener() {
                             @Override
                             public void onGlobalLayout() {
-                                mRecipeAdapter.bindImagesToHolders(recipeImages);
                                 WeeklyRecycler
                                         .getViewTreeObserver()
                                         .removeOnGlobalLayoutListener(this);
@@ -165,7 +161,6 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                         new ViewTreeObserver.OnGlobalLayoutListener() {
                             @Override
                             public void onGlobalLayout() {
-                                mCategoryAdapter.bindImagesToHolders(categoryImages);
                                 CategoryRecycler
                                         .getViewTreeObserver()
                                         .removeOnGlobalLayoutListener(this);
@@ -177,14 +172,9 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     @Override
     public void onPause() {
         super.onPause();
-        mRecipeAdapter.reset();
-        mCategoryAdapter.reset();
+        mRecipeAdapter.getProgressBarMap().clear();
+        mCategoryAdapter.getProgressBarMap().clear();
     }
-    
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//    }
     
     private void SetUpRecyclers() {
         WeeklyRecyclerSetUp();
@@ -295,12 +285,15 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                             Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
-                            recipeImages.add(bitmap);
-                            mRecipeAdapter.bindImagesToHolders(recipeImages);
+                            r.setPicture(bitmap);
+                            mRecipeAdapter.KillProgressBar(mRecipeAdapter.getProgressBarMap().get(r));
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder);
+                            r.setPicture(bitmap);
+                            mRecipeAdapter.KillProgressBar(mRecipeAdapter.getProgressBarMap().get(r));
                             Log.w("Firebase Storage", "Weekly Recipe Images: Couldn't Fetch File: " + e.getMessage());
                         }
                     });
@@ -353,12 +346,15 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                             Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
-                            categoryImages.add(bitmap);
-                            mCategoryAdapter.bindImagesToHolders(categoryImages);
+                            c.setPicture(bitmap);
+                            mCategoryAdapter.KillProgressBar(mCategoryAdapter.getProgressBarMap().get(c));
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder);
+                            c.setPicture(bitmap);
+                            mCategoryAdapter.KillProgressBar(mCategoryAdapter.getProgressBarMap().get(c));
                             Log.w("Firebase Storage", "Category Images: Couldn't Fetch File: " + e.getMessage());
                         }
                     });
@@ -430,6 +426,5 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         if (categories.size() > 0) {
             Toast.makeText(parent, categories.get(position).getName(), Toast.LENGTH_SHORT).show();;
         }
-        
     }
 }

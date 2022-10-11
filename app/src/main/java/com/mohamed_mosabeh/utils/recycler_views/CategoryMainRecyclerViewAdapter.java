@@ -1,67 +1,46 @@
 package com.mohamed_mosabeh.utils.recycler_views;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.data_objects.Category;
-import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerCategoryClickInterface;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CategoryMainRecyclerViewAdapter extends RecyclerView.Adapter<CategoryMainRecyclerViewAdapter.CategoriesCardsViewHolder> {
     
-    ArrayList<Category> categories;
-    ArrayList<CategoriesCardsViewHolder> holders = new ArrayList<>();
+    private ArrayList<Category> categories;
     private final RecyclerCategoryClickInterface mClickInterface;
+    public Map<Category, ProgressBar> progressBarMap = new HashMap<>();
     
-    public void bindImagesToHolders(ArrayList<Bitmap> bitmaps) {
-        
-        for (int i = 0; i < holders.size(); i++) {
-            try {
-                holders.get(i).categoryImage.setImageBitmap(bitmaps.get(i));
-                if (holders.get(i).categoryProgress != null)
-                    KillProgressBar(holders.get(i).categoryProgress);
-            } catch (IndexOutOfBoundsException e) {
-                Log.i("CategoryRecyclerView", "Could not bind Image!");
-            }
+    public void KillProgressBar(ProgressBar p) {
+        try {
+            p.setVisibility(View.GONE);
+        } catch (NullPointerException npe) {
+            Log.i("View Not Found", "View not initiated yet!");
         }
     }
     
-    
-    public void KillProgressBar(ProgressBar p) {
-        p.setVisibility(View.GONE);
-    }
-    
-    public void reset() {
-        holders.clear();
+    public Map<Category, ProgressBar> getProgressBarMap() {
+        return progressBarMap;
     }
     
     public CategoryMainRecyclerViewAdapter(ArrayList<Category> categories, RecyclerCategoryClickInterface clickInterface) {
         this.categories = categories;
         this.mClickInterface = clickInterface;
     }
-    
     
     
     @NonNull
@@ -75,14 +54,21 @@ public class CategoryMainRecyclerViewAdapter extends RecyclerView.Adapter<Catego
     @Override
     public void onBindViewHolder(@NonNull CategoryMainRecyclerViewAdapter.CategoriesCardsViewHolder holder, int position) {
         Category category = categories.get(position);
-        holders.add(holder);
         
         holder.categoryName.setText(category.getName());
     
         if (category.getImage().equals("no-image")) {
+            // If there is no Image: put star
             holder.categoryImage.setImageResource(R.drawable.ic_full_star);
             KillProgressBar(holder.categoryProgress);
+        } else if (category.getPicture() != null) {
+            // If there is an Image: put it
+            holder.categoryImage.setImageBitmap(category.getPicture());
+            KillProgressBar(holder.categoryProgress);
         }
+            // else then an Image is coming soon: wait for it to be auto-bound
+        
+        progressBarMap.put(category, holder.categoryProgress);
     }
     
     @Override
@@ -92,10 +78,9 @@ public class CategoryMainRecyclerViewAdapter extends RecyclerView.Adapter<Catego
     
     public static class CategoriesCardsViewHolder extends RecyclerView.ViewHolder {
     
-        TextView categoryName;
-        ImageView categoryImage;
-        ProgressBar categoryProgress;
-        
+        private TextView categoryName;
+        private ImageView categoryImage;
+        private ProgressBar categoryProgress;
         
         public CategoriesCardsViewHolder(@NonNull View itemView, RecyclerCategoryClickInterface clickInterface) {
             super(itemView);
@@ -116,5 +101,4 @@ public class CategoryMainRecyclerViewAdapter extends RecyclerView.Adapter<Catego
             });
         }
     }
-    
 }
