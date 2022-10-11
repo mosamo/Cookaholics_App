@@ -220,8 +220,34 @@ public class SubmitActivity extends AppCompatActivity {
         
         // Submit to database;
         DatabaseReference reference = database.getReference("recipes");
-//        String id = reference.push().getKey();
-        reference.push().setValue(recipe).addOnFailureListener(new OnFailureListener() {
+        String id = reference.push().getKey();
+        
+        String displayName = "Anonymous";
+        String user_id = "123abcde";
+        
+        recipe.setDisplay_name(displayName);
+        recipe.setUser_id(user_id);
+        
+        reference.child(id).setValue(recipe).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                if (recipe.getTags() != null) {
+                    reference.child(id).child("tags").setValue(recipe.getTags());
+                }
+                reference.child(id).child("timestamp").setValue(ServerValue.TIMESTAMP).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        //UploadIcon();
+                    }
+                });
+                reference.child(id).child("tagsString").setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        //UploadSteps();
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w("Database Error", e.getMessage());

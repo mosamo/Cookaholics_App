@@ -32,7 +32,6 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
     }
     
     public void bindImagesToHolders(ArrayList<Bitmap> bitmaps) {
-        
         for (int i = 0; i < holders.size(); i++) {
             try {
                 holders.get(i).cardImage.setImageBitmap(bitmaps.get(i));
