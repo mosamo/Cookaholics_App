@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,7 +28,7 @@ import com.mohamed_mosabeh.cookaholics_capstone.SubmitActivity;
 import com.mohamed_mosabeh.data_objects.Cuisine;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.data_objects.Tag;
-import com.mohamed_mosabeh.utils.RecyclerRecipeClickInterface;
+import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
 import com.mohamed_mosabeh.utils.recycler_views.CardRecipesSmallRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.CuisineRecipesRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.TagsRecipesRecyclerViewAdapter;

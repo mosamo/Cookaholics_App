@@ -1,7 +1,6 @@
 package com.mohamed_mosabeh.utils.recycler_views;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,36 +10,37 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.data_objects.Recipe;
+import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder> {
     
     ArrayList<Recipe> recipes;
-    ArrayList<Bitmap> savedImages = new ArrayList<>();
     ArrayList<CardRecipesViewHolder> holders = new ArrayList<>();
+    private final RecyclerRecipeClickInterface recyclerClickInterface;
     
-    public CardRecipesRecyclerViewAdapter(ArrayList<Recipe> recipes) {
+    public CardRecipesRecyclerViewAdapter(ArrayList<Recipe> recipes, RecyclerRecipeClickInterface recyclerClickInterface) {
         this.recipes = recipes;
+        this.recyclerClickInterface = recyclerClickInterface;
     }
     
     public void bindImagesToHolders(ArrayList<Bitmap> bitmaps) {
+        
         for (int i = 0; i < holders.size(); i++) {
-            holders.get(i).cardImage.setImageBitmap(bitmaps.get(i));
+            try {
+                holders.get(i).cardImage.setImageBitmap(bitmaps.get(i));
+                if (holders.get(i).cardProgress != null)
+                    KillProgressBar(holders.get(i).cardProgress);
+            } catch (IndexOutOfBoundsException e) {
+                Log.i("CardRecipesRecycler", "Could not bind Image!");
+            }
         }
     }
     
@@ -48,11 +48,15 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
         holders.clear();
     }
     
+    public void KillProgressBar(ProgressBar p) {
+        p.setVisibility(View.GONE);
+    }
+    
     @NonNull
     @Override
-    public com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CardRecipesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_main_recipes_card, parent, false);
-        com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder viewHolder = new com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter.CardRecipesViewHolder(view);
+        CardRecipesRecyclerViewAdapter.CardRecipesViewHolder viewHolder = new CardRecipesRecyclerViewAdapter.CardRecipesViewHolder(view, recyclerClickInterface);
         return viewHolder;
     }
     
@@ -74,14 +78,10 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
 
         holder.highlightedFrame.setVisibility(recipe.isHighlighted() ? View.GONE : View.VISIBLE);
         
-        if (!recipe.getIcon().equals("no-image")) {
+        if (recipe.getIcon().equals("no-image")) {
             holder.cardImage.setImageResource(R.drawable.placeholder);
             KillProgressBar(holder.cardProgress);
         }
-    }
-    
-    public void KillProgressBar(ProgressBar p) {
-        ((ViewGroup) p.getParent()).removeView(p);
     }
     
     @Override
@@ -107,7 +107,7 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
         FrameLayout highlightedFrame;
         LinearLayout marginReducer;
         
-        public CardRecipesViewHolder(@NonNull View itemView) {
+        public CardRecipesViewHolder(@NonNull View itemView, RecyclerRecipeClickInterface recyclerClickInterface) {
             super(itemView);
     
             cardLikes = itemView.findViewById(R.id.recipestxt_Likes);
@@ -120,6 +120,18 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
             marginReducer = itemView.findViewById(R.id.linearlayoutMarginReducer);
             cardImage = itemView.findViewById(R.id.recipeCard_imageView);
             cardProgress = itemView.findViewById(R.id.recipeCard_hotprogressbar);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (recyclerClickInterface != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            recyclerClickInterface.onItemRecipeClick(position);
+                        }
+                    }
+        
+                }
+            });
         }
     }
     

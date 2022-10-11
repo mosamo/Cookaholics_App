@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,7 +38,8 @@ import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.HighlightedRecipe;
 import com.mohamed_mosabeh.data_objects.Recipe;
-import com.mohamed_mosabeh.utils.RecyclerRecipeClickInterface;
+import com.mohamed_mosabeh.utils.click_interfaces.RecyclerCategoryClickInterface;
+import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
 import com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.CategoryMainRecyclerViewAdapter;
 
@@ -46,7 +48,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class HomeFragment extends Fragment implements RecyclerRecipeClickInterface {
+public class HomeFragment extends Fragment implements RecyclerRecipeClickInterface, RecyclerCategoryClickInterface {
     
     private FirebaseDatabase database;
     private FirebaseStorage storage;
@@ -59,11 +61,13 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     private ArrayList<Bitmap> recipeImages = new ArrayList<>();
     
     private ArrayList<Category> categories = new ArrayList<>();
+    private ArrayList<Bitmap> categoryImages = new ArrayList<>();
     
     
-    private RecyclerView.Adapter recipeAdapter = new CardRecipesRecyclerViewAdapter(recipes);
+    private RecyclerView.Adapter recipeAdapter = new CardRecipesRecyclerViewAdapter(recipes, this);
     private CardRecipesRecyclerViewAdapter mRecipeAdapter = (CardRecipesRecyclerViewAdapter) recipeAdapter;
-    private RecyclerView.Adapter categoryAdapter;
+    private RecyclerView.Adapter categoryAdapter = new CategoryMainRecyclerViewAdapter(categories, this);
+    private CategoryMainRecyclerViewAdapter mCategoryAdapter = (CategoryMainRecyclerViewAdapter) categoryAdapter;
     
     private TextView SeeAllWeeklyHottestTextView;
     private TextView featuredRecipeComment;
@@ -78,6 +82,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     private ImageView FeaturedRecipeImageView;
     
     private HighlightedRecipe featuredRecipe;
+    private Bitmap featuredImage;
     
     private OriginActivity parent;
     
@@ -91,7 +96,6 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         getData();
     }
     
-    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -104,16 +108,34 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     
     private void SetUpViews(View parent) {
         WeeklyRecycler = parent.findViewById(R.id.home_weeklyRecyclerView);
-        
         CategoryRecycler = parent.findViewById(R.id.home_categoriesRecyclerView);
         SeeAllWeeklyHottestTextView = parent.findViewById(R.id.home_recipeSeeAllWeeklyHottest);
         WeeklyHottestProgress = parent.findViewById(R.id.home_weeklyHottestProgress);
+        WeeklyHottestProgress.setVisibility(View.VISIBLE);
         CategoriesProgress = parent.findViewById(R.id.home_categoriesProgress);
-        FeaturedProgressBar = parent.findViewById(R.id.home_featuredProgressBar);
+        CategoriesProgress.setVisibility(View.VISIBLE);
+        CardView featuredMainContainer = parent.findViewById(R.id.home_CardRecipeOfTheWeek);
+        featuredMainContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (featuredRecipe != null) {
+                    Intent intent = new Intent(getActivity(), RecipeStepsActivity.class);
+                    intent.putExtra("recipe_id", featuredRecipe.getId());
+                    startActivity(intent);
+                }
+            }
+        });
         featuredRecipeComment = parent.findViewById(R.id.home_featuredRecipeComment);
         featuredRecipeCurator = parent.findViewById(R.id.home_featuredRecipeCurator);
+        FeaturedProgressBar = parent.findViewById(R.id.home_featuredProgressBar);
+        FeaturedProgressBar.setVisibility(View.VISIBLE);
         FeaturedCommentProgressBar = parent.findViewById(R.id.home_featuredRecipeCommentProgressBar);
+        
         FeaturedRecipeImageView = parent.findViewById(R.id.home_featuredRecipeImage);
+        if (featuredImage != null) {
+            FeaturedRecipeImageView.setImageBitmap(featuredImage);
+        }
+        
         featuredRecipeNameLabel = parent.findViewById(R.id.home_FeaturedRecipeNameLabel);
         
         SetUpRecyclers();
@@ -132,6 +154,22 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                                         .getViewTreeObserver()
                                         .removeOnGlobalLayoutListener(this);
                                 WeeklyHottestProgress.setVisibility(View.GONE);
+                                
+                                // If length is zero display Text
+                            }
+                        });
+        
+        CategoryRecycler
+                .getViewTreeObserver()
+                .addOnGlobalLayoutListener(
+                        new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                mCategoryAdapter.bindImagesToHolders(categoryImages);
+                                CategoryRecycler
+                                        .getViewTreeObserver()
+                                        .removeOnGlobalLayoutListener(this);
+                                CategoriesProgress.setVisibility(View.GONE);
                             }
                         });
     }
@@ -140,37 +178,26 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     public void onPause() {
         super.onPause();
         mRecipeAdapter.reset();
+        mCategoryAdapter.reset();
     }
     
-    @Override
-    public void onStart() {
-        super.onStart();
-    
-        // if there is no internet don't do anything
-        /*
-        if (database == null) {
-            database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
-            storage = FirebaseStorage.getInstance(getString(R.string.firebase_storage));
-            getData();
-        } else {
-            
-            SetUpRecyclers();
-            killProgressBars();
-        }*/
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//    }
     
     private void SetUpRecyclers() {
-        WeeklyRecyclerSetUp(recipes);
-        //CategoryRecyclerSetUp(categories);
-        //SetUpFeaturedContainer(featuredRecipe);
+        WeeklyRecyclerSetUp();
+        CategoryRecyclerSetUp();
+        SetUpFeaturedContainer();
     }
     
     private void getData() {
-        //getFeaturedRecipeData();
         getWeeklyRecipesData();
-        //getCategoriesData();
+        getCategoriesData();
+        getFeaturedRecipeData();
     }
-    /*
+    
     private void getFeaturedRecipeData() {
     
         DatabaseReference reference = database.getReference("highlighted-recipes");
@@ -188,9 +215,8 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                 }
     
                 featuredRecipe = hlRecipe;
-    
-                FeaturedCommentProgressBar.setVisibility(View.GONE);
-                SetUpFeaturedContainer(hlRecipe);
+                SetUpFeaturedContainer();
+                fetchFeaturedImage();
             }
     
             @Override
@@ -198,55 +224,40 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     
             }
         });
-    }*/
-    /*
-    private void SetUpFeaturedContainer(HighlightedRecipe hlRecipe) {
-        featuredRecipeComment.setText("\"" + hlRecipe.getCurator_comment() + "\"");
-        featuredRecipeCurator.setText("--" + hlRecipe.getCurator_name());
-        featuredRecipeNameLabel.setText(hlRecipe.getName());
+    }
     
-    
-        if (!hlRecipe.getIcon().equals("no-image")) {
-            try {
-                final File tempfile = File.createTempFile(hlRecipe.getId()+"_icon", "png");
-                final StorageReference storageRef = storage.getReference().child(hlRecipe.getIcon());
-                storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
-                        FeaturedRecipeImageView.setImageBitmap(bitmap);
-    
+    private void fetchFeaturedImage() {
+        try {
+            final File tempfile = File.createTempFile(featuredRecipe.getId() + "_icon", "png");
+            final StorageReference storageRef = storage.getReference().child(featuredRecipe.getIcon());
+            storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    featuredImage = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
+                    try {
+                        FeaturedRecipeImageView.setImageBitmap(featuredImage);
                         FeaturedProgressBar.setVisibility(View.GONE);
+                    } catch (NullPointerException npe) {
+                        Log.w("Home Featured Image", npe.getMessage());
+                    } catch (Exception e) {
+                        Log.w("Home Featured Image", e.getMessage());
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Firebase Storage", "Couldn't Fetch File: " + e.getMessage());
-                    
-                        // Kill Progress
-                        FeaturedProgressBar.setVisibility(View.GONE);
-                        FeaturedRecipeImageView.setImageResource(R.drawable.placeholder);
-                    }
-                });
-            
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-//            // Kill Progress
-//            if (FeaturedProgressBar != null) {
-//                ((ViewGroup) FeaturedProgressBar.getParent()).removeView(FeaturedProgressBar);
-//            }
-            FeaturedProgressBar.setVisibility(View.GONE);
-            FeaturedRecipeImageView.setImageResource(R.drawable.placeholder);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    featuredImage = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder);
+                    Log.w("Firebase Storage", "Featured Picture: Couldn't Fetch File: " + e.getMessage());
+                }
+            });
+        } catch (IOException e) {
+            Log.w("File Download Issue", e.getMessage());
+        } catch (Exception e) {
+            Log.w("File Download Issue", e.getMessage());
         }
     }
-    */
     
     private void getWeeklyRecipesData() {
-    
         DatabaseReference reference = database.getReference("recipes");
         Query latestEightRecipes = reference.orderByChild("timestamp").limitToLast(8);
         
@@ -263,12 +274,11 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                 }
                 
                 fetchRecipesImages(recipes);
-                WeeklyRecyclerSetUp(recipes);
+                WeeklyRecyclerSetUp();
             }
             
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
                 Log.w("W", "Failed to read value.", error.toException());
             }
         });
@@ -276,31 +286,33 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     
     private void fetchRecipesImages(ArrayList<Recipe> rs) {
         for (Recipe r : rs) {
-            try {
-                final File tempfile = File.createTempFile(r.getId() + "_icon", "png");
-                final StorageReference storageRef = storage.getReference().child(r.getIcon());
-                storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
-                        recipeImages.add(bitmap);
-                        mRecipeAdapter.bindImagesToHolders(recipeImages);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Firebase Storage", "Couldn't Fetch File: " + e.getMessage());
-                    }
-                });
-            } catch (IOException e) {
-                Log.w("File Download Issue", e.getMessage());
-            } catch (Exception e) {
-                Log.w("File Download Issue", e.getMessage());
+    
+            if (!r.getIcon().equals("no-image")) {
+                try {
+                    final File tempfile = File.createTempFile(r.getId() + "_icon", "png");
+                    final StorageReference storageRef = storage.getReference().child(r.getIcon());
+                    storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
+                            recipeImages.add(bitmap);
+                            mRecipeAdapter.bindImagesToHolders(recipeImages);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("Firebase Storage", "Weekly Recipe Images: Couldn't Fetch File: " + e.getMessage());
+                        }
+                    });
+                } catch (IOException e) {
+                    Log.w("File Download Issue", e.getMessage());
+                } catch (Exception e) {
+                    Log.w("File Download Issue", e.getMessage());
+                }
             }
         }
     }
     
-    /*
     private void getCategoriesData() {
     
         DatabaseReference reference = database.getReference("categories");
@@ -318,8 +330,9 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                     
                     categories.add(category);
                 }
-            
-                CategoryRecyclerSetUp(categories);
+                
+                fetchCategoriesImages(categories);
+                CategoryRecyclerSetUp();
             }
         
             @Override
@@ -330,9 +343,35 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         });
     }
     
-     */
+    private void fetchCategoriesImages(ArrayList<Category> cs) {
+        for (Category c : cs) {
+            if (!c.getImage().equals("no-image")) {
+                try {
+                    final File tempfile = File.createTempFile(c.getName() + "_icon", "png");
+                    final StorageReference storageRef = storage.getReference().child(c.getImage());
+                    storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
+                            categoryImages.add(bitmap);
+                            mCategoryAdapter.bindImagesToHolders(categoryImages);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("Firebase Storage", "Category Images: Couldn't Fetch File: " + e.getMessage());
+                        }
+                    });
+                } catch (IOException e) {
+                    Log.w("File Download Issue", e.getMessage());
+                } catch (Exception e) {
+                    Log.w("File Download Issue", e.getMessage());
+                }
+            }
+        }
+    }
     
-    private void WeeklyRecyclerSetUp(ArrayList<Recipe> recipes) {
+    private void WeeklyRecyclerSetUp() {
         if (WeeklyRecycler != null) {
             try {
                 WeeklyRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -343,18 +382,54 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         }
     }
     
-    private void CategoryRecyclerSetUp(ArrayList<Category> categories) {
-        CategoryRecycler.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+    private void CategoryRecyclerSetUp() {
+        if (CategoryRecycler != null) {
+            try {
+                CategoryRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+                CategoryRecycler.setAdapter(categoryAdapter);
+            } catch (Exception e) {
+                Log.w("Recycler Exception", e.getMessage());
+            }
+        }
+    }
     
-        categoryAdapter = new CategoryMainRecyclerViewAdapter(categories, storage);
-        CategoryRecycler.setAdapter(categoryAdapter);
-    
-        CategoriesProgress.setVisibility(View.GONE);
+    private void SetUpFeaturedContainer() {
+        try {
+            if (featuredRecipe != null) {
+                featuredRecipeComment.setText("\"" + featuredRecipe.getCurator_comment() + "\"");
+                featuredRecipeCurator.setText("--" + featuredRecipe.getCurator_name());
+                featuredRecipeNameLabel.setText(featuredRecipe.getName());
+                FeaturedCommentProgressBar.setVisibility(View.GONE);
+        
+                if (featuredRecipe.getIcon().equals("no-image")) {
+                    FeaturedRecipeImageView.setImageResource(R.drawable.placeholder);
+                    FeaturedProgressBar.setVisibility(View.GONE);
+                } else if (featuredImage != null) {
+                    FeaturedRecipeImageView.setImageBitmap(featuredImage);
+                    FeaturedProgressBar.setVisibility(View.GONE);
+                }
+            }
+        } catch (NullPointerException npe) {
+            Log.v("Home Fragment", "Views did not initialize yet");
+        }
     }
     
     @Override
     public void onItemRecipeClick(int position) {
         if (recipes.size() > 0) {
+            // this might be better
+            // recipes.size() - 1 <= position
+            Intent intent = new Intent(getActivity(), RecipeStepsActivity.class);
+            intent.putExtra("recipe_id", recipes.get(position).getId());
+            startActivity(intent);
         }
+    }
+    
+    @Override
+    public void onItemCategoryClick(int position) {
+        if (categories.size() > 0) {
+            Toast.makeText(parent, categories.get(position).getName(), Toast.LENGTH_SHORT).show();;
+        }
+        
     }
 }
