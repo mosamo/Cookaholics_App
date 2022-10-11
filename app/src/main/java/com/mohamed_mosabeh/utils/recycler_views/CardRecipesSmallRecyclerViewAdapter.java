@@ -25,20 +25,34 @@ import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CardRecipesSmallRecyclerViewAdapter extends RecyclerView.Adapter<CardRecipesSmallRecyclerViewAdapter.CardRecipesSmallViewHolder> {
     
-    ArrayList<Recipe> recipes;
-    FirebaseStorage storage;
-    String topLabel;
+    private ArrayList<Recipe> recipes;
+    private String topLabel;
     
     private final RecyclerRecipeClickInterface recyclerClickInterface;
     
-    public CardRecipesSmallRecyclerViewAdapter(ArrayList<Recipe> recipes, FirebaseStorage storage, RecyclerRecipeClickInterface recyclerClickInterface, String topLabel) {
+    private Map<Recipe, CardRecipesSmallViewHolder> recipeHolderMap = new HashMap<>();
+    
+    public CardRecipesSmallRecyclerViewAdapter(ArrayList<Recipe> recipes, String topLabel, RecyclerRecipeClickInterface recyclerClickInterface) {
         this.recipes = recipes;
-        this.storage = storage;
         this.topLabel = topLabel;
         this.recyclerClickInterface = recyclerClickInterface;
+    }
+    
+    public Map<Recipe, CardRecipesSmallViewHolder> getRecipeHolderMap() {
+        return recipeHolderMap;
+    }
+    
+    public void KillProgressBar(ProgressBar p) {
+        try {
+            p.setVisibility(View.GONE);
+        } catch (NullPointerException npe) {
+            Log.i("View Not Found", "View not initiated yet!");
+        }
     }
     
     @NonNull
@@ -62,42 +76,17 @@ public class CardRecipesSmallRecyclerViewAdapter extends RecyclerView.Adapter<Ca
         String servingsPlural = recipe.getServings() > 1 ? " Servings" : " Serving";
         holder.cardServings.setText(recipe.getServings() + servingsPlural);
     
-        if (!recipe.getIcon().equals("no-image")) {
-            try {
-                final File tempfile = File.createTempFile(recipes.get(position).getId()+"_icon", "png");
-                final StorageReference storageRef = storage.getReference().child(recipe.getIcon());
-                storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
-                        holder.cardImage.setImageBitmap(bitmap);
-                        
-                        ProgressBar p = holder.cardProgress;
-                        ((ViewGroup) p.getParent()).removeView(p);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Firebase Storage", "Couldn't Fetch File: " + e.getMessage());
-                        
-                        // Kill Progress
-                        ProgressBar p = holder.cardProgress;
-                        ((ViewGroup) p.getParent()).removeView(p);
-                        holder.cardImage.setImageResource(R.drawable.placeholder);
-                    }
-                });
-                
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            // Kill Progress
-            ProgressBar p = holder.cardProgress;
-            ((ViewGroup) p.getParent()).removeView(p);
+        if (recipe.getIcon().equals("no-image")) {
+            // If there is no Image: put placeholder
             holder.cardImage.setImageResource(R.drawable.placeholder);
+            KillProgressBar(holder.cardProgress);
+        } else if (recipe.getPicture() != null) {
+            // If there is an Image: put it
+            holder.cardImage.setImageBitmap(recipe.getPicture());
+            KillProgressBar(holder.cardProgress);
         }
+    
+        recipeHolderMap.put(recipe, holder);
     }
     
     @Override
@@ -115,9 +104,8 @@ public class CardRecipesSmallRecyclerViewAdapter extends RecyclerView.Adapter<Ca
     
         TextView cardTopLabel;
         
-        ImageView cardImage;
-        
-        ProgressBar cardProgress;
+        public ImageView cardImage;
+        public ProgressBar cardProgress;
         
         
         public CardRecipesSmallViewHolder(@NonNull View itemView, RecyclerRecipeClickInterface mClickInterface) {

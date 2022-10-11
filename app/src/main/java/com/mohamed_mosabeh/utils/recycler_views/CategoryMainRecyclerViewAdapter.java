@@ -23,7 +23,7 @@ public class CategoryMainRecyclerViewAdapter extends RecyclerView.Adapter<Catego
     
     private ArrayList<Category> categories;
     private final RecyclerCategoryClickInterface mClickInterface;
-    public Map<Category, ProgressBar> progressBarMap = new HashMap<>();
+    public Map<Category, CategoriesCardsViewHolder> categoryHolderMap = new HashMap<>();
     
     public void KillProgressBar(ProgressBar p) {
         try {
@@ -33,8 +33,8 @@ public class CategoryMainRecyclerViewAdapter extends RecyclerView.Adapter<Catego
         }
     }
     
-    public Map<Category, ProgressBar> getProgressBarMap() {
-        return progressBarMap;
+    public Map<Category, CategoriesCardsViewHolder> getCategoryHolderMap() {
+        return categoryHolderMap;
     }
     
     public CategoryMainRecyclerViewAdapter(ArrayList<Category> categories, RecyclerCategoryClickInterface clickInterface) {
@@ -68,7 +68,7 @@ public class CategoryMainRecyclerViewAdapter extends RecyclerView.Adapter<Catego
         }
             // else then an Image is coming soon: wait for it to be auto-bound
         
-        progressBarMap.put(category, holder.categoryProgress);
+        categoryHolderMap.put(category, holder);
     }
     
     @Override
@@ -79,8 +79,8 @@ public class CategoryMainRecyclerViewAdapter extends RecyclerView.Adapter<Catego
     public static class CategoriesCardsViewHolder extends RecyclerView.ViewHolder {
     
         private TextView categoryName;
-        private ImageView categoryImage;
-        private ProgressBar categoryProgress;
+        public ImageView categoryImage;
+        public ProgressBar categoryProgress;
         
         public CategoriesCardsViewHolder(@NonNull View itemView, RecyclerCategoryClickInterface clickInterface) {
             super(itemView);

@@ -22,10 +22,10 @@ public class OriginActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
 
     private HomeFragment homeFragment;
+    private RecipesFragment recipesFragment;
     private SearchFragment searchFragment = new SearchFragment();
     private AccountFragment accountFragment = new AccountFragment();
     private DefaultFragment defaultFragment = new DefaultFragment();
-    private RecipesFragment recipesFragment = new RecipesFragment();
     private HottestFragment hottestFragment = new HottestFragment();
     
     @Override
@@ -43,6 +43,7 @@ public class OriginActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
         
         homeFragment = new HomeFragment(this, database, storage);
+        recipesFragment = new RecipesFragment(this, database, storage);
 
         // Navigation View Set up
         bottomNavigationView = findViewById(R.id.bottomNavigationView);

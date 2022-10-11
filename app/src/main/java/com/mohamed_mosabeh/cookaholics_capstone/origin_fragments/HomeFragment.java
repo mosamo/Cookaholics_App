@@ -172,8 +172,8 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     @Override
     public void onPause() {
         super.onPause();
-        mRecipeAdapter.getProgressBarMap().clear();
-        mCategoryAdapter.getProgressBarMap().clear();
+        mRecipeAdapter.getRecipeHolderMap().clear();
+        mCategoryAdapter.getCategoryHolderMap().clear();
     }
     
     private void SetUpRecyclers() {
@@ -286,14 +286,23 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                             Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
                             r.setPicture(bitmap);
-                            mRecipeAdapter.KillProgressBar(mRecipeAdapter.getProgressBarMap().get(r));
+                            try {
+                                mRecipeAdapter.getRecipeHolderMap().get(r).cardImage.setImageBitmap(bitmap);
+                                mRecipeAdapter.KillProgressBar(mRecipeAdapter.getRecipeHolderMap().get(r).cardProgress);
+                            } catch (NullPointerException es) {
+                                Log.i("Recipes Recycler", "Cannot bind Recipes");
+                            }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder);
-                            r.setPicture(bitmap);
-                            mRecipeAdapter.KillProgressBar(mRecipeAdapter.getProgressBarMap().get(r));
+                            try {
+                                mRecipeAdapter.getRecipeHolderMap().get(r).cardImage.setImageBitmap(bitmap);
+                                mRecipeAdapter.KillProgressBar(mRecipeAdapter.getRecipeHolderMap().get(r).cardProgress);
+                            } catch (NullPointerException ef) {
+                                Log.i("Recipes Recycler", "Cannot bind Recipes");
+                            }
                             Log.w("Firebase Storage", "Weekly Recipe Images: Couldn't Fetch File: " + e.getMessage());
                         }
                     });
@@ -347,14 +356,24 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                             Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
                             c.setPicture(bitmap);
-                            mCategoryAdapter.KillProgressBar(mCategoryAdapter.getProgressBarMap().get(c));
+                            try {
+                                mCategoryAdapter.getCategoryHolderMap().get(c).categoryImage.setImageBitmap(bitmap);
+                                mCategoryAdapter.KillProgressBar(mCategoryAdapter.getCategoryHolderMap().get(c).categoryProgress);
+                            } catch (NullPointerException e) {
+                                Log.i("Category Recycler", "Cannot bind Category");
+                            }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder);
                             c.setPicture(bitmap);
-                            mCategoryAdapter.KillProgressBar(mCategoryAdapter.getProgressBarMap().get(c));
+                            try {
+                                mCategoryAdapter.getCategoryHolderMap().get(c).categoryImage.setImageBitmap(bitmap);
+                                mCategoryAdapter.KillProgressBar(mCategoryAdapter.getCategoryHolderMap().get(c).categoryProgress);
+                            } catch (NullPointerException ef) {
+                                Log.i("Category Recycler", "Cannot bind Category");
+                            }
                             Log.w("Firebase Storage", "Category Images: Couldn't Fetch File: " + e.getMessage());
                         }
                     });

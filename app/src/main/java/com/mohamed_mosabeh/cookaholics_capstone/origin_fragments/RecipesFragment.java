@@ -1,8 +1,11 @@
 package com.mohamed_mosabeh.cookaholics_capstone.origin_fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,16 +15,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.mohamed_mosabeh.cookaholics_capstone.OriginActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.SubmitActivity;
@@ -33,6 +42,8 @@ import com.mohamed_mosabeh.utils.recycler_views.CardRecipesSmallRecyclerViewAdap
 import com.mohamed_mosabeh.utils.recycler_views.CuisineRecipesRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.TagsRecipesRecyclerViewAdapter;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class RecipesFragment extends Fragment implements RecyclerRecipeClickInterface{
@@ -48,9 +59,10 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
     private RecyclerView TagRecycler;
     private RecyclerView NewRecipesRecycler;
     
-    private RecyclerView.Adapter CuisineAdapter;
-    private RecyclerView.Adapter TagAdapter;
-    private RecyclerView.Adapter NewRecipesAdapter;
+    private RecyclerView.Adapter NewRecipesAdapter = new CardRecipesSmallRecyclerViewAdapter(new_recipes, "New Recipe", this);
+    private CardRecipesSmallRecyclerViewAdapter mNewRecipeAdapter = (CardRecipesSmallRecyclerViewAdapter) NewRecipesAdapter;
+    private RecyclerView.Adapter TagAdapter = new TagsRecipesRecyclerViewAdapter(tags);
+    private RecyclerView.Adapter CuisineAdapter = new CuisineRecipesRecyclerViewAdapter(cuisines);
     
     private ProgressBar CuisineProgressBar;
     private ProgressBar TagProgressBar;
@@ -58,19 +70,33 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
     
     private Button btnRecipeSubmission;
     
+    private OriginActivity parent;
+    
     public RecipesFragment() {
+    }
+    
+    public RecipesFragment(OriginActivity parent, FirebaseDatabase database, FirebaseStorage storage) {
+        this.parent = parent;
+        this.database = database;
+        this.storage = storage;
+        getData();
     }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
     
-    
         View view = inflater.inflate(R.layout.fragment_recipes, container, false);
     
         SetUpViews(view);
         
         return view;
+    }
+    
+    @Override
+    public void onPause() {
+        super.onPause();
+        mNewRecipeAdapter.getRecipeHolderMap();
     }
     
     private void SetUpViews(View parent) {
@@ -92,32 +118,23 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                 startActivity(intent);
             }
         });
+    
+        SetUpRecyclers();
+        SetUpBindListeners();
     }
     
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (database == null) {
-            database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
-            storage = FirebaseStorage.getInstance(getString(R.string.firebase_storage));
-            getData();
-        } else {
-            SetUpRecyclers();
-        }
-    }
+    
     
     private void SetUpRecyclers() {
-        CuisineRecyclerSetUp(cuisines);
-        TagsRecyclerSetUp(tags);
-        NewRecipesRecyclerSetUp(new_recipes);
+        NewRecipesRecyclerSetUp();
+        CuisineRecyclerSetUp();
+        TagsRecyclerSetUp();
     }
     
-
-    
     private void getData() {
+        getNewestRecipesData();
         getCuisinesData();
         getTagsData();
-        getNewestRecipesData();
     }
     
     private void getNewestRecipesData() {
@@ -137,7 +154,8 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                     new_recipes.add(recipe);
                 }
             
-                NewRecipesRecyclerSetUp(new_recipes);
+                fetchNewRecipeImages(new_recipes);
+                NewRecipesRecyclerSetUp();
             }
         
             @Override
@@ -146,6 +164,48 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                 Log.w("W", "Failed to read value.", error.toException());
             }
         });
+    }
+    
+    private void fetchNewRecipeImages(ArrayList<Recipe> rs) {
+        for (Recipe r : rs) {
+        
+            if (!r.getIcon().equals("no-image")) {
+                try {
+                    final File tempfile = File.createTempFile(r.getId() + "_icon", "png");
+                    final StorageReference storageRef = storage.getReference().child(r.getIcon());
+                    storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
+                            r.setPicture(bitmap);
+                            try {
+                                mNewRecipeAdapter.getRecipeHolderMap().get(r).cardImage.setImageBitmap(bitmap);
+                                mNewRecipeAdapter.KillProgressBar(mNewRecipeAdapter.getRecipeHolderMap().get(r).cardProgress);
+                            } catch (NullPointerException es) {
+                                Log.i("New Recipes Recycler", "Couldn't bind Recipes");
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder);
+                            r.setPicture(bitmap);
+                            try {
+                                mNewRecipeAdapter.getRecipeHolderMap().get(r).cardImage.setImageBitmap(bitmap);
+                                mNewRecipeAdapter.KillProgressBar(mNewRecipeAdapter.getRecipeHolderMap().get(r).cardProgress);
+                            } catch (NullPointerException es) {
+                                Log.i("New Recipes Recycler", "Couldn't bind Recipes");
+                            }
+                            Log.w("Firebase Storage", "New Recipes Storage: Couldn't Fetch File: " + e.getMessage());
+                        }
+                    });
+                } catch (IOException e) {
+                    Log.w("File Download Issue", e.getMessage());
+                } catch (Exception e) {
+                    Log.w("File Download Issue", e.getMessage());
+                }
+            }
+        }
     }
     
     private void getTagsData() {
@@ -165,7 +225,7 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                     tags.add(tag);
                 }
             
-                TagsRecyclerSetUp(tags);
+                TagsRecyclerSetUp();
             }
         
             @Override
@@ -193,7 +253,7 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                     cuisines.add(cuisine);
                 }
             
-                CuisineRecyclerSetUp(cuisines);
+                CuisineRecyclerSetUp();
             }
         
             @Override
@@ -204,33 +264,39 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
         });
     }
     
-    private void NewRecipesRecyclerSetUp(ArrayList<Recipe> new_recipes) {
-        NewRecipesRecycler.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 2, GridLayoutManager.HORIZONTAL, false));
-        
-        NewRecipesAdapter = new CardRecipesSmallRecyclerViewAdapter(new_recipes, storage, this, "New Recipe");
-        NewRecipesRecycler.setAdapter(NewRecipesAdapter);
-        
-        NewRecipesProgressBar.setVisibility(View.GONE);
+    private void NewRecipesRecyclerSetUp() {
+        if (NewRecipesRecycler != null) {
+            try {
+                NewRecipesRecycler.setLayoutManager(new GridLayoutManager(parent.getApplicationContext(), 2, GridLayoutManager.HORIZONTAL, false));
+                NewRecipesRecycler.setAdapter(NewRecipesAdapter);
+            } catch (Exception e) {
+                Log.w("Recycler Exception", e.getMessage());
+            }
+        }
     }
     
-    private void CuisineRecyclerSetUp(ArrayList<Cuisine> cuisines) {
-        CuisineRecycler.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-    
-        CuisineAdapter = new CuisineRecipesRecyclerViewAdapter(cuisines);
     
     
-        CuisineRecycler.setAdapter(CuisineAdapter);
-        
-        CuisineProgressBar.setVisibility(View.GONE);
+    private void TagsRecyclerSetUp() {
+        if (TagRecycler != null) {
+            try {
+                TagRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+                TagRecycler.setAdapter(TagAdapter);
+            } catch (Exception e) {
+                Log.w("Recycler Exception", e.getMessage());
+            }
+        }
     }
     
-    private void TagsRecyclerSetUp(ArrayList<Tag> tags) {
-        TagRecycler.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-    
-        TagAdapter = new TagsRecipesRecyclerViewAdapter(tags);
-        TagRecycler.setAdapter(TagAdapter);
-        
-        TagProgressBar.setVisibility(View.GONE);
+    private void CuisineRecyclerSetUp() {
+        if (CuisineRecycler != null) {
+            try {
+                CuisineRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+                CuisineRecycler.setAdapter(CuisineAdapter);
+            } catch (Exception e) {
+                Log.w("Recycler Exception", e.getMessage());
+            }
+        }
     }
     
     @Override
@@ -242,5 +308,50 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
             intent.putExtra("recipe_id", new_recipes.get(position).getId());
             startActivity(intent);
         }
+    }
+    
+    private void SetUpBindListeners() {
+        NewRecipesRecycler
+                .getViewTreeObserver()
+                .addOnGlobalLayoutListener(
+                        new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                NewRecipesRecycler
+                                        .getViewTreeObserver()
+                                        .removeOnGlobalLayoutListener(this);
+                                NewRecipesProgressBar.setVisibility(View.GONE);
+
+                                // If length is zero display Text
+                            }
+                        });
+        TagRecycler
+                .getViewTreeObserver()
+                .addOnGlobalLayoutListener(
+                        new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                TagRecycler
+                                        .getViewTreeObserver()
+                                        .removeOnGlobalLayoutListener(this);
+                                TagProgressBar.setVisibility(View.GONE);
+                                
+                                // If length is zero display Text
+                            }
+                        });
+        CuisineRecycler
+                .getViewTreeObserver()
+                .addOnGlobalLayoutListener(
+                        new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                CuisineRecycler
+                                        .getViewTreeObserver()
+                                        .removeOnGlobalLayoutListener(this);
+                                CuisineProgressBar.setVisibility(View.GONE);
+
+                                // If length is zero display Text
+                            }
+                        });
     }
 }

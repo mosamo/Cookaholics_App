@@ -27,15 +27,15 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
     
     ArrayList<Recipe> recipes;
     private final RecyclerRecipeClickInterface recyclerClickInterface;
-    private Map<Recipe, ProgressBar> progressBarMap = new HashMap<>();
+    private Map<Recipe, CardRecipesViewHolder> recipeHolderMap = new HashMap<>();
     
     public CardRecipesRecyclerViewAdapter(ArrayList<Recipe> recipes, RecyclerRecipeClickInterface recyclerClickInterface) {
         this.recipes = recipes;
         this.recyclerClickInterface = recyclerClickInterface;
     }
     
-    public Map<Recipe, ProgressBar> getProgressBarMap() {
-        return progressBarMap;
+    public Map<Recipe, CardRecipesViewHolder> getRecipeHolderMap() {
+        return recipeHolderMap;
     }
     
     public void KillProgressBar(ProgressBar p) {
@@ -82,7 +82,7 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
         }
         // else means: an Image is coming soon: wait for it to be auto-bound
         
-        progressBarMap.put(recipe, holder.cardProgress);
+        recipeHolderMap.put(recipe, holder);
     }
     
     @Override
@@ -101,9 +101,8 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
         TextView cardCategory;
         TextView cardTagLists;
         
-        ImageView cardImage;
-        
-        ProgressBar cardProgress;
+        public ImageView cardImage;
+        public ProgressBar cardProgress;
         
         FrameLayout highlightedFrame;
         LinearLayout marginReducer;
