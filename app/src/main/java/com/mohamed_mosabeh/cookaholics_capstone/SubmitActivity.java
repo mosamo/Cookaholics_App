@@ -3,6 +3,8 @@ package com.mohamed_mosabeh.cookaholics_capstone;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,11 +13,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_submission_fragments.RecipeComfirmationFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_submission_fragments.RecipeFormFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_submission_fragments.RecipeFormStepFragment;
@@ -32,13 +35,13 @@ import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.data_objects.RecipeStep;
 import com.mohamed_mosabeh.utils.ImageManipulation;
 
-import org.checkerframework.checker.units.qual.A;
-
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class SubmitActivity extends AppCompatActivity {
     
     private FirebaseDatabase database;
+    private FirebaseStorage storage;
     
     private ImageManipulation controlImages = new ImageManipulation(this);
     private ArrayList<ImageView> listImageViews = new ArrayList<ImageView>();
@@ -51,6 +54,9 @@ public class SubmitActivity extends AppCompatActivity {
     
     private final int STEPS_LOWER_LIMIT = 2;
     private final int STEPS_UPPER_LIMIT = 10;
+    
+    private int imageToBeUploaded = 0;
+    private String uploadedRecipeId;
     
     private Button btnDelStep;
     private Button btnAddStep;
@@ -66,6 +72,7 @@ public class SubmitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_submit);
         
         database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
+        storage = FirebaseStorage.getInstance(getString(R.string.firebase_storage));
         
         // Views
         bottomLinear = findViewById(R.id.rsub_bottomLL);
@@ -221,6 +228,7 @@ public class SubmitActivity extends AppCompatActivity {
         // Submit to database;
         DatabaseReference reference = database.getReference("recipes");
         String id = reference.push().getKey();
+        uploadedRecipeId = id;
         
         String displayName = "Anonymous";
         String user_id = "123abcde";
@@ -231,19 +239,10 @@ public class SubmitActivity extends AppCompatActivity {
         reference.child(id).setValue(recipe).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                if (recipe.getTags() != null) {
-                    reference.child(id).child("tags").setValue(recipe.getTags());
-                }
                 reference.child(id).child("timestamp").setValue(ServerValue.TIMESTAMP).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        //UploadIcon();
-                    }
-                });
-                reference.child(id).child("tagsString").setValue(null).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        //UploadSteps();
+                        submitUploadImages();
                     }
                 });
             }
@@ -253,6 +252,74 @@ public class SubmitActivity extends AppCompatActivity {
                 Log.w("Database Error", e.getMessage());
             }
         });
+    }
+    
+    private void submitUploadImages() {
+        imageToBeUploaded = 0;
+        
+        DatabaseReference imageReference = database.getReference("recipes").child(uploadedRecipeId).child("icon");
+        StorageReference storageRef = storage.getReference().child("recipes/" + uploadedRecipeId + "/" + "icon");
+        
+        ImageView image = listImageViews.get(0);
+        Bitmap bitmap = getBitmapFromImageView(image);
+        
+        if (image.getTag().toString().equals("filled")) {
+            
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+        
+            UploadTask uploadTask = storageRef.putBytes(data);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    imageToBeUploaded++;
+                    if (imageToBeUploaded < listImageViews.size()) {
+                        imageReference.setValue(storageRef.getPath());
+                        submitStepImage(imageToBeUploaded);
+                    }
+                }
+            });
+        } else {
+           imageToBeUploaded++;
+           if (imageToBeUploaded < listImageViews.size()) {
+               submitStepImage(imageToBeUploaded);
+           }
+        }
+    }
+    
+    private void submitStepImage(int counter) {
+        String stepIndex = String.valueOf((counter - 1));
+        
+        DatabaseReference imageReference = database.getReference("recipes").child(uploadedRecipeId).child("steps").child(stepIndex).child("image_ref");
+        StorageReference storageRef = storage.getReference().child("recipes/" + uploadedRecipeId + "/" + "icon");
+        
+        ImageView image = listImageViews.get(counter);
+        Bitmap bitmap = getBitmapFromImageView(image);
+    
+        if (image.getTag().toString().equals("filled")) {
+        
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+        
+            UploadTask uploadTask = storageRef.putBytes(data);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    imageToBeUploaded++;
+                    if (imageToBeUploaded < listImageViews.size()) {
+                        imageReference.setValue(storageRef.getPath());
+                        submitStepImage(imageToBeUploaded);
+                    }
+                }
+            });
+        } else {
+            imageToBeUploaded++;
+            if (imageToBeUploaded < listImageViews.size()) {
+                submitStepImage(imageToBeUploaded);
+            }
+        }
     }
     
     private void addStep() {
@@ -330,5 +397,9 @@ public class SubmitActivity extends AppCompatActivity {
     
     public ImageManipulation getActivityImageManipulator() {
         return controlImages;
+    }
+    
+    private Bitmap getBitmapFromImageView(ImageView imageView) {
+        return ((BitmapDrawable)imageView.getDrawable()).getBitmap();
     }
 }

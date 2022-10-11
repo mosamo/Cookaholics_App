@@ -118,9 +118,13 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                 startActivity(intent);
             }
         });
+        
+        // No Spinners for now
+        NewRecipesProgressBar.setVisibility(View.GONE);
+        TagProgressBar.setVisibility(View.GONE);
+        CuisineProgressBar.setVisibility(View.GONE);
     
         SetUpRecyclers();
-        SetUpBindListeners();
     }
     
     
@@ -153,6 +157,7 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                     recipe.setId(snapshot.getKey());
                     new_recipes.add(recipe);
                 }
+                
             
                 fetchNewRecipeImages(new_recipes);
                 NewRecipesRecyclerSetUp();
@@ -224,6 +229,7 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                 
                     tags.add(tag);
                 }
+                
             
                 TagsRecyclerSetUp();
             }
@@ -308,50 +314,5 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
             intent.putExtra("recipe_id", new_recipes.get(position).getId());
             startActivity(intent);
         }
-    }
-    
-    private void SetUpBindListeners() {
-        NewRecipesRecycler
-                .getViewTreeObserver()
-                .addOnGlobalLayoutListener(
-                        new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @Override
-                            public void onGlobalLayout() {
-                                NewRecipesRecycler
-                                        .getViewTreeObserver()
-                                        .removeOnGlobalLayoutListener(this);
-                                NewRecipesProgressBar.setVisibility(View.GONE);
-
-                                // If length is zero display Text
-                            }
-                        });
-        TagRecycler
-                .getViewTreeObserver()
-                .addOnGlobalLayoutListener(
-                        new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @Override
-                            public void onGlobalLayout() {
-                                TagRecycler
-                                        .getViewTreeObserver()
-                                        .removeOnGlobalLayoutListener(this);
-                                TagProgressBar.setVisibility(View.GONE);
-                                
-                                // If length is zero display Text
-                            }
-                        });
-        CuisineRecycler
-                .getViewTreeObserver()
-                .addOnGlobalLayoutListener(
-                        new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @Override
-                            public void onGlobalLayout() {
-                                CuisineRecycler
-                                        .getViewTreeObserver()
-                                        .removeOnGlobalLayoutListener(this);
-                                CuisineProgressBar.setVisibility(View.GONE);
-
-                                // If length is zero display Text
-                            }
-                        });
     }
 }

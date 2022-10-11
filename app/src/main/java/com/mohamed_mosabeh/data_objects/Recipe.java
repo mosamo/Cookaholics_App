@@ -132,25 +132,13 @@ public class Recipe {
                 "\n\tLikes: " + getLikes() +
                 "\n\tReports: " + getReports() +
                 "\n\tSteps: " + getStepsString() +
-                "\n\tTags: " + getTags() +
+                "\n\tTags: " + getTags().toString() +
                 "\n\ticon: " + getIcon() +
                 "\n\ttimestamp: " + getTimestamp() +
                 "\n\tservings: " + getServings() +
                 "\n\tduration: " + getDuration() + " minutes" +
                 "\n\thighlighted: " + isHighlighted() +
                 "\n}";
-    }
-    
-    public String getTagsString() {
-        if (tags.size() > 0) {
-            String str = "";
-            int i = 0;
-            for (String tag : tags) {
-                str += "#" + tag + " ";
-            }
-            return str;
-        }
-        return "\n\t\tNo Tags";
     }
     
     private String getStepsString() {

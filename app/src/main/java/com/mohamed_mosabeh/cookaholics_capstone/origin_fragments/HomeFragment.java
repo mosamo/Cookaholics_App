@@ -108,9 +108,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         CategoryRecycler = parent.findViewById(R.id.home_categoriesRecyclerView);
         SeeAllWeeklyHottestTextView = parent.findViewById(R.id.home_recipeSeeAllWeeklyHottest);
         WeeklyHottestProgress = parent.findViewById(R.id.home_weeklyHottestProgress);
-        WeeklyHottestProgress.setVisibility(View.VISIBLE);
         CategoriesProgress = parent.findViewById(R.id.home_categoriesProgress);
-        CategoriesProgress.setVisibility(View.VISIBLE);
         CardView featuredMainContainer = parent.findViewById(R.id.home_CardRecipeOfTheWeek);
         featuredMainContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +123,6 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         featuredRecipeComment = parent.findViewById(R.id.home_featuredRecipeComment);
         featuredRecipeCurator = parent.findViewById(R.id.home_featuredRecipeCurator);
         FeaturedProgressBar = parent.findViewById(R.id.home_featuredProgressBar);
-        FeaturedProgressBar.setVisibility(View.VISIBLE);
         FeaturedCommentProgressBar = parent.findViewById(R.id.home_featuredRecipeCommentProgressBar);
         
         FeaturedRecipeImageView = parent.findViewById(R.id.home_featuredRecipeImage);
@@ -135,38 +132,11 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         
         featuredRecipeNameLabel = parent.findViewById(R.id.home_FeaturedRecipeNameLabel);
         
-        SetUpRecyclers();
-        SetUpBindListeners();
-    }
-    
-    private void SetUpBindListeners() {
-        WeeklyRecycler
-                .getViewTreeObserver()
-                .addOnGlobalLayoutListener(
-                        new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @Override
-                            public void onGlobalLayout() {
-                                WeeklyRecycler
-                                        .getViewTreeObserver()
-                                        .removeOnGlobalLayoutListener(this);
-                                WeeklyHottestProgress.setVisibility(View.GONE);
-                                
-                                // If length is zero display Text
-                            }
-                        });
+        // No Spinners for Now
+        WeeklyHottestProgress.setVisibility(View.GONE);
+        CategoriesProgress.setVisibility(View.GONE);
         
-        CategoryRecycler
-                .getViewTreeObserver()
-                .addOnGlobalLayoutListener(
-                        new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @Override
-                            public void onGlobalLayout() {
-                                CategoryRecycler
-                                        .getViewTreeObserver()
-                                        .removeOnGlobalLayoutListener(this);
-                                CategoriesProgress.setVisibility(View.GONE);
-                            }
-                        });
+        SetUpRecyclers();
     }
     
     @Override
@@ -262,6 +232,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                     recipe.setId(snapshot.getKey());
                     recipes.add(recipe);
                 }
+    
                 
                 fetchRecipesImages(recipes);
                 WeeklyRecyclerSetUp();
@@ -332,6 +303,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                     
                     categories.add(category);
                 }
+    
                 
                 fetchCategoriesImages(categories);
                 CategoryRecyclerSetUp();

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.Recipe;
+import com.mohamed_mosabeh.utils.ParserUtil;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
 
         holder.cardCategory.setText(recipe.getCategory());
         
-        holder.cardTagLists.setText(recipe.getTagsString().equals("No Tags") ? "" : recipe.getTagsString());
+        holder.cardTagLists.setText(ParserUtil.parseTags(recipe.getTags()).equals("No Tags") ? "" : ParserUtil.parseTags(recipe.getTags()));
 
         holder.highlightedFrame.setVisibility(recipe.isHighlighted() ? View.GONE : View.VISIBLE);
         
@@ -133,5 +134,4 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
             });
         }
     }
-    
 }

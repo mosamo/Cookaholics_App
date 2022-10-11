@@ -74,7 +74,7 @@ public class OriginActivity extends AppCompatActivity {
         });
         
         // default fragment to be showed
-        bottomNavigationView.setSelectedItemId(R.id.recipes);
+        bottomNavigationView.setSelectedItemId(R.id.home);
     }
     
     private void switchFragment(Fragment fragment) {

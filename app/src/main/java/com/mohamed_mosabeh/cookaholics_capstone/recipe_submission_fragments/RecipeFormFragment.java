@@ -166,9 +166,7 @@ public class RecipeFormFragment extends Fragment {
             Matcher matcher = regex.matcher(str);
             
             if (matcher.matches()) {
-                // TODO: use below line when submitting
                 List<String> tagsList = Arrays.asList(str.split(","));
-                Toast.makeText(parent, tagsList.toString(), Toast.LENGTH_SHORT).show();
                 return true;
             } else {
                 recipeTagsEdit.setError("Tags Improperly formatted!\nExample: tag,tag-b,tag-c");
