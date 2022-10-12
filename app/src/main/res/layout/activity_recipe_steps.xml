@@ -6,145 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".RecipeStepsActivity">
 
-    <LinearLayout
-        android:id="@+id/llvHeader"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/design_home_fragment_upper_mist"
-        android:orientation="vertical"
+    <FrameLayout
+        android:id="@+id/ars_bigFrameMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+    </FrameLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingRight="8dp"
-            android:paddingBottom="8dp">
-
-            <TextView
-                android:id="@+id/txtRecipeName"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="0dp"
-                android:ellipsize="end"
-                android:fontFamily="sans-serif-light"
-                android:maxLines="2"
-                android:text="Recipe Name"
-                android:textColor="#515151"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/rs_llvUnderHeader"
+    <FrameLayout
+        android:id="@+id/ars_commentsWindow"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="8dp"
-        android:paddingTop="2dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="12dp"
-        android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@+id/llvHeader">
-
-        <TextView
-            android:id="@+id/rs_recipeStepIndicator"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:fontFamily="@font/urbanist_light"
-            android:letterSpacing="0.04"
-            android:maxLines="2"
-            android:text="Recipe Step"
-            android:textColor="#707070"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/recipePager"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rs_llvUnderHeader">
-
-    </androidx.viewpager2.widget.ViewPager2>
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="4dp"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <View
-            android:id="@+id/view6"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"></View>
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTintMode="add"
-            android:drawableTop="@drawable/ic_like_icon"
-            android:text="like" />
-
-        <View
-            android:id="@+id/view"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"></View>
-
-        <Button
-            android:id="@+id/button7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/ic_comment_square"
-            android:text="Discuss" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"></View>
-
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/ic_report_flag"
-            android:text="report" />
-
-        <View
-            android:id="@+id/view7"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"></View>
-
-    </LinearLayout>
-
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
