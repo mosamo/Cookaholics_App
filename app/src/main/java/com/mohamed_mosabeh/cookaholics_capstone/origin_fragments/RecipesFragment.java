@@ -37,6 +37,7 @@ import com.mohamed_mosabeh.cookaholics_capstone.SubmitActivity;
 import com.mohamed_mosabeh.data_objects.Cuisine;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.data_objects.Tag;
+import com.mohamed_mosabeh.utils.ViewUtil;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
 import com.mohamed_mosabeh.utils.recycler_views.CardRecipesSmallRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.CuisineRecipesRecyclerViewAdapter;
@@ -119,14 +120,12 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
             }
         });
         
-        // No Spinners for now
-        NewRecipesProgressBar.setVisibility(View.GONE);
-        TagProgressBar.setVisibility(View.GONE);
-        CuisineProgressBar.setVisibility(View.GONE);
+        ViewUtil.IfDataExistsHideProgressBar(new_recipes.size(), NewRecipesProgressBar);
+        ViewUtil.IfDataExistsHideProgressBar(tags.size(), TagProgressBar);
+        ViewUtil.IfDataExistsHideProgressBar(cuisines.size(), CuisineProgressBar);
     
         SetUpRecyclers();
     }
-    
     
     
     private void SetUpRecyclers() {
@@ -157,7 +156,8 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                     recipe.setId(snapshot.getKey());
                     new_recipes.add(recipe);
                 }
-                
+    
+                ViewUtil.IfDataExistsHideProgressBar(new_recipes.size(), NewRecipesProgressBar);
             
                 fetchNewRecipeImages(new_recipes);
                 NewRecipesRecyclerSetUp();
@@ -229,7 +229,8 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                 
                     tags.add(tag);
                 }
-                
+    
+                ViewUtil.IfDataExistsHideProgressBar(tags.size(), TagProgressBar);
             
                 TagsRecyclerSetUp();
             }
@@ -258,6 +259,9 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                 
                     cuisines.add(cuisine);
                 }
+    
+    
+                ViewUtil.IfDataExistsHideProgressBar(cuisines.size(), CuisineProgressBar);
             
                 CuisineRecyclerSetUp();
             }

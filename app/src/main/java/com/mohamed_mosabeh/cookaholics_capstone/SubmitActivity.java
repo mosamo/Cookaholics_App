@@ -3,12 +3,14 @@ package com.mohamed_mosabeh.cookaholics_capstone;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -216,6 +218,10 @@ public class SubmitActivity extends AppCompatActivity {
     }
     
     public void mSuccessfulSubmission() {
+        // Hide Keyboard
+        View view = this.getCurrentFocus();
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     
         // Change Views
         final FrameLayout blueArea = findViewById(R.id.rsub_ContainerSteps);
@@ -231,7 +237,8 @@ public class SubmitActivity extends AppCompatActivity {
             steps.add(step.getGeneratedStep());
         }
         recipe.setSteps(steps);
-    
+        
+        
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(
                         R.anim.slide_from_right,  // enter
@@ -239,6 +246,8 @@ public class SubmitActivity extends AppCompatActivity {
                         R.anim.slide_from_right,  // pop enter
                         R.anim.slide_out_left)    // pop exit
                 .replace(R.id.rsub_fragment, comfirmationUIFragment).commit();
+        
+        comfirmationUIFragment.setLoadingText("Uploading Recipe Data..");
         
         // Submit to database;
         DatabaseReference reference = database.getReference("recipes");
@@ -257,6 +266,8 @@ public class SubmitActivity extends AppCompatActivity {
                 reference.child(id).child("timestamp").setValue(ServerValue.TIMESTAMP).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+    
+                        comfirmationUIFragment.setLoadingText("Uploading Recipe Icon..");
                         submitUploadImages();
                     }
                 });
@@ -306,6 +317,9 @@ public class SubmitActivity extends AppCompatActivity {
                     listImageViews.remove(0);
     
                     NotifyResultRecieved(true);
+    
+    
+                    comfirmationUIFragment.setLoadingText("Uploading Images..\n(" + resultsNeededToShowComfirmationUI + " Images Remaining)");
                     for (ImageView im : listImageViews) {
                         submitUploadImageStep(im);
                     }
@@ -366,6 +380,7 @@ public class SubmitActivity extends AppCompatActivity {
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    comfirmationUIFragment.setLoadingText("Uploading Images..\n(" + (resultsNeededToShowComfirmationUI-1) + " Images Remaining)");
                     NotifyResultRecieved(true);
                     Log.i("Submitted Image", "Step" + i);
                 }

@@ -52,6 +52,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/rubik_semi_bold"
                 android:text="Loading.."
+                android:textAlignment="center"
                 android:textColor="#707070"
                 android:textSize="18sp" />
 
