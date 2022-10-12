@@ -41,9 +41,6 @@ public class OriginActivity extends AppCompatActivity {
         
         FirebaseStorage storage = FirebaseStorage.getInstance(getString(R.string.firebase_storage));
         FirebaseDatabase database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
-        
-        homeFragment = new HomeFragment(this, database, storage);
-        recipesFragment = new RecipesFragment(this, database, storage);
 
         // Navigation View Set up
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -61,10 +58,20 @@ public class OriginActivity extends AppCompatActivity {
                     switchFragment(searchFragment);
                     return true;
                 case R.id.recipes:
-                    switchFragment(recipesFragment);
+                    if (recipesFragment != null) {
+                        switchFragment(recipesFragment);
+                    } else {
+                        recipesFragment = new RecipesFragment(this, database, storage);
+                        switchFragment(recipesFragment);
+                    }
                     return true;
                 case R.id.home:
-                    switchFragment(homeFragment);
+                    if (homeFragment != null) {
+                        switchFragment(homeFragment);
+                    } else {
+                        homeFragment = new HomeFragment(this, database, storage);
+                        switchFragment(homeFragment);
+                    }
                     return true;
                 case R.id.hottest:
                     switchFragment(hottestFragment);
@@ -72,9 +79,10 @@ public class OriginActivity extends AppCompatActivity {
             }
             return false;
         });
-        
-        // default fragment to be showed
-        bottomNavigationView.setSelectedItemId(R.id.home);
+//
+//        // default fragment
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.flFragment, homeFragment).commit();
     }
     
     private void switchFragment(Fragment fragment) {

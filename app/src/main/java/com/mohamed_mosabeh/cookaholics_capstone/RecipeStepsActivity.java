@@ -75,7 +75,6 @@ public class RecipeStepsActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot != null) {
     
-    
                     Recipe recipe = snapshot.child(recipe_id).getValue(Recipe.class);
                     
                     // Value Setting

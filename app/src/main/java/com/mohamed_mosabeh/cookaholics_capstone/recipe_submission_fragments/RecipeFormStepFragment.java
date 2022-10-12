@@ -103,6 +103,7 @@ public class RecipeFormStepFragment extends Fragment {
     private boolean validateStepHeader() {
         if (stepHeader.getText().toString().trim().isEmpty()) {
             stepHeader.setError("Cannot leave Step Header empty!");
+            stepHeader.requestFocus();
             return false;
         } else
             return true;
@@ -111,6 +112,7 @@ public class RecipeFormStepFragment extends Fragment {
     private boolean validateStepContent() {
         if (stepContent.getText().toString().trim().isEmpty()) {
             stepContent.setError("Cannot leave Instructions empty!");
+            stepContent.requestFocus();
             return false;
         } else
             return true;

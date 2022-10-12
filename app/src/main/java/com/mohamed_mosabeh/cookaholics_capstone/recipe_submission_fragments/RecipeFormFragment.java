@@ -140,6 +140,7 @@ public class RecipeFormFragment extends Fragment {
     private boolean validateRecipeName() {
         if (recipeNameEdit.getText().toString().trim().isEmpty()) {
             recipeNameEdit.setError("Cannot leave recipe name empty!");
+            recipeNameEdit.requestFocus();
             return false;
         } else
             return true;
@@ -148,12 +149,14 @@ public class RecipeFormFragment extends Fragment {
     private boolean validateMoreThanZero(EditText editText) {
         if (editText.getText().toString().trim().isEmpty()) {
             editText.setError("Cannot be Empty!");
+            editText.requestFocus();
             return false;
         }
         
         int number = Integer.parseInt(editText.getText().toString());
         if (number < 1) {
             editText.setError("Cannot be less than 1");
+            editText.requestFocus();
             return false;
         }
         return true;
@@ -166,10 +169,10 @@ public class RecipeFormFragment extends Fragment {
             Matcher matcher = regex.matcher(str);
             
             if (matcher.matches()) {
-                List<String> tagsList = Arrays.asList(str.split(","));
                 return true;
             } else {
                 recipeTagsEdit.setError("Tags Improperly formatted!\nExample: tag,tag-b,tag-c");
+                recipeTagsEdit.requestFocus();
                 return false;
             }
         }

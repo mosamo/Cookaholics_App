@@ -13,9 +13,12 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +45,9 @@ public class SubmitActivity extends AppCompatActivity {
     
     private FirebaseDatabase database;
     private FirebaseStorage storage;
+    private FirebaseAuth firebaseAuth;
+    DatabaseReference imageReference;
+    StorageReference imageStorageRef;
     
     private ImageManipulation controlImages = new ImageManipulation(this);
     private ArrayList<ImageView> listImageViews = new ArrayList<ImageView>();
@@ -55,7 +61,6 @@ public class SubmitActivity extends AppCompatActivity {
     private final int STEPS_LOWER_LIMIT = 2;
     private final int STEPS_UPPER_LIMIT = 10;
     
-    private int imageToBeUploaded = 0;
     private String uploadedRecipeId;
     
     private Button btnDelStep;
@@ -65,6 +70,7 @@ public class SubmitActivity extends AppCompatActivity {
     private LinearLayout bottomLinear;
     private ArrayList<FrameLayout> listFragments = new ArrayList<>();
     private ArrayList<RecipeFormStepFragment> stepFragments = new ArrayList<>();
+    private ScrollView mainScrollView;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +79,15 @@ public class SubmitActivity extends AppCompatActivity {
         
         database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
         storage = FirebaseStorage.getInstance(getString(R.string.firebase_storage));
-        
+    
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user == null)
+            firebaseAuth.signInAnonymously();
+    
         // Views
         bottomLinear = findViewById(R.id.rsub_bottomLL);
+        mainScrollView = findViewById(R.id.rsub_mainScroll);
         btnSubmit = findViewById(R.id.rsub_SubmitButton);
         btnDelStep = findViewById(R.id.rsub_removeStepButton);
         btnDelStep.setOnClickListener(new View.OnClickListener() {
@@ -193,6 +205,7 @@ public class SubmitActivity extends AppCompatActivity {
         for (Boolean valid : validationResults) {
             if (valid == false) {
                 btnSubmit.setEnabled(true);
+                //mainScrollView.fullScroll(ScrollView.FOCUS_UP);
                 return;
             }
         }
@@ -201,7 +214,7 @@ public class SubmitActivity extends AppCompatActivity {
     }
     
     public void mSuccessfulSubmission() {
-        
+    
         // Change Views
         final FrameLayout blueArea = findViewById(R.id.rsub_ContainerSteps);
         
@@ -249,76 +262,100 @@ public class SubmitActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                finish();
                 Log.w("Database Error", e.getMessage());
             }
         });
     }
     
     private void submitUploadImages() {
-        imageToBeUploaded = 0;
         
-        DatabaseReference imageReference = database.getReference("recipes").child(uploadedRecipeId).child("icon");
-        StorageReference storageRef = storage.getReference().child("recipes/" + uploadedRecipeId + "/" + "icon");
+        imageReference = database.getReference("recipes").child(uploadedRecipeId).child("icon");
+        imageStorageRef = storage.getReference().child("recipes/" + uploadedRecipeId + "/" + "icon");
         
         ImageView image = listImageViews.get(0);
-        Bitmap bitmap = getBitmapFromImageView(image);
-        
-        if (image.getTag().toString().equals("filled")) {
+        if (image.getTag() != null && image.getTag().toString().equals("filled")) {
+            
+            
+            Bitmap bitmap = getBitmapFromImageView(image);
             
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] data = baos.toByteArray();
-        
-            UploadTask uploadTask = storageRef.putBytes(data);
+    
+            Log.i("Upload", "uploading icon to " + imageStorageRef.getPath());
+            
+            UploadTask uploadTask = imageStorageRef.putBytes(data);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    imageToBeUploaded++;
-                    if (imageToBeUploaded < listImageViews.size()) {
-                        imageReference.setValue(storageRef.getPath());
-                        submitStepImage(imageToBeUploaded);
+                    String path = "/recipes/" + uploadedRecipeId + "/icon";
+                    imageReference.setValue(path);
+                    
+                    Log.i("Submitted Image", "Icon");
+                    
+                    listImageViews.remove(0);
+    
+                    for (ImageView im : listImageViews) {
+                        submitUploadImageStep(im);
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("Uploading Image Failed", e.getMessage());
+                    
+                    listImageViews.remove(0);
+                    for (ImageView im : listImageViews) {
+                        submitUploadImageStep(im);
                     }
                 }
             });
-        } else {
-           imageToBeUploaded++;
-           if (imageToBeUploaded < listImageViews.size()) {
-               submitStepImage(imageToBeUploaded);
-           }
         }
     }
     
-    private void submitStepImage(int counter) {
-        String stepIndex = String.valueOf((counter - 1));
+    private void submitUploadImageStep(ImageView image) {
+        int i = listImageViews.indexOf(image);
+        String path = "/recipes/" + uploadedRecipeId + "/" + i;
         
-        DatabaseReference imageReference = database.getReference("recipes").child(uploadedRecipeId).child("steps").child(stepIndex).child("image_ref");
-        StorageReference storageRef = storage.getReference().child("recipes/" + uploadedRecipeId + "/" + "icon");
-        
-        ImageView image = listImageViews.get(counter);
-        Bitmap bitmap = getBitmapFromImageView(image);
+        imageReference = database.getReference("recipes").child(uploadedRecipeId).child("steps").child(String.valueOf(i)).child("image_ref");
+        imageStorageRef = storage.getReference().child("recipes/" + uploadedRecipeId + "/" + i);
     
-        if (image.getTag().toString().equals("filled")) {
+        if (image.getTag() != null && image.getTag().toString().equals("filled")) {
+            
+            Bitmap bitmap = getBitmapFromImageView(image);
         
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] data = baos.toByteArray();
         
-            UploadTask uploadTask = storageRef.putBytes(data);
+            Log.i("Upload", "uploading image step " + i + " to " + imageStorageRef.getPath());
+    
+            imageReference.setValue(path).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Log.i("Updated Path in Steps", path);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w("Updated Path Failed", e.getMessage());
+                }
+            });
+            
+            UploadTask uploadTask = imageStorageRef.putBytes(data);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    imageToBeUploaded++;
-                    if (imageToBeUploaded < listImageViews.size()) {
-                        imageReference.setValue(storageRef.getPath());
-                        submitStepImage(imageToBeUploaded);
-                    }
+                
+                    Log.i("Submitted Image", "Step" + i);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("Uploading Image Failed", "Image Step " + i + e.getMessage());
                 }
             });
-        } else {
-            imageToBeUploaded++;
-            if (imageToBeUploaded < listImageViews.size()) {
-                submitStepImage(imageToBeUploaded);
-            }
         }
     }
     
@@ -401,5 +438,11 @@ public class SubmitActivity extends AppCompatActivity {
     
     private Bitmap getBitmapFromImageView(ImageView imageView) {
         return ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+    }
+    
+    public void updateLoadingStatus(boolean uploadNumber) {
+        // create boolean in class header []
+        // boolean[uploadNumber] = true
+        // if all is true finish and display Win
     }
 }

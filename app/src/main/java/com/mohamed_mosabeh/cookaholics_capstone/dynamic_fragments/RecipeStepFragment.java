@@ -100,7 +100,8 @@ public class RecipeStepFragment extends Fragment {
                         ((ViewGroup) progressBarRSF.getParent()).removeView(progressBarRSF);
     
     
-                    stepImage.setImageResource(R.drawable.placeholder);
+                    if (stepImage != null)
+                        stepImage.setImageResource(R.drawable.placeholder);
                 }
             });
         

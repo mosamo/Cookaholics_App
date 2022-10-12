@@ -274,7 +274,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                             } catch (NullPointerException ef) {
                                 Log.i("Recipes Recycler", "Cannot bind Recipes");
                             }
-                            Log.w("Firebase Storage", "Weekly Recipe Images: Couldn't Fetch File: " + e.getMessage());
+                            Log.w("Firebase Storage", "Weekly Recipe Images: Couldn't Fetch File: " + e.getMessage() + " " + r.getIcon());
                         }
                     });
                 } catch (IOException e) {
