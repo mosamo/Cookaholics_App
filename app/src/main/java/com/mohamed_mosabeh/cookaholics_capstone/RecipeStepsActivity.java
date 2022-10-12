@@ -92,11 +92,6 @@ public class RecipeStepsActivity extends AppCompatActivity {
                     
                     // Pager Set up
                     ViewPagerSetup(recipe);
-    
-                    // Hide progress Bar
-//                    final ProgressBar loading = findViewById(R.id.recipeLoadingProgress);
-//                    loading.setVisibility(View.GONE);
-                    
                 } else {
                     Toast.makeText(getApplicationContext(), "No Database Found", Toast.LENGTH_SHORT).show();
                 }
@@ -135,5 +130,4 @@ public class RecipeStepsActivity extends AppCompatActivity {
             }
         });
     }
-    
 }

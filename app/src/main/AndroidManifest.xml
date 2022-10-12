@@ -18,6 +18,13 @@
         android:theme="@style/Theme.Cookaholics_Capstone"
         tools:targetApi="31">
         <activity
+            android:name=".test_activity_2"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".SubmitActivity"
             android:exported="false"
             android:screenOrientation="portrait">
@@ -46,8 +53,8 @@
             android:exported="true" />
         <activity
             android:name=".RecipeStepsActivity"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
