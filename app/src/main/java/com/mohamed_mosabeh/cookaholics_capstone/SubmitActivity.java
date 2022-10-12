@@ -70,7 +70,9 @@ public class SubmitActivity extends AppCompatActivity {
     private LinearLayout bottomLinear;
     private ArrayList<FrameLayout> listFragments = new ArrayList<>();
     private ArrayList<RecipeFormStepFragment> stepFragments = new ArrayList<>();
-    private ScrollView mainScrollView;
+    
+    private RecipeComfirmationFragment comfirmationUIFragment;
+    private int resultsNeededToShowComfirmationUI;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,8 @@ public class SubmitActivity extends AppCompatActivity {
         
         database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
         storage = FirebaseStorage.getInstance(getString(R.string.firebase_storage));
+        
+        comfirmationUIFragment = new RecipeComfirmationFragment(this);
     
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -87,7 +91,6 @@ public class SubmitActivity extends AppCompatActivity {
     
         // Views
         bottomLinear = findViewById(R.id.rsub_bottomLL);
-        mainScrollView = findViewById(R.id.rsub_mainScroll);
         btnSubmit = findViewById(R.id.rsub_SubmitButton);
         btnDelStep = findViewById(R.id.rsub_removeStepButton);
         btnDelStep.setOnClickListener(new View.OnClickListener() {
@@ -201,11 +204,10 @@ public class SubmitActivity extends AppCompatActivity {
             validationResults.add(fragment.validateStepForm());
         }
         
-        // check if all is valid!
+        // check if validation returns true
         for (Boolean valid : validationResults) {
             if (valid == false) {
                 btnSubmit.setEnabled(true);
-                //mainScrollView.fullScroll(ScrollView.FOCUS_UP);
                 return;
             }
         }
@@ -236,7 +238,7 @@ public class SubmitActivity extends AppCompatActivity {
                         R.anim.slide_out_left,    // exit
                         R.anim.slide_from_right,  // pop enter
                         R.anim.slide_out_left)    // pop exit
-                .replace(R.id.rsub_fragment, new RecipeComfirmationFragment(this)).commit();
+                .replace(R.id.rsub_fragment, comfirmationUIFragment).commit();
         
         // Submit to database;
         DatabaseReference reference = database.getReference("recipes");
@@ -269,13 +271,20 @@ public class SubmitActivity extends AppCompatActivity {
     }
     
     private void submitUploadImages() {
+    
+        // Q: How many files do we need to upload?
+        // A: as many Images as tagged
+        resultsNeededToShowComfirmationUI = 0;
+        for (ImageView image : listImageViews) {
+            if (image.getTag() != null && image.getTag().toString().equals("filled"))
+                resultsNeededToShowComfirmationUI++;
+        }
         
         imageReference = database.getReference("recipes").child(uploadedRecipeId).child("icon");
         imageStorageRef = storage.getReference().child("recipes/" + uploadedRecipeId + "/" + "icon");
         
         ImageView image = listImageViews.get(0);
         if (image.getTag() != null && image.getTag().toString().equals("filled")) {
-            
             
             Bitmap bitmap = getBitmapFromImageView(image);
             
@@ -296,6 +305,7 @@ public class SubmitActivity extends AppCompatActivity {
                     
                     listImageViews.remove(0);
     
+                    NotifyResultRecieved(true);
                     for (ImageView im : listImageViews) {
                         submitUploadImageStep(im);
                     }
@@ -306,11 +316,20 @@ public class SubmitActivity extends AppCompatActivity {
                     Log.e("Uploading Image Failed", e.getMessage());
                     
                     listImageViews.remove(0);
+    
+                    NotifyResultRecieved(false);
                     for (ImageView im : listImageViews) {
                         submitUploadImageStep(im);
                     }
                 }
             });
+        } else {
+            // else: main image does not need to be submitted
+            // submitting the rest
+            listImageViews.remove(0);
+            for (ImageView im : listImageViews) {
+                submitUploadImageStep(im);
+            }
         }
     }
     
@@ -347,12 +366,13 @@ public class SubmitActivity extends AppCompatActivity {
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                
+                    NotifyResultRecieved(true);
                     Log.i("Submitted Image", "Step" + i);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+                    NotifyResultRecieved(false);
                     Log.e("Uploading Image Failed", "Image Step " + i + e.getMessage());
                 }
             });
@@ -440,9 +460,13 @@ public class SubmitActivity extends AppCompatActivity {
         return ((BitmapDrawable)imageView.getDrawable()).getBitmap();
     }
     
-    public void updateLoadingStatus(boolean uploadNumber) {
-        // create boolean in class header []
-        // boolean[uploadNumber] = true
-        // if all is true finish and display Win
+    public void NotifyResultRecieved(boolean status) {
+        resultsNeededToShowComfirmationUI--;
+        Log.i("Upload Finished", "Result:" + (status ? "Success!" : "Fail!") + " Results Needed: " + resultsNeededToShowComfirmationUI);
+        
+        // if all results have been received. display Success UI;
+        if (resultsNeededToShowComfirmationUI == 0) {
+            comfirmationUIFragment.DisplaySuccessUI(uploadedRecipeId);
+        }
     }
 }
