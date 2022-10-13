@@ -4,9 +4,10 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
@@ -16,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 public class PortalActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
@@ -32,8 +34,8 @@ public class PortalActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                Handler handler = new Handler();
-                handler.post(new Runnable() {
+                Executor mainExecutor = ContextCompat.getMainExecutor(getApplicationContext());
+                mainExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
                         if (user != null) {

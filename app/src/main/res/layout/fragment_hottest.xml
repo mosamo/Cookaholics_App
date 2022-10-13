@@ -43,15 +43,10 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/urbanist_light"
                         android:letterSpacing="0.07"
-                        android:text="Most Liked Recipes of All Time"
+                        android:text="Most Liked Recipes"
                         android:textColor="#BA55D3"
                         android:textSize="20sp"
                         android:textStyle="bold" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
 
                 </LinearLayout>
 
@@ -101,15 +96,10 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
                 </LinearLayout>
 
                 <ProgressBar
-                    android:id="@+id/rec_RecipeProgress"
+                    android:id="@+id/wideCard_progressBar"
                     style="?android:attr/progressBarStyle"
                     android:layout_width="80dp"
                     android:layout_height="100dp"
@@ -117,6 +107,94 @@
                     android:layout_margin="4dp"
                     android:indeterminateTint="@color/offical_cookaholics_drawable_tint_1"
                     android:visibility="visible" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/wideCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="6dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp"
+                    app:strokeColor="@color/material_on_surface_stroke"
+                    app:strokeWidth="1dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        app:cardElevation="0dp"
+                        app:cardMaxElevation="0dp">
+
+                        <ImageView
+                            android:id="@+id/imageView_wideCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp"
+                            android:background="@drawable/blank_placeholder"
+                            android:scaleType="centerCrop" />
+
+                        <ProgressBar
+                            android:id="@+id/imageView_progressBar"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:indeterminateTint="#AAAAAA" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="bottom"
+                        android:layout_marginTop="110dp"
+                        android:background="@drawable/gradient_recipe_header"
+                        android:orientation="vertical"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/wideCard_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/urbanist_light"
+                            android:maxLines="1"
+                            android:text="Default Name"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold"></TextView>
+
+                        <TextView
+                            android:id="@+id/wideCard_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/urbanist_light"
+                            android:maxLines="1"
+                            android:text="Text"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"></TextView>
+
+                        <TextView
+                            android:id="@+id/wideCard_tags"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/urbanist_light"
+                            android:maxLines="1"
+                            android:text="Text"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"></TextView>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
 
@@ -127,6 +205,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:orientation="vertical"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/HottestPage_container1">
@@ -147,11 +226,6 @@
                         android:textColor="#BA55D3"
                         android:textSize="20sp"
                         android:textStyle="bold" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
 
                 </LinearLayout>
 
