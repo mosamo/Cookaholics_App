@@ -3,6 +3,7 @@ package com.mohamed_mosabeh.cookaholics_capstone;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
@@ -25,12 +26,17 @@ import com.mohamed_mosabeh.auth.AnonymousAuth;
 import com.mohamed_mosabeh.cookaholics_capstone.other_fragments.EmptyFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_steps_fragments.RecipeStepsCommentsFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_steps_fragments.RecipeStepsContainerFragment;
+import com.mohamed_mosabeh.data_objects.Comment;
 import com.mohamed_mosabeh.data_objects.HighlightedRecipe;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.utils.RecipeInstructionsSwipeAdapter;
+import com.mohamed_mosabeh.utils.recycler_views.CommentRecyclerViewAdapter;
+
+import org.checkerframework.checker.units.qual.A;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class RecipeStepsActivity extends AppCompatActivity {
     
@@ -44,6 +50,7 @@ public class RecipeStepsActivity extends AppCompatActivity {
     private EmptyFragment emptyFragment;
     
     private RecipeInstructionsSwipeAdapter adapter;
+    
     
     private Recipe recipe;
     private String recipe_id;
@@ -70,7 +77,7 @@ public class RecipeStepsActivity extends AppCompatActivity {
         
         // Initiate Fragments
         bigContainerFragment = new RecipeStepsContainerFragment(this, storage);
-        bigCommentFragment = new RecipeStepsCommentsFragment(this);
+        bigCommentFragment = new RecipeStepsCommentsFragment(this, database, recipe_id);
         emptyFragment = new EmptyFragment();
         
         // Loading Data
@@ -90,6 +97,7 @@ public class RecipeStepsActivity extends AppCompatActivity {
                 if (snapshot != null) {
     
                     recipe = snapshot.getValue(Recipe.class);
+                    recipe.setId(recipe_id);
                     
                     bigContainerFragment.setAvailableData();
                     bigContainerFragment.checkReceivedData();

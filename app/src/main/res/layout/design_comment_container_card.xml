@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:elevation="4dp"
+    android:scaleX="1"
+    android:scaleY="1">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:layout_margin="4dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="4dp">
+
+    </androidx.cardview.widget.CardView>
+
+    <FrameLayout
+        android:layout_width="20dp"
+        android:layout_height="fill_parent"
+        android:layout_gravity="bottom|right"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/design_recipe_steps_header"
+        android:elevation="11dp"
+        android:orientation="vertical">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="right|top"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:alpha="0.5"
+        android:background="@drawable/design_home_fragment_upper_mist"
+        android:elevation="6dp"
+        android:orientation="vertical" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="2dp"
+        android:elevation="8dp">
+
+        <FrameLayout
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/design_square_country_scrip"
+            android:elevation="7dp"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/design_square_country_scrip"
+            android:elevation="7dp"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/frameLayout4"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/design_square_country_scrip"
+            android:elevation="7dp"
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/ccd_commentContent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="4dp"
+            android:elevation="6dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/rubik_regular"
+            android:gravity="center"
+            android:maxLines="3"
+            android:text="comment"
+            android:textColor="#B7494646"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/ccd_username"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/frameLayout4"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/ccd_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="3dp"
+            android:elevation="8dp"
+            android:fontFamily="@font/rubik_semi_bold"
+            android:paddingStart="2dp"
+            android:paddingRight="10dp"
+            android:text="John Smith"
+            android:textColor="#BF434242"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

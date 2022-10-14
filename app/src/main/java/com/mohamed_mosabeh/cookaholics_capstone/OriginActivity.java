@@ -28,8 +28,6 @@ public class OriginActivity extends AppCompatActivity {
     private DefaultFragment defaultFragment = new DefaultFragment();
     private HottestFragment hottestFragment = new HottestFragment();
     
-    private FirebaseUser exportedUserInfo;
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +37,6 @@ public class OriginActivity extends AppCompatActivity {
         if (auth == null){
             startActivity(new Intent(OriginActivity.this, PortalActivity.class));
             finish();
-        } else {
-            exportedUserInfo = auth;
         }
         
         FirebaseStorage storage = FirebaseStorage.getInstance(getString(R.string.firebase_storage));
@@ -107,9 +103,5 @@ public class OriginActivity extends AppCompatActivity {
         auth.signOut();
         startActivity(new Intent(OriginActivity.this, PortalActivity.class));
         finish();
-    }
-    
-    public FirebaseUser getOriginAuth() {
-        return exportedUserInfo;
     }
 }
