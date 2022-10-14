@@ -92,15 +92,8 @@ public class RecipeStepsActivity extends AppCompatActivity {
                     bigContainerFragment.setAvailableData();
                     bigContainerFragment.checkReceivedData();
                     
-                    // Timestamp Importing and Parsing
-//                    Long time = recipe.getTimestamp();
-//
-//                    SimpleDateFormat dataFormat = new SimpleDateFormat("dd MMM yyyy");
-//                    String timeString = dataFormat.format(new Date(time));
-//
-//                    txtRecipeTimestamp.setText(timeString);
+                    bigCommentFragment.setRecipeDetails(recipe);
                     
-                    // Pager Set up
                 } else {
                     Log.w("Recipe Steps Data", "No Data Found");
                 }
