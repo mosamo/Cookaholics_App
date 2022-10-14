@@ -254,8 +254,15 @@ public class SubmitActivity extends AppCompatActivity {
         String id = reference.push().getKey();
         uploadedRecipeId = id;
         
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        
         String displayName = "Anonymous";
-        String user_id = "123abcde";
+        if (user.getDisplayName() != null && !user.getDisplayName().isEmpty())
+            displayName = user.getDisplayName();
+        
+        String user_id = "no-id";
+        if (user.getUid() != null )
+            user_id = user.getUid();
         
         recipe.setDisplay_name(displayName);
         recipe.setUser_id(user_id);
@@ -266,8 +273,8 @@ public class SubmitActivity extends AppCompatActivity {
                 reference.child(id).child("timestamp").setValue(ServerValue.TIMESTAMP).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-    
-                        comfirmationUIFragment.setLoadingText("Uploading Recipe Icon..");
+                        if (listImageViews.get(0).getTag() == null)
+                            comfirmationUIFragment.setLoadingText("Uploading Recipe Image..");
                         submitUploadImages();
                     }
                 });
@@ -286,6 +293,7 @@ public class SubmitActivity extends AppCompatActivity {
         // Q: How many files do we need to upload?
         // A: as many Images as tagged
         resultsNeededToShowComfirmationUI = 0;
+        
         for (ImageView image : listImageViews) {
             if (image.getTag() != null && image.getTag().toString().equals("filled"))
                 resultsNeededToShowComfirmationUI++;
@@ -320,6 +328,7 @@ public class SubmitActivity extends AppCompatActivity {
     
     
                     comfirmationUIFragment.setLoadingText("Uploading Images..\n(" + resultsNeededToShowComfirmationUI + " Images Remaining)");
+                    simpleSuccessCheck();
                     for (ImageView im : listImageViews) {
                         submitUploadImageStep(im);
                     }
@@ -345,6 +354,8 @@ public class SubmitActivity extends AppCompatActivity {
                 submitUploadImageStep(im);
             }
         }
+    
+        simpleSuccessCheck();
     }
     
     private void submitUploadImageStep(ImageView image) {
@@ -381,6 +392,7 @@ public class SubmitActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     comfirmationUIFragment.setLoadingText("Uploading Images..\n(" + (resultsNeededToShowComfirmationUI-1) + " Images Remaining)");
+                    simpleSuccessCheck();
                     NotifyResultRecieved(true);
                     Log.i("Submitted Image", "Step" + i);
                 }
@@ -482,6 +494,13 @@ public class SubmitActivity extends AppCompatActivity {
         // if all results have been received. display Success UI;
         if (resultsNeededToShowComfirmationUI == 0) {
             comfirmationUIFragment.DisplaySuccessUI(uploadedRecipeId);
+        }
+    }
+    
+    public void simpleSuccessCheck() {
+        if (resultsNeededToShowComfirmationUI == 0) {
+            comfirmationUIFragment.DisplaySuccessUI(uploadedRecipeId);
+            
         }
     }
 }

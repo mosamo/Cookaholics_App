@@ -25,6 +25,7 @@ import com.mohamed_mosabeh.auth.AnonymousAuth;
 import com.mohamed_mosabeh.cookaholics_capstone.other_fragments.EmptyFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_steps_fragments.RecipeStepsCommentsFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_steps_fragments.RecipeStepsContainerFragment;
+import com.mohamed_mosabeh.data_objects.HighlightedRecipe;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.utils.RecipeInstructionsSwipeAdapter;
 
@@ -46,6 +47,7 @@ public class RecipeStepsActivity extends AppCompatActivity {
     
     private Recipe recipe;
     private String recipe_id;
+    private HighlightedRecipe highlightDetails;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,18 +83,34 @@ public class RecipeStepsActivity extends AppCompatActivity {
     
     private void LoadRecipe() {
         
-        reference = database.getReference("recipes");
+        reference = database.getReference("recipes").child(recipe_id);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot != null) {
     
-                    recipe = snapshot.child(recipe_id).getValue(Recipe.class);
+                    recipe = snapshot.getValue(Recipe.class);
                     
                     bigContainerFragment.setAvailableData();
                     bigContainerFragment.checkReceivedData();
                     
                     bigCommentFragment.setRecipeDetails(recipe);
+                    
+                    if (recipe.isHighlighted()) {
+                        reference = database.getReference("highlighted-recipes").child(recipe_id);
+                        reference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot != null)
+                                    highlightDetails = snapshot.getValue(HighlightedRecipe.class);
+                            }
+    
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+        
+                            }
+                        });
+                    }
                     
                 } else {
                     Log.w("Recipe Steps Data", "No Data Found");
@@ -138,5 +156,9 @@ public class RecipeStepsActivity extends AppCompatActivity {
     
     public Recipe getRecipe() {
         return recipe;
+    }
+    
+    public HighlightedRecipe getHighlightDetails() {
+        return highlightDetails;
     }
 }

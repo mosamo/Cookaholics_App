@@ -2,6 +2,7 @@ package com.mohamed_mosabeh.cookaholics_capstone.recipe_steps_fragments;
 
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -11,10 +12,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
+import com.mohamed_mosabeh.data_objects.HighlightedRecipe;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.utils.ParserUtil;
+import com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -23,6 +27,7 @@ public class RecipeStepsCommentsFragment extends Fragment {
     
     private RecipeStepsActivity parent;
     
+    // Basic Recipe Details
     private TextView recipeName;
     private TextView recipeCategory;
     private TextView recipeCuisine;
@@ -33,6 +38,13 @@ public class RecipeStepsCommentsFragment extends Fragment {
     private TextView recipeDate;
     private TextView recipeUsername;
     private TextView recipeLikes;
+    
+    // Highlighted Recipe Details
+    private View hlHorizontal;
+    private CardView hlFrame;
+    private TextView curatorName;
+    private TextView curatorComment;
+    private TextView curatorRating;
     
     public RecipeStepsCommentsFragment() {
         // Required empty public constructor
@@ -61,6 +73,7 @@ public class RecipeStepsCommentsFragment extends Fragment {
             }
         });
         
+        // Basic Recipe Views
         recipeName = view.findViewById(R.id.rcsm_rcName);
         recipeCategory = view.findViewById(R.id.rcsm_rcCategory);
         recipeCuisine = view.findViewById(R.id.rcsm_rcCuisine);
@@ -71,6 +84,13 @@ public class RecipeStepsCommentsFragment extends Fragment {
         recipeDate = view.findViewById(R.id.rcsm_rcDate);
         recipeUsername = view.findViewById(R.id.rcsm_rcUser);
         recipeLikes = view.findViewById(R.id.rscm_LikesCount);
+        
+        // Highlighted Recipe Views
+        hlHorizontal = view.findViewById(R.id.rcom_curatorHorizontal);
+        hlFrame = view.findViewById(R.id.rcom_curatorFrame);
+        curatorComment = view.findViewById(R.id.rcom_curatorComment);
+        curatorName = view.findViewById(R.id.rcom_curatorName);
+        curatorRating = view.findViewById(R.id.rcom_curatorRating);
         
         if (parent.getRecipe() != null)
             setRecipeDetails(parent.getRecipe());
@@ -97,6 +117,15 @@ public class RecipeStepsCommentsFragment extends Fragment {
                 String timeString = dataFormat.format(new Date(time));
     
                 recipeDate.setText(timeString);
+                
+                if (parent.getHighlightDetails() != null) {
+                    HighlightedRecipe hr = parent.getHighlightDetails();
+                    hlHorizontal.setVisibility(View.VISIBLE);
+                    hlFrame.setVisibility(View.VISIBLE);
+                    curatorComment.setText("\"" +hr.getCurator_comment() + "\"");
+                    curatorName.setText("Curator " + hr.getCurator_name() + " Says:");
+                    curatorRating.setText("Rating: " + hr.getCurator_rating() + "/10");
+                }
                 
             } catch (NullPointerException npe) {
                 Log.i("Recipe Comment Details", "Acquired Data too quickly! setting it when the fragment is initialized");

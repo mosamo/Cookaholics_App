@@ -70,7 +70,7 @@ public class CardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<com.moh
         
         holder.cardTagLists.setText(ParserUtil.parseTags(recipe.getTags()).equals("No Tags") ? "" : ParserUtil.parseTags(recipe.getTags()));
 
-        holder.highlightedFrame.setVisibility(recipe.isHighlighted() ? View.GONE : View.VISIBLE);
+        holder.highlightedFrame.setVisibility(recipe.isHighlighted() ? View.VISIBLE : View.GONE);
         
         if (recipe.getIcon().equals("no-image")) {
             // If there is no Image: put placeholder
