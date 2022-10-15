@@ -52,6 +52,10 @@ public class RecipeStepsContainerFragment extends Fragment {
     private Button btnLike;
     private Button btnReport;
     
+    private boolean userDidNotLike = false;
+    
+    private int REPORTS_REQUIRED_THRESHOLD = 25;
+    
     public RecipeStepsContainerFragment() {
     }
     
@@ -60,7 +64,6 @@ public class RecipeStepsContainerFragment extends Fragment {
         this.storage = storage;
         this.database = database;
         this.id = id;
-        getData();
     }
     
     @Override
@@ -104,8 +107,55 @@ public class RecipeStepsContainerFragment extends Fragment {
             }
         });
         
+        mStatusLiking(1);
+        mStatusReporting(1);
+        
+        mCheckLikesAndReports();
+        
         setAvailableData();
         checkReceivedData();
+    }
+    
+    public void mCheckLikesAndReports() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            DatabaseReference likesReference = database.getReference("users").child(user.getUid()).child("likes");
+            likesReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        if (snap.getValue(String.class).equals(id)) {
+                            mStatusLiking(3);
+                            return;
+                        }
+                    }
+                    mStatusLiking(2);
+                }
+    
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+        
+                }
+            });
+            DatabaseReference reportsReference = database.getReference("users").child(user.getUid()).child("reports");
+            reportsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        if (snap.getValue(String.class).equals(id)) {
+                            mStatusReporting(3);
+                            return;
+                        }
+                    }
+                    mStatusReporting(2);
+                }
+        
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+            
+                }
+            });
+        }
     }
     
     private void reportButtonClick() {
@@ -153,18 +203,19 @@ public class RecipeStepsContainerFragment extends Fragment {
     
                 DatabaseReference reference = database.getReference().child("users").child(user_id).child(field);
                 if (add) {
-                    reference.runTransaction(new Transaction.Handler() {
-                        @NonNull
+                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public Transaction.Result doTransaction(@NonNull MutableData currentData) {
-                            int childCount = (int) currentData.getChildrenCount();
-                            reference.child(String.valueOf(childCount)).setValue(id);
-                            return Transaction.success(currentData);
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            int count = 0;
+                            for (DataSnapshot s : snapshot.getChildren()) {
+                                count++;
+                            }
+                            reference.child(String.valueOf(count)).setValue(id);
                         }
-        
+    
                         @Override
-                        public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
-            
+                        public void onCancelled(@NonNull DatabaseError error) {
+        
                         }
                     });
                 } else if (add == false) { // remove
@@ -196,14 +247,11 @@ public class RecipeStepsContainerFragment extends Fragment {
     }
     
     
-    public void getData() {
-    
-    }
-    
     public void setAvailableData() {
         adapter = parent.getOrCreateAdapter();
         recipe = parent.getRecipe();
     }
+    
     public void checkReceivedData() {
         if (recipe != null) {
             txtRecipeName.setText(recipe.getName());
@@ -252,6 +300,7 @@ public class RecipeStepsContainerFragment extends Fragment {
                 btn.setEnabled(true);
                 btn.setTag("fresh");
                 btn.setText("Like");
+                userDidNotLike = true;
                 btn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_icon, 0, 0);
                 btn.setBackgroundColor(getResources().getColor(R.color.purple_500));
                 break;
@@ -259,6 +308,7 @@ public class RecipeStepsContainerFragment extends Fragment {
                 btn.setEnabled(true);
                 btn.setTag("stale");
                 btn.setText("Undo");
+                userDidNotLike = false;
                 btn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_icon, 0, 0);
                 btn.setBackgroundColor(getResources().getColor(R.color.purple_500));
                 break;
@@ -295,12 +345,16 @@ public class RecipeStepsContainerFragment extends Fragment {
         reference.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
-                Long likes = mutableData.getValue(Long.class);
-                if (likes == null) {
+                Long count = mutableData.getValue(Long.class);
+                if (count == null) {
                     mutableData.setValue(1);
                 }
                 else {
-                    mutableData.setValue(likes + 1);
+                    mutableData.setValue(count + 1);
+                }
+                
+                if (methodsTypes.equals("reportMethods") && count + 1 >= REPORTS_REQUIRED_THRESHOLD) {
+                    recipeExodus();
                 }
             
                 return Transaction.success(mutableData);
@@ -325,6 +379,12 @@ public class RecipeStepsContainerFragment extends Fragment {
                 }
             }
         });
+    }
+    
+    private void recipeExodus() {
+        DatabaseReference reference = database.getReference("recipes").child(id);
+        reference.setValue(null);
+        parent.finish();
     }
     
     private void decrementField(DatabaseReference reference, String methodsTypes) {

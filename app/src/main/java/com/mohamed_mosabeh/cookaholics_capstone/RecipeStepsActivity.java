@@ -84,6 +84,7 @@ public class RecipeStepsActivity extends AppCompatActivity {
                 .replace(R.id.ars_bigFrameMain, bigContainerFragment).commit();
     }
     
+    
     private void LoadRecipe() {
         
         reference = database.getReference("recipes").child(recipe_id);
@@ -91,30 +92,34 @@ public class RecipeStepsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot != null) {
+                    
+                        try {
+                            recipe = snapshot.getValue(Recipe.class);
+                            recipe.setId(recipe_id);
     
-                    recipe = snapshot.getValue(Recipe.class);
-                    recipe.setId(recipe_id);
-                    
-                    bigContainerFragment.setAvailableData();
-                    bigContainerFragment.checkReceivedData();
-                    
-                    bigCommentFragment.setRecipeDetails(recipe);
-                    
-                    if (recipe.isHighlighted()) {
-                        reference = database.getReference("highlighted-recipes").child(recipe_id);
-                        reference.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot != null)
-                                    highlightDetails = snapshot.getValue(HighlightedRecipe.class);
-                            }
+                            bigContainerFragment.setAvailableData();
+                            bigContainerFragment.checkReceivedData();
     
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-        
+                            bigCommentFragment.setRecipeDetails(recipe);
+    
+                            if (recipe.isHighlighted()) {
+                                reference = database.getReference("highlighted-recipes").child(recipe_id);
+                                reference.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (snapshot != null)
+                                            highlightDetails = snapshot.getValue(HighlightedRecipe.class);
+                                    }
+            
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                
+                                    }
+                                });
                             }
-                        });
-                    }
+                        } catch (NullPointerException npe) {
+                            Log.w("Recipe Steps", "Recipe Terminated");
+                        }
                     
                 } else {
                     Log.w("Recipe Steps Data", "No Data Found");
