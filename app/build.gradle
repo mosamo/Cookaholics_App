@@ -47,7 +47,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-storage:20.0.2'
     implementation 'com.google.android.material:material:1.6.1'
-    implementation 'com.firebaseui:firebase-ui-database:8.0.2'
     // note to self following are github user libraries
     implementation 'com.github.bumptech.glide:glide:4.14.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.1'
