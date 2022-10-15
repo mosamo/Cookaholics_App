@@ -99,7 +99,7 @@
             android:fontFamily="@font/rubik_regular"
             android:gravity="center"
             android:maxLines="3"
-            android:text="comment"
+            android:text="comment comment comment comment comment comment comment comment comment comment comment comment comment comment comment comment comment"
             android:textColor="#B7494646"
             android:textSize="12sp"
             android:textStyle="bold"

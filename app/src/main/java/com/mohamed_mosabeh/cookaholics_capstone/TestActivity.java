@@ -24,7 +24,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.mohamed_mosabeh.auth.AnonymousAuth;
 import com.mohamed_mosabeh.data_objects.Recipe;
 
 
@@ -51,7 +50,6 @@ public class TestActivity extends AppCompatActivity {
         });
     
         mAuth = FirebaseAuth.getInstance();
-        AnonymousAuth.signIn(this, mAuth);
     }
     
     public void mainButtonClick(View view) {

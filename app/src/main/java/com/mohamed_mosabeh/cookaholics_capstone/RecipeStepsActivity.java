@@ -22,7 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.mohamed_mosabeh.auth.AnonymousAuth;
 import com.mohamed_mosabeh.cookaholics_capstone.other_fragments.EmptyFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_steps_fragments.RecipeStepsCommentsFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_steps_fragments.RecipeStepsContainerFragment;
@@ -69,9 +68,6 @@ public class RecipeStepsActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
         storage= FirebaseStorage.getInstance(getString(R.string.firebase_storage));
         mAuth = FirebaseAuth.getInstance();
-        
-        // Signing in
-        AnonymousAuth.signIn(this, mAuth);
         
         // View Pager Adapter
         

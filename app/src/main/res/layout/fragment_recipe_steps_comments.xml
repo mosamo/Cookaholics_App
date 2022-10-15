@@ -15,487 +15,564 @@
         android:layout_height="match_parent"
         android:clickable="true">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/materialCardView"
+        <ScrollView
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="6dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:scaleX="1"
-            android:scaleY="1"
-            app:cardBackgroundColor="@color/white"
-            app:cardElevation="4dp"
-            app:cardPreventCornerOverlap="false"
+            android:layout_height="fill_parent"
+            android:contentDescription="Scroll"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MaterialCardView.Cut">
+            app:layout_constraintTop_toTopOf="parent">
 
-            <FrameLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_gravity="top"
-                android:background="@drawable/design_recipe_header">
+                android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/rscm_lbl2"
-                    android:layout_width="match_parent"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="28dp"
-                    android:paddingRight="28dp"
-                    android:text="Recipe information:"
-                    android:textColor="#D7FFF9D4"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/rscm_LikesCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|end"
-                    android:layout_marginRight="8dp"
-                    android:background="@drawable/design_yellow_chip"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:text="Likes: 0"
-                    android:textAlignment="textEnd"
-                    android:textColor="#D7FFF9D4"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-            </FrameLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:orientation="vertical">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/rcsm_lbl1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="24dp"
-                        android:paddingRight="8dp"
-                        android:text="Recipe Name: " />
-
-                    <View
-                        android:id="@+id/view10"
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="#579E9D9D" />
-
-                    <TextView
-                        android:id="@+id/rcsm_rcName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#27B5ADAD"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:paddingLeft="16dp"
-                        android:text="My Recipe" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/view8"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#579E9D9D" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/rcsm_lbl3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#FFFFFF"
-                        android:paddingLeft="24dp"
-                        android:paddingRight="8dp"
-                        android:text="Category: " />
-
-                    <View
-                        android:id="@+id/view15"
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="#579E9D9D" />
-
-                    <TextView
-                        android:id="@+id/rcsm_rcCategory"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#2AE6E2E2"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:paddingLeft="16dp"
-                        android:text="Category" />
-
-                    <View
-                        android:id="@+id/view25"
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="#579E9D9D" />
-
-                    <TextView
-                        android:id="@+id/rcsm_lbl2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#FFFFFF"
-                        android:paddingLeft="24dp"
-                        android:paddingRight="8dp"
-                        android:text="Cuisine: " />
-
-                    <View
-                        android:id="@+id/view14"
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="#579E9D9D" />
-
-                    <TextView
-                        android:id="@+id/rcsm_rcCuisine"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#2AE6E2E2"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:paddingLeft="16dp"
-                        android:text="Cuisine" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/view9"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#579E9D9D" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/rcsm_lbl4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#FFFFFF"
-                        android:paddingLeft="24dp"
-                        android:paddingRight="8dp"
-                        android:text="Description: " />
-
-                    <View
-                        android:id="@+id/view16"
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="#579E9D9D" />
-
-                    <TextView
-                        android:id="@+id/rcsm_rcDescription"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#27B5ADAD"
-                        android:ellipsize="end"
-                        android:maxLines="3"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp"
-                        android:text="Lorem Ipsum" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/view11"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#579E9D9D" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/rcsm_lbl6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#FFFFFF"
-                        android:paddingStart="24dp"
-                        android:paddingRight="8dp"
-                        android:text="Servings: " />
-
-                    <View
-                        android:id="@+id/view17"
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="#579E9D9D" />
-
-                    <TextView
-                        android:id="@+id/rcsm_rcServing"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#2AE6E2E2"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:paddingLeft="4dp"
-                        android:text="Servings" />
-
-                    <View
-                        android:id="@+id/view24"
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="#579E9D9D" />
-
-                    <TextView
-                        android:id="@+id/rcsm_lbl9"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#FFFFFF"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="8dp"
-                        android:text="Duration: " />
-
-                    <View
-                        android:id="@+id/view19"
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="#579E9D9D" />
-
-                    <TextView
-                        android:id="@+id/rcsm_rcDuration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#2AE6E2E2"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:paddingStart="4dp"
-                        android:paddingEnd="4dp"
-                        android:text="Duration" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/view20"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#579E9D9D"></View>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/rcsm_lbl8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#FFFFFF"
-                        android:paddingLeft="24dp"
-                        android:paddingRight="8dp"
-                        android:text="Tags: " />
-
-                    <View
-                        android:id="@+id/view22"
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="#579E9D9D" />
-
-                    <TextView
-                        android:id="@+id/rcsm_rcTags"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#27B5ADAD"
-                        android:ellipsize="end"
-                        android:maxLines="3"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp"
-                        android:text="#tags" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/view23"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#579E9D9D" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/rcsm_lbl7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="24dp"
-                        android:paddingRight="8dp"
-                        android:text="Date: " />
-
-                    <View
-                        android:id="@+id/view18"
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="#579E9D9D" />
-
-                    <TextView
-                        android:id="@+id/rcsm_rcDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#2AE6E2E2"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:paddingLeft="4dp"
-                        android:text="Date" />
-
-                    <View
-                        android:id="@+id/view13"
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="#579E9D9D" />
-
-                    <TextView
-                        android:id="@+id/rcsm_lbl10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#FFFFFF"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="8dp"
-                        android:text="User: " />
-
-                    <View
-                        android:id="@+id/view21"
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:background="#579E9D9D" />
-
-                    <TextView
-                        android:id="@+id/rcsm_rcUser"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="#2AE6E2E2"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:paddingStart="4dp"
-                        android:paddingEnd="4dp"
-                        android:text="User" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/rcom_curatorHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#579E9D9D"
-                    android:visibility="gone" />
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/rcom_curatorFrame"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:background="@drawable/design_yellow_chip_curved"
-                    android:visibility="gone"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="2dp"
-                    app:cardMaxElevation="2dp">
+                    android:layout_margin="6dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:scaleX="1"
+                    android:scaleY="1"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardElevation="4dp"
+                    app:cardPreventCornerOverlap="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MaterialCardView.Cut">
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:alpha="0.7"
-                        android:background="@drawable/gradient_recipe_header">
+                        android:layout_height="30dp"
+                        android:layout_gravity="top"
+                        android:background="@drawable/design_recipe_header">
+
+                        <TextView
+                            android:id="@+id/rscm_lbl2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="28dp"
+                            android:paddingRight="28dp"
+                            android:text="Recipe information:"
+                            android:textColor="#D7FFF9D4"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/rscm_LikesCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:layout_marginRight="8dp"
+                            android:background="@drawable/design_yellow_chip"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="Likes: 0"
+                            android:textAlignment="textEnd"
+                            android:textColor="#D7FFF9D4"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:orientation="vertical">
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical">
+                            android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/rcom_curatorName"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="4dp"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:text="Curator John Says:"
-                                android:textColor="#FDFDFD"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/rcom_curatorComment"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:text="&quot;My Favorite Recipe&quot;"
-                                android:textAlignment="center"
-                                android:textColor="#FDFDFD"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/rcom_curatorRating"
+                                android:id="@+id/rcsm_lbl1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_gravity="right"
-                                android:layout_margin="4dp"
-                                android:background="@drawable/design_white_transparent_leaf"
-                                android:paddingStart="10dp"
-                                android:paddingTop="2dp"
-                                android:paddingEnd="10dp"
-                                android:paddingBottom="2dp"
-                                android:text="Rating: 10/10"
-                                android:textColor="#FDFDFD"
-                                android:textStyle="bold" />
+                                android:paddingLeft="24dp"
+                                android:paddingRight="8dp"
+                                android:text="Recipe Name: " />
+
+                            <View
+                                android:id="@+id/view10"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="#579E9D9D" />
+
+                            <TextView
+                                android:id="@+id/rcsm_rcName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="#27B5ADAD"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:paddingLeft="16dp"
+                                android:text="My Recipe" />
                         </LinearLayout>
-                    </FrameLayout>
+
+                        <View
+                            android:id="@+id/view8"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#579E9D9D" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/rcsm_lbl3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="#FFFFFF"
+                                android:paddingLeft="24dp"
+                                android:paddingRight="8dp"
+                                android:text="Category: " />
+
+                            <View
+                                android:id="@+id/view15"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="#579E9D9D" />
+
+                            <TextView
+                                android:id="@+id/rcsm_rcCategory"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="#2AE6E2E2"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:paddingLeft="16dp"
+                                android:text="Category" />
+
+                            <View
+                                android:id="@+id/view25"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="#579E9D9D" />
+
+                            <TextView
+                                android:id="@+id/rcsm_lbl2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="#FFFFFF"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
+                                android:text="Cuisine: " />
+
+                            <View
+                                android:id="@+id/view14"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="#579E9D9D" />
+
+                            <TextView
+                                android:id="@+id/rcsm_rcCuisine"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="#2AE6E2E2"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:paddingLeft="16dp"
+                                android:text="Cuisine" />
+                        </LinearLayout>
+
+                        <View
+                            android:id="@+id/view9"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#579E9D9D" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/rcsm_lbl4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="#FFFFFF"
+                                android:paddingLeft="24dp"
+                                android:paddingRight="8dp"
+                                android:text="Description: " />
+
+                            <View
+                                android:id="@+id/view16"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="#579E9D9D" />
+
+                            <TextView
+                                android:id="@+id/rcsm_rcDescription"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="#27B5ADAD"
+                                android:ellipsize="end"
+                                android:maxLines="3"
+                                android:paddingLeft="16dp"
+                                android:paddingRight="16dp"
+                                android:text="Lorem Ipsum" />
+                        </LinearLayout>
+
+                        <View
+                            android:id="@+id/view11"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#579E9D9D" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/rcsm_lbl6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="#FFFFFF"
+                                android:paddingStart="24dp"
+                                android:paddingRight="8dp"
+                                android:text="Servings: " />
+
+                            <View
+                                android:id="@+id/view17"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="#579E9D9D" />
+
+                            <TextView
+                                android:id="@+id/rcsm_rcServing"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="#2AE6E2E2"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:paddingLeft="4dp"
+                                android:text="Servings" />
+
+                            <View
+                                android:id="@+id/view24"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="#579E9D9D" />
+
+                            <TextView
+                                android:id="@+id/rcsm_lbl9"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="#FFFFFF"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
+                                android:text="Duration: " />
+
+                            <View
+                                android:id="@+id/view19"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="#579E9D9D" />
+
+                            <TextView
+                                android:id="@+id/rcsm_rcDuration"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="#2AE6E2E2"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:paddingStart="4dp"
+                                android:paddingEnd="4dp"
+                                android:text="Duration" />
+                        </LinearLayout>
+
+                        <View
+                            android:id="@+id/view20"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#579E9D9D"></View>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/rcsm_lbl8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="#FFFFFF"
+                                android:paddingLeft="24dp"
+                                android:paddingRight="8dp"
+                                android:text="Tags: " />
+
+                            <View
+                                android:id="@+id/view22"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="#579E9D9D" />
+
+                            <TextView
+                                android:id="@+id/rcsm_rcTags"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="#27B5ADAD"
+                                android:ellipsize="end"
+                                android:maxLines="3"
+                                android:paddingLeft="16dp"
+                                android:paddingRight="16dp"
+                                android:text="#tags" />
+                        </LinearLayout>
+
+                        <View
+                            android:id="@+id/view23"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#579E9D9D" />
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/rcsm_lbl7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="24dp"
+                                android:paddingRight="8dp"
+                                android:text="Date: " />
+
+                            <View
+                                android:id="@+id/view18"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="#579E9D9D" />
+
+                            <TextView
+                                android:id="@+id/rcsm_rcDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="#2AE6E2E2"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:paddingLeft="4dp"
+                                android:text="Date" />
+
+                            <View
+                                android:id="@+id/view13"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="#579E9D9D" />
+
+                            <TextView
+                                android:id="@+id/rcsm_lbl10"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="#FFFFFF"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp"
+                                android:text="User: " />
+
+                            <View
+                                android:id="@+id/view21"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="#579E9D9D" />
+
+                            <TextView
+                                android:id="@+id/rcsm_rcUser"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="#2AE6E2E2"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:paddingStart="4dp"
+                                android:paddingEnd="4dp"
+                                android:text="User" />
+                        </LinearLayout>
+
+                        <View
+                            android:id="@+id/rcom_curatorHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#579E9D9D"
+                            android:visibility="gone" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/rcom_curatorFrame"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:background="@drawable/design_yellow_chip_curved"
+                            android:visibility="invisible"
+                            app:cardCornerRadius="8dp"
+                            app:cardElevation="2dp"
+                            app:cardMaxElevation="2dp">
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:alpha="0.7"
+                                android:background="@drawable/gradient_recipe_header">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/rcom_curatorName"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="4dp"
+                                        android:paddingStart="8dp"
+                                        android:paddingEnd="8dp"
+                                        android:text="Curator John Says:"
+                                        android:textColor="#FDFDFD"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/rcom_curatorComment"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:paddingStart="8dp"
+                                        android:paddingEnd="8dp"
+                                        android:text="&quot;My Favorite Recipe&quot;"
+                                        android:textAlignment="center"
+                                        android:textColor="#FDFDFD"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/rcom_curatorRating"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="right"
+                                        android:layout_margin="4dp"
+                                        android:background="@drawable/design_white_transparent_leaf"
+                                        android:paddingStart="10dp"
+                                        android:paddingTop="2dp"
+                                        android:paddingEnd="10dp"
+                                        android:paddingBottom="2dp"
+                                        android:text="Rating: 10/10"
+                                        android:textColor="#FDFDFD"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </FrameLayout>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/materialCardView">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/rcom_textInputComment"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:hint="Comment"
+                        app:boxStrokeColor="#801E88E5"
+                        app:hintTextColor="#801E88E5"
+                        app:placeholderText="Say Something.."
+                        app:startIconDrawable="@drawable/ic_comment_square">
+
+                        <com.google.android.material.textfield.TextInputEditText
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ?., "
+                            android:maxLength="130" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/rcom_commentSubmit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
+                        android:text="send" />
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp"
+                    app:cardMaxElevation="4dp"
+                    app:layout_constraintBottom_toTopOf="@+id/rcms_backToRecipeSteps"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+
+                    <TextView
+                        android:id="@+id/rcom_LoadingIndicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="sans-serif-medium"
+                        android:padding="8dp"
+                        android:text="Loading.."
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcom_commentRecycler"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp">
+
+                    </androidx.recyclerview.widget.RecyclerView>
                 </androidx.cardview.widget.CardView>
-            </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+                <Button
+                    android:id="@+id/rcms_backToRecipeSteps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:text="Go Back to Recipe"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:cardMaxElevation="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/materialCardView">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcom_commentRecycler"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_margin="4dp">
-
-            </androidx.recyclerview.widget.RecyclerView>
-        </androidx.cardview.widget.CardView>
-
-        <Button
-            android:id="@+id/rcms_backToRecipeSteps"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Go Back to Recipe"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </com.google.android.material.card.MaterialCardView>

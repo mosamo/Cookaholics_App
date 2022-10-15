@@ -2,25 +2,35 @@ package com.mohamed_mosabeh.cookaholics_capstone.recipe_steps_fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
@@ -35,6 +45,7 @@ import com.mohamed_mosabeh.utils.recycler_views.CommentRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.TagsRecipesRecyclerViewAdapter;
 
 import org.checkerframework.checker.units.qual.A;
+import org.w3c.dom.Text;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -43,6 +54,7 @@ import java.util.ArrayList;
 public class RecipeStepsCommentsFragment extends Fragment {
     
     private RecipeStepsActivity parent;
+    
     
     private String id;
     
@@ -58,6 +70,8 @@ public class RecipeStepsCommentsFragment extends Fragment {
     private TextView recipeUsername;
     private TextView recipeLikes;
     
+    private TextView loadingIndicator;
+    
     // Highlighted Recipe Details
     private View hlHorizontal;
     private CardView hlFrame;
@@ -71,6 +85,8 @@ public class RecipeStepsCommentsFragment extends Fragment {
     
     private ArrayList<Comment> comments = new ArrayList<>();
     private RecyclerView.Adapter CommentsAdapter = new CommentRecyclerViewAdapter(comments);
+    
+    private TextInputLayout textInputLayout;
     
     public RecipeStepsCommentsFragment() {
         // Required empty public constructor
@@ -100,10 +116,6 @@ public class RecipeStepsCommentsFragment extends Fragment {
                     Comment comment = snapshot.getValue(Comment.class);
                     comments.add(comment);
                 }
-                
-                // Todo consider this
-                // TODO CONSIDER THIS
-                //ViewUtil.IfDataExistsHideProgressBar(tags.size(), TagProgressBar);
             
                 CommentRecyclerSetup();
             }
@@ -119,11 +131,17 @@ public class RecipeStepsCommentsFragment extends Fragment {
     private void CommentRecyclerSetup() {
         if (CommentRecycler != null) {
             try {
-                CommentRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+                CommentRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.VERTICAL, false));
                 CommentRecycler.setAdapter(CommentsAdapter);
             } catch (Exception e) {
                 Log.w("Recycler Exception", e.getMessage());
             }
+        }
+        if (loadingIndicator != null) {
+            if (comments.size() > 0)
+                loadingIndicator.setText("");
+            else
+                loadingIndicator.setText("No Comments");
         }
     }
     
@@ -147,6 +165,8 @@ public class RecipeStepsCommentsFragment extends Fragment {
             }
         });
         
+        loadingIndicator = view.findViewById(R.id.rcom_LoadingIndicator);
+        
         CommentRecycler = view.findViewById(R.id.rcom_commentRecycler);
         
         // Basic Recipe Views
@@ -167,11 +187,81 @@ public class RecipeStepsCommentsFragment extends Fragment {
         curatorComment = view.findViewById(R.id.rcom_curatorComment);
         curatorName = view.findViewById(R.id.rcom_curatorName);
         curatorRating = view.findViewById(R.id.rcom_curatorRating);
+        textInputLayout = view.findViewById(R.id.rcom_textInputComment);
         
         if (parent.getRecipe() != null)
             setRecipeDetails(parent.getRecipe());
+        
+        // Submit Button
+        Button btnSubmit = view.findViewById(R.id.rcom_commentSubmit);
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitComment();
+            }
+        });
     
         CommentRecyclerSetup();
+    }
+    
+    private void submitComment() {
+        String str = textInputLayout.getEditText().getText().toString().trim();
+        if (!str.isEmpty()) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    
+            if (user != null) {
+                try {
+                    String displayName = "Anonymous";
+                    if (user.getDisplayName() != null && !user.getDisplayName().isEmpty())
+                        displayName = user.getDisplayName();
+    
+                    String user_id = "no-id";
+                    if (user.getUid() != null)
+                        user_id = user.getUid();
+    
+                    DatabaseReference reference = database.getReference().child("comments");
+                    DatabaseReference userReference = database.getReference().child("users").child(user.getUid()).child("comments");
+                    
+    
+                    Comment comment = new Comment();
+                    comment.setDisplay_name(displayName);
+                    comment.setUser_id(user_id);
+                    comment.setRecipe_id(parent.getRecipe().getId());
+                    comment.setContent(str);
+    
+                    reference.push().setValue(comment).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            textInputLayout.getEditText().setText("");
+                            userReference.runTransaction(new Transaction.Handler() {
+                                @NonNull
+                                @Override
+                                public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                                    int childCount = (int) currentData.getChildrenCount();
+                                    Comment small = new Comment();
+                                    small.setContent(str);
+                                    small.setRecipe_id(parent.getRecipe().getId());
+                                    userReference.child(String.valueOf(childCount)).setValue(small);
+                                    return null;
+                                }
+        
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+            
+                                }
+                            });
+                        }
+                    });
+                    
+                    ViewUtil.getSnackBar(parent, "Comment Submission");
+                    
+                } catch (NullPointerException npe) {
+                    Log.w("Comment Submission", npe.getMessage());
+                } catch (Exception e) {
+                    Log.w("Comment Submission", e.getMessage());
+                }
+            }
+        }
     }
     
     public void setRecipeDetails(Recipe r) {

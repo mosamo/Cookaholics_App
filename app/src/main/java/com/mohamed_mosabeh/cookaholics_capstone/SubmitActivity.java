@@ -87,9 +87,6 @@ public class SubmitActivity extends AppCompatActivity {
         comfirmationUIFragment = new RecipeComfirmationFragment(this);
     
         firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user == null)
-            firebaseAuth.signInAnonymously();
     
         // Views
         bottomLinear = findViewById(R.id.rsub_bottomLL);
