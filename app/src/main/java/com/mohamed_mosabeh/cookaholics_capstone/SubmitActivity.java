@@ -1,6 +1,7 @@
 package com.mohamed_mosabeh.cookaholics_capstone;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -25,8 +26,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -38,6 +41,7 @@ import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.Cuisine;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.data_objects.RecipeStep;
+import com.mohamed_mosabeh.data_objects.Tag;
 import com.mohamed_mosabeh.utils.ImageManipulation;
 
 import java.io.ByteArrayOutputStream;
@@ -268,19 +272,69 @@ public class SubmitActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void unused) {
                 reference.child(id).child("timestamp").setValue(ServerValue.TIMESTAMP).addOnSuccessListener(new OnSuccessListener<Void>() {
+                
                     @Override
                     public void onSuccess(Void unused) {
+                        
+                        addOrIncrementTags(recipe.getTags());
+                        
                         if (listImageViews.get(0).getTag() == null)
                             comfirmationUIFragment.setLoadingText("Uploading Recipe Image..");
                         submitUploadImages();
                     }
                 });
+    
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 finish();
                 Log.w("Database Error", e.getMessage());
+            }
+        });
+    }
+    
+    private void addOrIncrementTags(ArrayList<String> tags) {
+        DatabaseReference reference = database.getReference("tags");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (String tag : tags) {
+                    if (snapshot.hasChild(tag)) {
+                        DatabaseReference ref = reference.child(tag).child("recipes_count");
+                        ref.runTransaction(new Transaction.Handler() {
+                            @NonNull
+                            @Override
+                            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                                Long recipeCount = currentData.getValue(Long.class);
+                                if (recipeCount == null || recipeCount == 0) {
+                                    currentData.setValue(1);
+                                } else {
+                                    currentData.setValue(recipeCount + 1);
+                                }
+                                return Transaction.success(currentData);
+                            }
+    
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+        
+                            }
+                        });
+                    } else {
+                        Tag t = new Tag();
+                        t.setHits(0);
+                        t.setRecipes_count(1);
+                        t.setTrending(false);
+                        reference.child(tag).setValue(t);
+                    }
+                }
+                
+                reference.removeEventListener(this);
+            }
+    
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+        
             }
         });
     }

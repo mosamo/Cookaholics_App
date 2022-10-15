@@ -301,7 +301,7 @@ public class RecipeStepsCommentsFragment extends Fragment {
                                     small.setContent(str);
                                     small.setRecipe_id(parent.getRecipe().getId());
                                     userReference.child(String.valueOf(childCount)).setValue(small);
-                                    return null;
+                                    return Transaction.success(currentData);
                                 }
         
                                 @Override
