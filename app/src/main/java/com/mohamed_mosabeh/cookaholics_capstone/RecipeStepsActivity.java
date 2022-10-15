@@ -72,7 +72,7 @@ public class RecipeStepsActivity extends AppCompatActivity {
         // View Pager Adapter
         
         // Initiate Fragments
-        bigContainerFragment = new RecipeStepsContainerFragment(this, storage);
+        bigContainerFragment = new RecipeStepsContainerFragment(this, database, storage, recipe_id);
         bigCommentFragment = new RecipeStepsCommentsFragment(this, database, recipe_id);
         emptyFragment = new EmptyFragment();
         

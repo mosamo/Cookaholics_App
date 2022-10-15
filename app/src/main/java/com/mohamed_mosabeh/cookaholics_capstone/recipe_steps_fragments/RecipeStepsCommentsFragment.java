@@ -92,7 +92,7 @@ public class RecipeStepsCommentsFragment extends Fragment {
     private boolean mPermissionToComment = false;
     private String permissionToCommentStatus = "Loading..";
     
-    private boolean DEBUG_CHATROOM_MODE = true;
+    private boolean DEBUG_CHATROOM_MODE = false;
     
     public RecipeStepsCommentsFragment() {
         // Required empty public constructor
@@ -145,12 +145,12 @@ public class RecipeStepsCommentsFragment extends Fragment {
                     }
                 });
             }
-        
     }
     
     private void getCommentsData() {
         DatabaseReference reference = database.getReference("comments");
-        Query commentsQuery = reference.orderByChild("recipe_id").equalTo(id);
+        // TODO: MOHAMED MARKER 1 - HERE
+        Query commentsQuery = reference.orderByChild("recipe_id").equalTo(id).limitToFirst(10);
     
         commentsQuery.addValueEventListener(new ValueEventListener() {
             @Override
@@ -162,9 +162,6 @@ public class RecipeStepsCommentsFragment extends Fragment {
                     Comment comment = snapshot.getValue(Comment.class);
                     comments.add(comment);
                 }
-                
-                if (!DEBUG_CHATROOM_MODE)
-                    reference.removeEventListener(this);
             
                 CommentRecyclerSetup();
             }

@@ -105,12 +105,14 @@
                 android:layout_weight="1"></View>
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/rs_likeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:backgroundTintMode="add"
                 android:drawableTop="@drawable/ic_like_icon"
+                android:tag="fresh"
                 android:text="like" />
 
             <View
@@ -133,11 +135,13 @@
                 android:layout_weight="1"></View>
 
             <Button
-                android:id="@+id/button5"
+                android:id="@+id/rs_reportButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:drawableTop="@drawable/ic_report_flag"
+                android:tag="fresh"
                 android:text="report" />
 
             <View
