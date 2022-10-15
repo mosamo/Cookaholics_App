@@ -275,9 +275,11 @@ public class SubmitActivity extends AppCompatActivity {
                 
                     @Override
                     public void onSuccess(Void unused) {
-                        
-                        addOrIncrementTags(recipe.getTags());
-                        
+                        try {
+                            addOrIncrementTags(recipe.getTags());
+                        } catch (NullPointerException npe) {
+                            Log.i("Npe Submit Activity", "no tags!");
+                        }
                         if (listImageViews.get(0).getTag() == null)
                             comfirmationUIFragment.setLoadingText("Uploading Recipe Image..");
                         submitUploadImages();
@@ -295,48 +297,52 @@ public class SubmitActivity extends AppCompatActivity {
     }
     
     private void addOrIncrementTags(ArrayList<String> tags) {
-        DatabaseReference reference = database.getReference("tags");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (String tag : tags) {
-                    if (snapshot.hasChild(tag)) {
-                        DatabaseReference ref = reference.child(tag).child("recipes_count");
-                        ref.runTransaction(new Transaction.Handler() {
-                            @NonNull
-                            @Override
-                            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
-                                Long recipeCount = currentData.getValue(Long.class);
-                                if (recipeCount == null || recipeCount == 0) {
-                                    currentData.setValue(1);
-                                } else {
-                                    currentData.setValue(recipeCount + 1);
-                                }
-                                return Transaction.success(currentData);
-                            }
-    
-                            @Override
-                            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
-        
-                            }
-                        });
-                    } else {
-                        Tag t = new Tag();
-                        t.setHits(0);
-                        t.setRecipes_count(1);
-                        t.setTrending(false);
-                        reference.child(tag).setValue(t);
-                    }
-                }
+            DatabaseReference reference = database.getReference("tags");
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    try {
+                        for (String tag : tags) {
+                            if (snapshot.hasChild(tag)) {
+                                DatabaseReference ref = reference.child(tag).child("recipes_count");
+                                ref.runTransaction(new Transaction.Handler() {
+                                    @NonNull
+                                    @Override
+                                    public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                                        Long recipeCount = currentData.getValue(Long.class);
+                                        if (recipeCount == null || recipeCount == 0) {
+                                            currentData.setValue(1);
+                                        } else {
+                                            currentData.setValue(recipeCount + 1);
+                                        }
+                                        return Transaction.success(currentData);
+                                    }
                 
-                reference.removeEventListener(this);
-            }
-    
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                                    @Override
+                                    public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                    
+                                    }
+                                });
+                            } else {
+                                Tag t = new Tag();
+                                t.setHits(0);
+                                t.setRecipes_count(1);
+                                t.setTrending(false);
+                                reference.child(tag).setValue(t);
+                            }
+                        }
+                    } catch (NullPointerException npe) {
+                        Log.i("Npe: Submit tags", "no tags");
+                    }
+            
+                    reference.removeEventListener(this);
+                }
         
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+            
+                }
+            });
     }
     
     private void submitUploadImages() {

@@ -223,8 +223,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     private void getWeeklyRecipesData() {
         DatabaseReference reference = database.getReference("recipes");
         Query latestEightRecipes = reference.orderByChild("timestamp").limitToLast(8);
-        
-        latestEightRecipes.addValueEventListener(new ValueEventListener() {
+        latestEightRecipes.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
     
@@ -295,7 +294,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         DatabaseReference reference = database.getReference("categories");
         Query firstTwentyCategories = reference.limitToFirst(8);
     
-        firstTwentyCategories.addValueEventListener(new ValueEventListener() {
+        firstTwentyCategories.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
     

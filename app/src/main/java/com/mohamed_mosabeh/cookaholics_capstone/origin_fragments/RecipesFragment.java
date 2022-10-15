@@ -247,7 +247,7 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
         DatabaseReference reference = database.getReference("cuisines");
         Query topSixCuisines = reference.orderByChild("hits").limitToLast(6);
     
-        topSixCuisines.addValueEventListener(new ValueEventListener() {
+        topSixCuisines.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
             
