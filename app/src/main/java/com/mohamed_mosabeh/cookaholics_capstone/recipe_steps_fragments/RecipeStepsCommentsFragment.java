@@ -87,6 +87,12 @@ public class RecipeStepsCommentsFragment extends Fragment {
     private RecyclerView.Adapter CommentsAdapter = new CommentRecyclerViewAdapter(comments);
     
     private TextInputLayout textInputLayout;
+    private TextView commentPreventerLoading;
+    private Button btnSubmit;
+    private boolean mPermissionToComment = false;
+    private String permissionToCommentStatus = "Loading..";
+    
+    private boolean DEBUG_CHATROOM_MODE = true;
     
     public RecipeStepsCommentsFragment() {
         // Required empty public constructor
@@ -99,7 +105,47 @@ public class RecipeStepsCommentsFragment extends Fragment {
     }
     
     private void getData() {
+        if (DEBUG_CHATROOM_MODE)
+            mPermissionToComment = true;
         getCommentsData();
+        getPermissionToComment();
+    }
+    
+    private void getPermissionToComment() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    
+            if (user != null && !DEBUG_CHATROOM_MODE) {
+                DatabaseReference reference = database.getReference("users").child(user.getUid()).child("comments");
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            // if you found that the user already commented to this recipe..
+                            if (snapshot.child("recipe_id").getValue(String.class).equals(id)) {
+                                reference.removeEventListener(this);
+                                mPermissionToComment = false;
+                                permissionToCommentStatus = "(Max 1 Comment / per User)";
+                                changePermissionToComment();
+                                return;
+                            }
+                        }
+    
+                        // if the user didn't comment. he can comment
+    
+                        // do we need to remove event listener on success?
+                        mPermissionToComment = true;
+                        changePermissionToComment();
+                        return;
+                    }
+            
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                
+                    }
+                });
+            }
+        
     }
     
     private void getCommentsData() {
@@ -116,6 +162,9 @@ public class RecipeStepsCommentsFragment extends Fragment {
                     Comment comment = snapshot.getValue(Comment.class);
                     comments.add(comment);
                 }
+                
+                if (!DEBUG_CHATROOM_MODE)
+                    reference.removeEventListener(this);
             
                 CommentRecyclerSetup();
             }
@@ -131,7 +180,7 @@ public class RecipeStepsCommentsFragment extends Fragment {
     private void CommentRecyclerSetup() {
         if (CommentRecycler != null) {
             try {
-                CommentRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+                CommentRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.VERTICAL, true));
                 CommentRecycler.setAdapter(CommentsAdapter);
             } catch (Exception e) {
                 Log.w("Recycler Exception", e.getMessage());
@@ -187,13 +236,20 @@ public class RecipeStepsCommentsFragment extends Fragment {
         curatorComment = view.findViewById(R.id.rcom_curatorComment);
         curatorName = view.findViewById(R.id.rcom_curatorName);
         curatorRating = view.findViewById(R.id.rcom_curatorRating);
+        
+        // comment Views
         textInputLayout = view.findViewById(R.id.rcom_textInputComment);
+        
+        commentPreventerLoading = view.findViewById(R.id.rcom_commentPreventer);
+        commentPreventerLoading.setText(permissionToCommentStatus);
+        
+        btnSubmit = view.findViewById(R.id.rcom_commentSubmit);
+        
         
         if (parent.getRecipe() != null)
             setRecipeDetails(parent.getRecipe());
         
         // Submit Button
-        Button btnSubmit = view.findViewById(R.id.rcom_commentSubmit);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,6 +257,7 @@ public class RecipeStepsCommentsFragment extends Fragment {
             }
         });
     
+        changePermissionToComment();
         CommentRecyclerSetup();
     }
     
@@ -232,6 +289,11 @@ public class RecipeStepsCommentsFragment extends Fragment {
                     reference.push().setValue(comment).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
+                            if (!DEBUG_CHATROOM_MODE) {
+                                mPermissionToComment = false;
+                                permissionToCommentStatus = "(Max 1 Comment / per User)";
+                            }
+                            changePermissionToComment();
                             textInputLayout.getEditText().setText("");
                             userReference.runTransaction(new Transaction.Handler() {
                                 @NonNull
@@ -250,10 +312,10 @@ public class RecipeStepsCommentsFragment extends Fragment {
             
                                 }
                             });
+                            ViewUtil.getSnackBar(parent, "Comment Submitted!");
                         }
                     });
                     
-                    ViewUtil.getSnackBar(parent, "Comment Submission");
                     
                 } catch (NullPointerException npe) {
                     Log.w("Comment Submission", npe.getMessage());
@@ -261,6 +323,26 @@ public class RecipeStepsCommentsFragment extends Fragment {
                     Log.w("Comment Submission", e.getMessage());
                 }
             }
+        }
+    }
+    
+    public void changePermissionToComment() {
+        try {
+            
+            if (mPermissionToComment) {
+                btnSubmit.setVisibility(View.VISIBLE);
+                textInputLayout.setVisibility(View.VISIBLE);
+                commentPreventerLoading.setVisibility(View.GONE);
+                commentPreventerLoading.setText(permissionToCommentStatus);
+            } else {
+                btnSubmit.setVisibility(View.GONE);
+                textInputLayout.setVisibility(View.GONE);
+                commentPreventerLoading.setVisibility(View.VISIBLE);
+                commentPreventerLoading.setText(permissionToCommentStatus);
+            }
+            
+        } catch (NullPointerException npe) {
+            Log.w("Comments Fragment", npe.getMessage());
         }
     }
     

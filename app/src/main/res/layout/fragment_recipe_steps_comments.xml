@@ -2,6 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rcom_txtCommentPreventer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scaleX="1"
@@ -420,7 +421,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="4dp"
                             android:background="@drawable/design_yellow_chip_curved"
-                            android:visibility="invisible"
+                            android:visibility="gone"
                             app:cardCornerRadius="8dp"
                             app:cardElevation="2dp"
                             app:cardMaxElevation="2dp">
@@ -499,6 +500,7 @@
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:hint="Comment"
+                        android:visibility="gone"
                         app:boxStrokeColor="#801E88E5"
                         app:hintTextColor="#801E88E5"
                         app:placeholderText="Say Something.."
@@ -522,7 +524,19 @@
                         android:layout_marginEnd="8dp"
                         android:paddingTop="16dp"
                         android:paddingBottom="16dp"
-                        android:text="send" />
+                        android:text="send"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/rcom_commentPreventer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:text="Loading.."
+                        android:textAlignment="center"
+                        android:textSize="16sp"
+                        android:textStyle="bold|italic" />
                 </LinearLayout>
 
                 <androidx.cardview.widget.CardView
