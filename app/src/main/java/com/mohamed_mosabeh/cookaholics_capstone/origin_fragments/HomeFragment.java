@@ -15,12 +15,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,7 +37,7 @@ import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.HighlightedRecipe;
 import com.mohamed_mosabeh.data_objects.Recipe;
-import com.mohamed_mosabeh.utils.ViewUtil;
+import com.mohamed_mosabeh.utils.ViewUtils;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerCategoryClickInterface;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
 import com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter;
@@ -141,8 +139,8 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
             }
         });
         
-        ViewUtil.IfDataExistsHideProgressBar(recipes.size(), WeeklyHottestProgress);
-        ViewUtil.IfDataExistsHideProgressBar(categories.size(), CategoriesProgress);
+        ViewUtils.IfDataExistsHideProgressBar(recipes.size(), WeeklyHottestProgress);
+        ViewUtils.IfDataExistsHideProgressBar(categories.size(), CategoriesProgress);
         
         SetUpRecyclers();
     }
@@ -243,7 +241,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                 }
     
     
-                ViewUtil.IfDataExistsHideProgressBar(recipes.size(), WeeklyHottestProgress);
+                ViewUtils.IfDataExistsHideProgressBar(recipes.size(), WeeklyHottestProgress);
                 fetchRecipesImages(recipes);
                 WeeklyRecyclerSetUp();
             }
@@ -315,7 +313,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                 }
     
     
-                ViewUtil.IfDataExistsHideProgressBar(categories.size(), CategoriesProgress);
+                ViewUtils.IfDataExistsHideProgressBar(categories.size(), CategoriesProgress);
                 fetchCategoriesImages(categories);
                 CategoryRecyclerSetUp();
             }

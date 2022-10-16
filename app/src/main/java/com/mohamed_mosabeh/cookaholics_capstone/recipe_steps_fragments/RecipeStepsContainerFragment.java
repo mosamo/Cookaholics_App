@@ -3,7 +3,6 @@ package com.mohamed_mosabeh.cookaholics_capstone.recipe_steps_fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,12 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
-import com.mohamed_mosabeh.data_objects.Comment;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.utils.RecipeInstructionsSwipeAdapter;
-import com.mohamed_mosabeh.utils.ViewUtil;
-
-import org.mockito.kotlin.KStubbing;
 
 public class RecipeStepsContainerFragment extends Fragment {
     

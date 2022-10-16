@@ -7,7 +7,7 @@ import android.widget.ProgressBar;
 
 import com.google.android.material.snackbar.Snackbar;
 
-public class ViewUtil {
+public class ViewUtils {
     public static void IfDataExistsHideProgressBar (int entries, ProgressBar p) {
         if (entries > 0)
             if (p != null)

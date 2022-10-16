@@ -14,31 +14,31 @@ import com.mohamed_mosabeh.utils.click_interfaces.RecyclerTagClickInterface;
 
 import java.util.ArrayList;
 
-public class TagsRecipesRecyclerViewAdapter extends RecyclerView.Adapter<TagsRecipesRecyclerViewAdapter.TagsRecipesViewHolder> {
+public class TagsDetailsRecyclerViewAdapter extends RecyclerView.Adapter<TagsDetailsRecyclerViewAdapter.TagDetailsViewHolder> {
     
     ArrayList<Tag> tags;
-    
     private final RecyclerTagClickInterface mClickInterface;
     
-    public TagsRecipesRecyclerViewAdapter(ArrayList<Tag> tags, RecyclerTagClickInterface mClickInterface) {
+    public TagsDetailsRecyclerViewAdapter(ArrayList<Tag> tags, RecyclerTagClickInterface mClickInterface) {
         this.tags = tags;
         this.mClickInterface = mClickInterface;
     }
     
     @NonNull
     @Override
-    public TagsRecipesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_recipes_tag_scrip, parent, false);
-        TagsRecipesRecyclerViewAdapter.TagsRecipesViewHolder viewHolder = new TagsRecipesRecyclerViewAdapter.TagsRecipesViewHolder(view, mClickInterface);
+    public TagDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_recipes_tag_scrip_two, parent, false);
+        TagsDetailsRecyclerViewAdapter.TagDetailsViewHolder viewHolder = new TagsDetailsRecyclerViewAdapter.TagDetailsViewHolder(view, mClickInterface);
         return viewHolder;
     }
     
     @Override
-    public void onBindViewHolder(@NonNull TagsRecipesRecyclerViewAdapter.TagsRecipesViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TagsDetailsRecyclerViewAdapter.TagDetailsViewHolder holder, int position) {
         Tag tag = tags.get(position);
         
         holder.textContent.setText("#" + tag.getName());
-        
+        holder.textHits.setText(tag.getHits() +"\nhits");
+        holder.textRecipes.setText(tag.getRecipes_count()+"\nrecipes");
     }
     
     @Override
@@ -46,13 +46,17 @@ public class TagsRecipesRecyclerViewAdapter extends RecyclerView.Adapter<TagsRec
         return tags.size();
     }
     
-    public static class TagsRecipesViewHolder extends RecyclerView.ViewHolder {
+    public static class TagDetailsViewHolder extends RecyclerView.ViewHolder {
         
         TextView textContent;
+        TextView textHits;
+        TextView textRecipes;
         
-        public TagsRecipesViewHolder(@NonNull View itemView, RecyclerTagClickInterface mClickInterface) {
+        public TagDetailsViewHolder(@NonNull View itemView, RecyclerTagClickInterface mClickInterface) {
             super(itemView);
             textContent = itemView.findViewById(R.id.scrip_scripText);
+            textHits = itemView.findViewById(R.id.scrip_scripHits);
+            textRecipes = itemView.findViewById(R.id.scrip_scripRecipes);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

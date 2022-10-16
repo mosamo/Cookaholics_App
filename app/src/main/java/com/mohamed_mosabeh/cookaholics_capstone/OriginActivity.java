@@ -10,6 +10,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.MoreCategoriesFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.MoreCuisinesFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.MoreNewestFragment;
+import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.MoreTagsFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.filtered.FilteredByParametersFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.AccountFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HomeFragment;
@@ -34,10 +35,11 @@ public class OriginActivity extends AppCompatActivity {
     private AccountFragment accountFragment = new AccountFragment();
     private HottestFragment hottestFragment = new HottestFragment();
     
-    // Alternative Fragments
+    // More Details Fragments
     private MoreCategoriesFragment moreCategories;
     private MoreCuisinesFragment moreCuisines;
     private MoreNewestFragment moreNewest;
+    private MoreTagsFragment moreTags;
     private FilteredByParametersFragment filteredByParametersFragment;
     
     
@@ -149,6 +151,14 @@ public class OriginActivity extends AppCompatActivity {
                 } else {
                     moreCuisines = new MoreCuisinesFragment(this, database);
                     switchFragment(moreCuisines);
+                }
+                break;
+            case "more_tags":
+                if (moreTags != null) {
+                    switchFragment(moreTags);
+                } else {
+                    moreTags = new MoreTagsFragment(this, database);
+                    switchFragment(moreTags);
                 }
                 break;
             case "filtered_by":

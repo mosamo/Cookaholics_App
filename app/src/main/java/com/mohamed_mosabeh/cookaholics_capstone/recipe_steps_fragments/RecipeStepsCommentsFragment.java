@@ -10,17 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,15 +33,9 @@ import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.data_objects.Comment;
 import com.mohamed_mosabeh.data_objects.HighlightedRecipe;
 import com.mohamed_mosabeh.data_objects.Recipe;
-import com.mohamed_mosabeh.data_objects.Tag;
 import com.mohamed_mosabeh.utils.ParserUtil;
-import com.mohamed_mosabeh.utils.ViewUtil;
-import com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter;
+import com.mohamed_mosabeh.utils.ViewUtils;
 import com.mohamed_mosabeh.utils.recycler_views.CommentRecyclerViewAdapter;
-import com.mohamed_mosabeh.utils.recycler_views.TagsRecipesRecyclerViewAdapter;
-
-import org.checkerframework.checker.units.qual.A;
-import org.w3c.dom.Text;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -309,7 +299,7 @@ public class RecipeStepsCommentsFragment extends Fragment {
             
                                 }
                             });
-                            ViewUtil.getSnackBar(parent, "Comment Submitted!");
+                            ViewUtils.getSnackBar(parent, "Comment Submitted!");
                         }
                     });
                     

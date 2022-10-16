@@ -49,7 +49,7 @@
                         android:ellipsize="end"
                         android:fontFamily="@font/nunito_bold_main"
                         android:maxLines="1"
-                        android:text="Welcome, Guest!"
+                        android:text="Welcome Home!"
                         android:textColor="#4E4E4E"
                         android:textSize="20sp" />
 

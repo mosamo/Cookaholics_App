@@ -1,11 +1,11 @@
 package com.mohamed_mosabeh.cookaholics_capstone.more_fragments;
 
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -22,27 +22,29 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.mohamed_mosabeh.cookaholics_capstone.OriginActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
-import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
-import com.mohamed_mosabeh.data_objects.Recipe;
-import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
-import com.mohamed_mosabeh.utils.recycler_views.CompactRecipesRecyclerViewAdapter;
+import com.mohamed_mosabeh.data_objects.Category;
+import com.mohamed_mosabeh.data_objects.Tag;
+import com.mohamed_mosabeh.utils.click_interfaces.RecyclerTagClickInterface;
+import com.mohamed_mosabeh.utils.recycler_views.CategoryMainRecyclerViewAdapter;
+import com.mohamed_mosabeh.utils.recycler_views.TagsDetailsRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.Set;
 
-public class MoreNewestFragment extends Fragment implements RecyclerRecipeClickInterface, MoreRecipesBaseInterface {
+public class MoreTagsFragment extends Fragment implements MoreRecipesBaseInterface, RecyclerTagClickInterface {
     
     private OriginActivity parent;
     private FirebaseDatabase database;
     
-    private ArrayList<Recipe> recipes = new ArrayList<>();
-    private RecyclerView recipeRecycler;
-    private RecyclerView.Adapter recipeAdapter = new CompactRecipesRecyclerViewAdapter(recipes, this, "New Recipe");
+    private ArrayList<Tag> tags = new ArrayList<>();
+    private RecyclerView tagsRecycler;
+    private RecyclerView.Adapter tagAdapter = new TagsDetailsRecyclerViewAdapter(tags, this);
     
-    public MoreNewestFragment() {
+    public MoreTagsFragment() {
         // Required empty public constructor
     }
     
-    public MoreNewestFragment(OriginActivity parent, FirebaseDatabase database) {
+    public MoreTagsFragment(OriginActivity parent, FirebaseDatabase database) {
         this.parent = parent;
         this.database = database;
         getData();
@@ -51,9 +53,10 @@ public class MoreNewestFragment extends Fragment implements RecyclerRecipeClickI
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_more_newest, container, false);
+        View v = inflater.inflate(R.layout.fragment_more_tags, container, false);
         
         SetupViews(v);
+        
         RecyclerSetup();
         
         return v;
@@ -61,21 +64,26 @@ public class MoreNewestFragment extends Fragment implements RecyclerRecipeClickI
     
     @Override
     public void getData() {
-        DatabaseReference reference = database.getReference("recipes");
-        Query newestThirtySix = reference.orderByChild("timestamp").limitToLast(36);
+        DatabaseReference reference = database.getReference("tags");
+        Query topThirtySixTags = reference.orderByChild("recipes_count").limitToLast(36);
     
-        newestThirtySix.addValueEventListener(new ValueEventListener() {
+        // maybe value event listener is not the best choice
+        // but I want stuff to show up
+        topThirtySixTags.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
             
-                recipes.clear();
+                tags.clear();
             
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Recipe recipe = snapshot.getValue(Recipe.class);
-                    recipe.setId(snapshot.getKey());
-                    recipes.add(recipe);
-                }
                 
+                    Tag t = snapshot.getValue(Tag.class);
+                    t.setName(snapshot.getKey());
+                
+                    tags.add(t);
+                
+                }
+            
                 RecyclerSetup();
             }
         
@@ -89,8 +97,8 @@ public class MoreNewestFragment extends Fragment implements RecyclerRecipeClickI
     
     @Override
     public void SetupViews(View view) {
-        recipeRecycler = view.findViewById(R.id.fmnr_Recycler);
-        Button btnBack = view.findViewById(R.id.fmnr_back);
+        tagsRecycler = view.findViewById(R.id.mtf_Recycler);
+        Button btnBack = view.findViewById(R.id.mtf_back);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,16 +109,16 @@ public class MoreNewestFragment extends Fragment implements RecyclerRecipeClickI
     
     @Override
     public void RecyclerSetup() {
-        if (recipeRecycler != null) {
+        if (tagsRecycler != null) {
             try {
-                recipeRecycler.setLayoutManager(new GridLayoutManager(parent.getApplicationContext(), 2, GridLayoutManager.HORIZONTAL, false));
-                recipeRecycler.setAdapter(recipeAdapter);
-                recipeRecycler.addItemDecoration(new RecyclerView.ItemDecoration() {
+                tagsRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+                tagsRecycler.setAdapter(tagAdapter);
+                /*tagsRecycler.addItemDecoration(new RecyclerView.ItemDecoration() {
                     @Override
                     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                        outRect.set(6, 0, 6, 16);
+                        outRect.set(16, 16, 16, 16);
                     }
-                });
+                });*/
             
             } catch (Exception e) {
                 Log.w("Recycler Exception", e.getMessage());
@@ -119,9 +127,7 @@ public class MoreNewestFragment extends Fragment implements RecyclerRecipeClickI
     }
     
     @Override
-    public void onItemRecipeClick(int position) {
-        Intent intent = new Intent(getActivity(), RecipeStepsActivity.class);
-        intent.putExtra("recipe_id", recipes.get(position).getId());
-        startActivity(intent);
+    public void onItemTagClick(int position) {
+    
     }
 }
