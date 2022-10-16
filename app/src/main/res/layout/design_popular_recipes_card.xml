@@ -92,7 +92,7 @@
             android:maxLines="1"
             android:minLines="1"
             android:text="Default Recipe Name"
-            android:textColor="#BA55D3"
+            android:textColor="#333333"
             android:textSize="18sp"
             android:textStyle="bold"></TextView>
 
