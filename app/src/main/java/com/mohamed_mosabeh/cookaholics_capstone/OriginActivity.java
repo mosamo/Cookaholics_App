@@ -12,6 +12,7 @@ import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.MoreCuisinesFragm
 import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.MoreNewestFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.MoreTagsFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.filtered.FilteredByParametersFragment;
+import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.filtered.FilteredByTagFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.AccountFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HomeFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HottestFragment;
@@ -41,6 +42,7 @@ public class OriginActivity extends AppCompatActivity {
     private MoreNewestFragment moreNewest;
     private MoreTagsFragment moreTags;
     private FilteredByParametersFragment filteredByParametersFragment;
+    private FilteredByTagFragment filteredByTagFragment;
     
     
     @Override
@@ -97,9 +99,10 @@ public class OriginActivity extends AppCompatActivity {
     
     
     
-        /** this fragment fetches data at runtime, so we it won't lock up the app by fetching data immediately
+        /** following fragments fetches data at runtime, so we it won't lock up the app by fetching data immediately
          * therefore we can safely initialize it in advance **/
          filteredByParametersFragment = new FilteredByParametersFragment(this, database);
+         filteredByTagFragment = new FilteredByTagFragment(this, database);
 //
 //        // default fragment
 //        getSupportFragmentManager().beginTransaction()
@@ -164,6 +167,9 @@ public class OriginActivity extends AppCompatActivity {
             case "filtered_by":
                 switchFragment(filteredByParametersFragment);
                 break;
+            case "filtered_by_tag":
+                switchFragment(filteredByTagFragment);
+                break;
             default:
                 break;
         }
@@ -181,5 +187,9 @@ public class OriginActivity extends AppCompatActivity {
     
     public void setFilteredFragmentParameter(String type, String value, String returnsTo) {
         filteredByParametersFragment.setQueryParameters(type, value, returnsTo);
+    }
+    
+    public void setFilteredFragmentTag(String tag) {
+        filteredByTagFragment.setTagSearch(tag);
     }
 }

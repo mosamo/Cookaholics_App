@@ -1,6 +1,5 @@
 package com.mohamed_mosabeh.cookaholics_capstone.more_fragments.filtered;
 
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 
@@ -23,77 +22,65 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.mohamed_mosabeh.cookaholics_capstone.OriginActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
-import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
+import com.mohamed_mosabeh.cookaholics_capstone.TestActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.MoreRecipesBaseInterface;
-import com.mohamed_mosabeh.data_objects.Comment;
 import com.mohamed_mosabeh.data_objects.Recipe;
-import com.mohamed_mosabeh.utils.click_interfaces.RecyclerCategoryClickInterface;
+import com.mohamed_mosabeh.utils.ViewUtils;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
-import com.mohamed_mosabeh.utils.recycler_views.CategoryMainRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.CompactRecipesRecyclerViewAdapter;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Locale;
 
-public class FilteredByParametersFragment extends Fragment implements RecyclerRecipeClickInterface, MoreRecipesBaseInterface {
+public class FilteredByTagFragment extends Fragment implements MoreRecipesBaseInterface, RecyclerRecipeClickInterface {
     
     private OriginActivity parent;
     private FirebaseDatabase database;
     
     private ArrayList<Recipe> recipes = new ArrayList<>();
-    private RecyclerView recipesRecycler;
-    private String qParameter_type = "?";
-    private String qParameter_value = "?";
-    private String return_to_fragment;
-    private RecyclerView.Adapter adapter = new CompactRecipesRecyclerViewAdapter(recipes, this, "Filtered Recipe");
+    private RecyclerView recipeRecycler;
+    private RecyclerView.Adapter recipeAdapter = new CompactRecipesRecyclerViewAdapter(recipes, this, "Tag Found");
     
+    private String mWantedTag;
     private TextView loadingTextview;
-    private TextView searchLabel;
     
-    public FilteredByParametersFragment() {
+    public void setTagSearch(String tag) {
+        mWantedTag = tag;
+    }
+    
+    public FilteredByTagFragment() {
         // Required empty public constructor
     }
     
-    public FilteredByParametersFragment(OriginActivity parent, FirebaseDatabase database) {
+    public FilteredByTagFragment(OriginActivity parent, FirebaseDatabase database) {
         this.parent = parent;
         this.database = database;
-    }
-    
-    public void setQueryParameters(String param_type, String param_value, String returnsTo) {
-        qParameter_type = param_type;
-        qParameter_value = param_value;
-        return_to_fragment = returnsTo;
-        getRuntimeData();
     }
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_filtered_by_parameters, container, false);
+        
+        View view = inflater.inflate(R.layout.fragment_filtered_by_tag, container, false);
         
         SetupViews(view);
-        RecyclerSetup();
+        getRuntimeData();
         
         return view;
     }
     
     private void getRuntimeData() {
-        recipes.clear();
-        
         DatabaseReference reference = database.getReference("recipes");
-        Query commentsQuery = reference.orderByChild(qParameter_type).equalTo(qParameter_value).limitToFirst(12);
-    
-        commentsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query mHundredRecipes = reference.limitToLast(100);
+        mHundredRecipes.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
             
+                recipes.clear();
             
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Recipe r = snapshot.getValue(Recipe.class);
-                    recipes.add(r);
-                    r.setId(snapshot.getKey());
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Recipe recipe = snapshot.getValue(Recipe.class);
+                    if (recipe.getTags().contains(mWantedTag))
+                        recipes.add(recipe);
                 }
     
                 if (loadingTextview != null) {
@@ -104,17 +91,17 @@ public class FilteredByParametersFragment extends Fragment implements RecyclerRe
             
                     }
                 }
-                
+    
                 RecyclerSetup();
             }
         
             @Override
             public void onCancelled(DatabaseError error) {
                 // Failed to read value
-                Log.w("W", "Filtered By Fragment", error.toException());
+                Log.w("W", "Failed to read value.", error.toException());
                 if (loadingTextview != null) {
                     if (recipes.size() == 0) {
-                        loadingTextview.setText("No Recipes Found.\n (Try a different Query)");
+                        loadingTextview.setText("No Recipes Found");
                     }else {
                         loadingTextview.setText("");
             
@@ -126,48 +113,41 @@ public class FilteredByParametersFragment extends Fragment implements RecyclerRe
     
     @Override
     public void getData() {
-        // For Filtered Fragments, Data should be acquired in runtime
-        // ..So this will not be used
-        // I'm keeping it here for consistency/informational Value
+    
     }
     
     @Override
     public void SetupViews(View view) {
-        recipesRecycler = view.findViewById(R.id.filteredb_recycler);
-        Button btnBack = view.findViewById(R.id.filteredb_back);
+        recipeRecycler = view.findViewById(R.id.ffbt_Recycler);
+        Button btnBack = view.findViewById(R.id.ffbt_back);
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parent.alternativeFragments(return_to_fragment);
+                parent.alternativeFragments("recipes");
             }
         });
-        
-        loadingTextview = view.findViewById(R.id.filtered_by_resultTextView);
-        searchLabel = view.findViewById(R.id.filteredb_searchLabel);
+        loadingTextview = view.findViewById(R.id.ffbt_resultTextView);
     }
     
     @Override
     public void RecyclerSetup() {
-        if (recipesRecycler != null) {
+        if (recipeRecycler != null) {
             try {
-                recipesRecycler.setLayoutManager(new GridLayoutManager(parent.getApplicationContext(), 2, GridLayoutManager.HORIZONTAL, false));
-                recipesRecycler.setAdapter(adapter);
-                recipesRecycler.addItemDecoration(new RecyclerView.ItemDecoration() {
+                recipeRecycler.setLayoutManager(new GridLayoutManager(parent.getApplicationContext(), 2, GridLayoutManager.HORIZONTAL, false));
+                recipeRecycler.setAdapter(recipeAdapter);
+                recipeRecycler.addItemDecoration(new RecyclerView.ItemDecoration() {
                     @Override
                     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                         outRect.set(6, 0, 6, 16);
                     }
                 });
+    
                 if (loadingTextview != null) {
                     if (recipes.size() > 1) {
                         loadingTextview.setText("");
                     }
                 }
-                
-                if (searchLabel != null) {
-                    searchLabel.setText("Search: Recipes with " + qParameter_type.toLowerCase() + " : " + qParameter_value.toLowerCase());
-                }
-                
+            
             } catch (Exception e) {
                 Log.w("Recycler Exception", e.getMessage());
             }
@@ -176,10 +156,6 @@ public class FilteredByParametersFragment extends Fragment implements RecyclerRe
     
     @Override
     public void onItemRecipeClick(int position) {
-        if (recipes.size() > 0) {
-            Intent intent = new Intent(getActivity(), RecipeStepsActivity.class);
-            intent.putExtra("recipe_id", recipes.get(position).getId());
-            startActivity(intent);
-        }
+    
     }
 }

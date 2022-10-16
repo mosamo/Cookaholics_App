@@ -22,9 +22,18 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.mohamed_mosabeh.data_objects.Recipe;
+import com.mohamed_mosabeh.data_objects.Tag;
+import com.mohamed_mosabeh.utils.ViewUtils;
+
+import org.checkerframework.checker.units.qual.A;
+
+import java.lang.ref.Reference;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class TestActivity extends AppCompatActivity {
@@ -42,24 +51,33 @@ public class TestActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance("https://cookaholics-capstone-d4931-default-rtdb.asia-southeast1.firebasedatabase.app/");
         reference = database.getReference("recipes");
     
-        Button b =  findViewById(R.id.xxxbutton);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-    
         mAuth = FirebaseAuth.getInstance();
     }
     
     public void mainButtonClick(View view) {
     
-        String s = database.getReference("recipes").push().getKey();
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-        database.getReference("recipes").child(s).child("xx").setValue("s").addOnSuccessListener(new OnSuccessListener<Void>() {
+        DatabaseReference reference = database.getReference("recipes");
+    
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+    
+                int count = 0;
+                
+                for (DataSnapshot s : dataSnapshot.getChildren()) {
+                    Recipe recipe = s.getValue(Recipe.class);
+                    boolean x = recipe.getTags().contains("keto");
+                    if (x)
+                        count++;
+                }
+                
+                ViewUtils.getSnackBar(TestActivity.this, "Recipes with tag:" + count);
+            }
+        
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("W", "Failed to read value.", error.toException());
             }
         });
     }

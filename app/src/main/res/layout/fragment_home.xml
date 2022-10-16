@@ -49,7 +49,7 @@
                         android:ellipsize="end"
                         android:fontFamily="@font/nunito_bold_main"
                         android:maxLines="1"
-                        android:text="Welcome Home!"
+                        android:text="Welcome to Cookaholics"
                         android:textColor="#4E4E4E"
                         android:textSize="20sp" />
 

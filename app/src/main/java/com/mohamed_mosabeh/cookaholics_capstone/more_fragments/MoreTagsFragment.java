@@ -47,7 +47,6 @@ public class MoreTagsFragment extends Fragment implements MoreRecipesBaseInterfa
     public MoreTagsFragment(OriginActivity parent, FirebaseDatabase database) {
         this.parent = parent;
         this.database = database;
-        getData();
     }
     
     @Override
@@ -58,18 +57,16 @@ public class MoreTagsFragment extends Fragment implements MoreRecipesBaseInterfa
         SetupViews(v);
         
         RecyclerSetup();
+        getRuntimeData();
         
         return v;
     }
     
-    @Override
-    public void getData() {
+    private void getRuntimeData() {
         DatabaseReference reference = database.getReference("tags");
         Query topThirtySixTags = reference.orderByChild("recipes_count").limitToLast(36);
     
-        // maybe value event listener is not the best choice
-        // but I want stuff to show up
-        topThirtySixTags.addValueEventListener(new ValueEventListener() {
+        topThirtySixTags.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
             
@@ -96,6 +93,11 @@ public class MoreTagsFragment extends Fragment implements MoreRecipesBaseInterfa
     }
     
     @Override
+    public void getData() {
+    
+    }
+    
+    @Override
     public void SetupViews(View view) {
         tagsRecycler = view.findViewById(R.id.mtf_Recycler);
         Button btnBack = view.findViewById(R.id.mtf_back);
@@ -111,14 +113,8 @@ public class MoreTagsFragment extends Fragment implements MoreRecipesBaseInterfa
     public void RecyclerSetup() {
         if (tagsRecycler != null) {
             try {
-                tagsRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+                tagsRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.VERTICAL, true));
                 tagsRecycler.setAdapter(tagAdapter);
-                /*tagsRecycler.addItemDecoration(new RecyclerView.ItemDecoration() {
-                    @Override
-                    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                        outRect.set(16, 16, 16, 16);
-                    }
-                });*/
             
             } catch (Exception e) {
                 Log.w("Recycler Exception", e.getMessage());
@@ -128,6 +124,8 @@ public class MoreTagsFragment extends Fragment implements MoreRecipesBaseInterfa
     
     @Override
     public void onItemTagClick(int position) {
-    
+        String value = tags.get(position).getName();
+        parent.setFilteredFragmentTag(value);
+        parent.alternativeFragments("filtered_by_tag");
     }
 }

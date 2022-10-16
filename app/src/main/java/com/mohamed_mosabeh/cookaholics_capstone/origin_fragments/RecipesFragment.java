@@ -356,6 +356,8 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
     
     @Override
     public void onItemTagClick(int position) {
-    
+        String value = tags.get(position).getName();
+        parent.setFilteredFragmentTag(value);
+        parent.alternativeFragments("filtered_by_tag");
     }
 }

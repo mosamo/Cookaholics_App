@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".more_fragments.filtered.FilteredByParametersFragment">
+    tools:context=".more_fragments.filtered.FilteredByTagFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -39,12 +39,12 @@
                     android:ellipsize="end"
                     android:fontFamily="@font/nunito_bold_main"
                     android:maxLines="1"
-                    android:text="Recipes:"
+                    android:text="Recipes by Tag:"
                     android:textColor="#4E4E4E"
                     android:textSize="28sp" />
 
                 <Button
-                    android:id="@+id/filteredb_back"
+                    android:id="@+id/ffbt_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -71,17 +71,18 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/filteredb_recycler"
+            android:id="@+id/ffbt_Recycler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
 
         <TextView
-            android:id="@+id/filtered_by_resultTextView"
+            android:id="@+id/ffbt_resultTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loading.."
@@ -91,26 +92,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <TextView
-                android:id="@+id/filteredb_searchLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Search: Recipes with ? of ?"
-                android:textSize="18sp"
-                android:textStyle="bold|italic" />
-        </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
