@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
@@ -37,8 +36,10 @@ import com.mohamed_mosabeh.cookaholics_capstone.SubmitActivity;
 import com.mohamed_mosabeh.data_objects.Cuisine;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.data_objects.Tag;
-import com.mohamed_mosabeh.utils.ViewUtil;
+import com.mohamed_mosabeh.utils.ViewUtils;
+import com.mohamed_mosabeh.utils.click_interfaces.RecyclerCuisineClickInterface;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
+import com.mohamed_mosabeh.utils.click_interfaces.RecyclerTagClickInterface;
 import com.mohamed_mosabeh.utils.recycler_views.CardRecipesSmallRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.CuisineRecipesRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.TagsRecipesRecyclerViewAdapter;
@@ -47,7 +48,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class RecipesFragment extends Fragment implements RecyclerRecipeClickInterface{
+public class RecipesFragment extends Fragment implements RecyclerRecipeClickInterface, RecyclerCuisineClickInterface, RecyclerTagClickInterface {
     
     private FirebaseDatabase database;
     private FirebaseStorage storage;
@@ -62,14 +63,18 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
     
     private RecyclerView.Adapter NewRecipesAdapter = new CardRecipesSmallRecyclerViewAdapter(new_recipes, "New Recipe", this);
     private CardRecipesSmallRecyclerViewAdapter mNewRecipeAdapter = (CardRecipesSmallRecyclerViewAdapter) NewRecipesAdapter;
-    private RecyclerView.Adapter TagAdapter = new TagsRecipesRecyclerViewAdapter(tags);
-    private RecyclerView.Adapter CuisineAdapter = new CuisineRecipesRecyclerViewAdapter(cuisines);
+    private RecyclerView.Adapter TagAdapter = new TagsRecipesRecyclerViewAdapter(tags, this);
+    private RecyclerView.Adapter CuisineAdapter = new CuisineRecipesRecyclerViewAdapter(cuisines, this);
     
     private ProgressBar CuisineProgressBar;
     private ProgressBar TagProgressBar;
     private ProgressBar NewRecipesProgressBar;
     
     private Button btnRecipeSubmission;
+    
+    private Button seeAllCuisines;
+    private Button seeAllNewest;
+    private Button seeAllTags;
     
     private OriginActivity parent;
     
@@ -100,18 +105,18 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
         mNewRecipeAdapter.getRecipeHolderMap();
     }
     
-    private void SetUpViews(View parent) {
+    private void SetUpViews(View viewParent) {
         
-        CuisineRecycler = parent.findViewById(R.id.rec_cusineRecycler);
-        CuisineProgressBar = parent.findViewById(R.id.rec_cusineProgress);
+        CuisineRecycler = viewParent.findViewById(R.id.rec_cusineRecycler);
+        CuisineProgressBar = viewParent.findViewById(R.id.rec_cusineProgress);
         
-        TagRecycler = parent.findViewById(R.id.rec_tagsRecycler);
-        TagProgressBar = parent.findViewById(R.id.rec_tagsProgress);
+        TagRecycler = viewParent.findViewById(R.id.rec_tagsRecycler);
+        TagProgressBar = viewParent.findViewById(R.id.rec_tagsProgress);
         
-        NewRecipesRecycler = parent.findViewById(R.id.rec_newRecipesRecycler);
-        NewRecipesProgressBar = parent.findViewById(R.id.rec_newRecipesProgress);
+        NewRecipesRecycler = viewParent.findViewById(R.id.rec_newRecipesRecycler);
+        NewRecipesProgressBar = viewParent.findViewById(R.id.rec_newRecipesProgress);
     
-        btnRecipeSubmission = parent.findViewById(R.id.rec_RecipeSubmission);
+        btnRecipeSubmission = viewParent.findViewById(R.id.rec_RecipeSubmission);
         btnRecipeSubmission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,9 +125,31 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
             }
         });
         
-        ViewUtil.IfDataExistsHideProgressBar(new_recipes.size(), NewRecipesProgressBar);
-        ViewUtil.IfDataExistsHideProgressBar(tags.size(), TagProgressBar);
-        ViewUtil.IfDataExistsHideProgressBar(cuisines.size(), CuisineProgressBar);
+        seeAllCuisines = viewParent.findViewById(R.id.rec_SeeAllCuisine);
+        seeAllCuisines.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                parent.alternativeFragments("more_cuisines");
+            }
+        });
+        seeAllNewest = viewParent.findViewById(R.id.rec_SeeAllNewRecipes);
+        seeAllNewest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                parent.alternativeFragments("more_newest");
+            }
+        });
+        seeAllTags = viewParent.findViewById(R.id.rec_SeeAllTags);
+        seeAllTags.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                parent.alternativeFragments("more_tags");
+            }
+        });
+        
+        ViewUtils.IfDataExistsHideProgressBar(new_recipes.size(), NewRecipesProgressBar);
+        ViewUtils.IfDataExistsHideProgressBar(tags.size(), TagProgressBar);
+        ViewUtils.IfDataExistsHideProgressBar(cuisines.size(), CuisineProgressBar);
     
         SetUpRecyclers();
     }
@@ -157,7 +184,7 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                     new_recipes.add(recipe);
                 }
     
-                ViewUtil.IfDataExistsHideProgressBar(new_recipes.size(), NewRecipesProgressBar);
+                ViewUtils.IfDataExistsHideProgressBar(new_recipes.size(), NewRecipesProgressBar);
             
                 fetchNewRecipeImages(new_recipes);
                 NewRecipesRecyclerSetUp();
@@ -215,7 +242,7 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
     
     private void getTagsData() {
         DatabaseReference reference = database.getReference("tags");
-        Query topTenTags = reference.orderByChild("hits").limitToLast(10);
+        Query topTenTags = reference.orderByChild("recipes_count").limitToLast(10);
     
         topTenTags.addValueEventListener(new ValueEventListener() {
             @Override
@@ -230,7 +257,7 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                     tags.add(tag);
                 }
     
-                ViewUtil.IfDataExistsHideProgressBar(tags.size(), TagProgressBar);
+                ViewUtils.IfDataExistsHideProgressBar(tags.size(), TagProgressBar);
             
                 TagsRecyclerSetUp();
             }
@@ -247,7 +274,7 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
         DatabaseReference reference = database.getReference("cuisines");
         Query topSixCuisines = reference.orderByChild("hits").limitToLast(6);
     
-        topSixCuisines.addValueEventListener(new ValueEventListener() {
+        topSixCuisines.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
             
@@ -261,7 +288,7 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                 }
     
     
-                ViewUtil.IfDataExistsHideProgressBar(cuisines.size(), CuisineProgressBar);
+                ViewUtils.IfDataExistsHideProgressBar(cuisines.size(), CuisineProgressBar);
             
                 CuisineRecyclerSetUp();
             }
@@ -318,5 +345,19 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
             intent.putExtra("recipe_id", new_recipes.get(position).getId());
             startActivity(intent);
         }
+    }
+    
+    @Override
+    public void onItemCuisineClick(int position) {
+        String value = cuisines.get(position).getName();
+        parent.setFilteredFragmentParameter("cuisine", value, "recipes");
+        parent.alternativeFragments("filtered_by");
+    }
+    
+    @Override
+    public void onItemTagClick(int position) {
+        String value = tags.get(position).getName();
+        parent.setFilteredFragmentTag(value);
+        parent.alternativeFragments("filtered_by_tag");
     }
 }

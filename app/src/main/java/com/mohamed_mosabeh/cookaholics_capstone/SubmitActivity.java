@@ -1,6 +1,7 @@
 package com.mohamed_mosabeh.cookaholics_capstone;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -25,8 +26,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -38,6 +41,7 @@ import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.Cuisine;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.data_objects.RecipeStep;
+import com.mohamed_mosabeh.data_objects.Tag;
 import com.mohamed_mosabeh.utils.ImageManipulation;
 
 import java.io.ByteArrayOutputStream;
@@ -87,9 +91,6 @@ public class SubmitActivity extends AppCompatActivity {
         comfirmationUIFragment = new RecipeComfirmationFragment(this);
     
         firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user == null)
-            firebaseAuth.signInAnonymously();
     
         // Views
         bottomLinear = findViewById(R.id.rsub_bottomLL);
@@ -254,8 +255,15 @@ public class SubmitActivity extends AppCompatActivity {
         String id = reference.push().getKey();
         uploadedRecipeId = id;
         
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        
         String displayName = "Anonymous";
-        String user_id = "123abcde";
+        if (user.getDisplayName() != null && !user.getDisplayName().isEmpty())
+            displayName = user.getDisplayName();
+        
+        String user_id = "no-id";
+        if (user.getUid() != null )
+            user_id = user.getUid();
         
         recipe.setDisplay_name(displayName);
         recipe.setUser_id(user_id);
@@ -264,13 +272,20 @@ public class SubmitActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void unused) {
                 reference.child(id).child("timestamp").setValue(ServerValue.TIMESTAMP).addOnSuccessListener(new OnSuccessListener<Void>() {
+                
                     @Override
                     public void onSuccess(Void unused) {
-    
-                        comfirmationUIFragment.setLoadingText("Uploading Recipe Icon..");
+                        try {
+                            addOrIncrementTags(recipe.getTags());
+                        } catch (NullPointerException npe) {
+                            Log.i("Npe Submit Activity", "no tags!");
+                        }
+                        if (listImageViews.get(0).getTag() == null)
+                            comfirmationUIFragment.setLoadingText("Uploading Recipe Image..");
                         submitUploadImages();
                     }
                 });
+    
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -281,11 +296,61 @@ public class SubmitActivity extends AppCompatActivity {
         });
     }
     
+    private void addOrIncrementTags(ArrayList<String> tags) {
+            DatabaseReference reference = database.getReference("tags");
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    try {
+                        for (String tag : tags) {
+                            if (snapshot.hasChild(tag)) {
+                                DatabaseReference ref = reference.child(tag).child("recipes_count");
+                                ref.runTransaction(new Transaction.Handler() {
+                                    @NonNull
+                                    @Override
+                                    public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                                        Long recipeCount = currentData.getValue(Long.class);
+                                        if (recipeCount == null || recipeCount == 0) {
+                                            currentData.setValue(1);
+                                        } else {
+                                            currentData.setValue(recipeCount + 1);
+                                        }
+                                        return Transaction.success(currentData);
+                                    }
+                
+                                    @Override
+                                    public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                    
+                                    }
+                                });
+                            } else {
+                                Tag t = new Tag();
+                                t.setHits(0);
+                                t.setRecipes_count(1);
+                                t.setTrending(false);
+                                reference.child(tag).setValue(t);
+                            }
+                        }
+                    } catch (NullPointerException npe) {
+                        Log.i("Npe: Submit tags", "no tags");
+                    }
+            
+                    reference.removeEventListener(this);
+                }
+        
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+            
+                }
+            });
+    }
+    
     private void submitUploadImages() {
     
         // Q: How many files do we need to upload?
         // A: as many Images as tagged
         resultsNeededToShowComfirmationUI = 0;
+        
         for (ImageView image : listImageViews) {
             if (image.getTag() != null && image.getTag().toString().equals("filled"))
                 resultsNeededToShowComfirmationUI++;
@@ -320,6 +385,7 @@ public class SubmitActivity extends AppCompatActivity {
     
     
                     comfirmationUIFragment.setLoadingText("Uploading Images..\n(" + resultsNeededToShowComfirmationUI + " Images Remaining)");
+                    simpleSuccessCheck();
                     for (ImageView im : listImageViews) {
                         submitUploadImageStep(im);
                     }
@@ -345,6 +411,8 @@ public class SubmitActivity extends AppCompatActivity {
                 submitUploadImageStep(im);
             }
         }
+    
+        simpleSuccessCheck();
     }
     
     private void submitUploadImageStep(ImageView image) {
@@ -381,6 +449,7 @@ public class SubmitActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     comfirmationUIFragment.setLoadingText("Uploading Images..\n(" + (resultsNeededToShowComfirmationUI-1) + " Images Remaining)");
+                    simpleSuccessCheck();
                     NotifyResultRecieved(true);
                     Log.i("Submitted Image", "Step" + i);
                 }
@@ -482,6 +551,13 @@ public class SubmitActivity extends AppCompatActivity {
         // if all results have been received. display Success UI;
         if (resultsNeededToShowComfirmationUI == 0) {
             comfirmationUIFragment.DisplaySuccessUI(uploadedRecipeId);
+        }
+    }
+    
+    public void simpleSuccessCheck() {
+        if (resultsNeededToShowComfirmationUI == 0) {
+            comfirmationUIFragment.DisplaySuccessUI(uploadedRecipeId);
+            
         }
     }
 }

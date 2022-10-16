@@ -47,6 +47,7 @@ public class RecipeFormFragment extends Fragment {
     
     private Spinner SpinnerCuisines;
     private List<String> cuisineSpinnerItems =  new ArrayList<String>();
+    private List<Cuisine> cuisinesValues = new ArrayList<>();
     
     private Spinner SpinnerCategories;
     private List<String> categorySpinnerItems =  new ArrayList<String>();
@@ -59,13 +60,15 @@ public class RecipeFormFragment extends Fragment {
     private EditText recipeTagsEdit;
     private EditText recipeDescriptionEdit;
     
+    private final String DEFAULT_VALUE = "None";
+    
     public RecipeFormFragment() {
     }
     
     public RecipeFormFragment(SubmitActivity parent) {
         this.parent = parent;
-        cuisineSpinnerItems.add("None");
-        categorySpinnerItems.add("None");
+        cuisineSpinnerItems.add(DEFAULT_VALUE);
+        categorySpinnerItems.add(DEFAULT_VALUE);
     }
     
     @Override
@@ -185,9 +188,10 @@ public class RecipeFormFragment extends Fragment {
     
     public void addCuisinesDropdownData(ArrayList<Cuisine> cuisines) {
         cuisineSpinnerItems.clear();
-        cuisineSpinnerItems.add("None");
+        cuisineSpinnerItems.add(DEFAULT_VALUE);
         for (Cuisine c : cuisines) {
             cuisineSpinnerItems.add(c.getCountry_code());
+            cuisinesValues.add(c);
         }
         
         // Notify Spinner Data Changed
@@ -199,7 +203,7 @@ public class RecipeFormFragment extends Fragment {
     
     public void addCategoriesDropdownData(ArrayList<Category> categories) {
         categorySpinnerItems.clear();
-        categorySpinnerItems.add("None");
+        categorySpinnerItems.add(DEFAULT_VALUE);
         for (Category c : categories) {
             categorySpinnerItems.add(c.getName());
         }
@@ -231,13 +235,19 @@ public class RecipeFormFragment extends Fragment {
         recipe.setName(recipeNameEdit.getText().toString().trim());
         recipe.setDuration(Integer.parseInt(recipeDurationEdit.getText().toString()));
         recipe.setServings(Integer.parseInt(recipeServingsEdit.getText().toString()));
-        recipe.setCuisine(SpinnerCuisines.getSelectedItem().toString());
         recipe.setCategory(SpinnerCategories.getSelectedItem().toString());
+        
+        recipe.setCuisine(SpinnerCuisines.getSelectedItem().toString());
+        // if it is not default. get cuisine name (value) instead of cuisine flag (label)
+        if (SpinnerCuisines.getSelectedItem().toString() != DEFAULT_VALUE)
+            recipe.setCuisine(cuisinesValues.get(SpinnerCuisines.getSelectedItemPosition() - 1).getName());
+        
         // Optional Values
         if (recipeDescriptionEdit.getText().toString().trim().isEmpty())
-            recipe.setDescription("");
+            recipe.setDescription("- - -");
         else
             recipe.setDescription(recipeDescriptionEdit.getText().toString().trim());
+        
         // Tags Saving
         if (!recipeTagsEdit.getText().toString().trim().isEmpty()) {
             String [] tagsArray = recipeTagsEdit.getText().toString().split(",");

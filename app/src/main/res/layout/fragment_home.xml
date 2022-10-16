@@ -49,7 +49,7 @@
                         android:ellipsize="end"
                         android:fontFamily="@font/nunito_bold_main"
                         android:maxLines="1"
-                        android:text="Welcome, Guest!"
+                        android:text="Welcome to Cookaholics"
                         android:textColor="#4E4E4E"
                         android:textSize="20sp" />
 
@@ -243,14 +243,18 @@
                         android:layout_height="0dp"
                         android:layout_weight="1" />
 
-                    <TextView
+                    <Button
                         android:id="@+id/home_recipeSeeAllCategories"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/ic_right_arrow_icon"
+                        android:paddingTop="0dp"
+                        android:paddingRight="8dp"
+                        android:paddingBottom="0dp"
                         android:text="See All"
-                        android:textColor="@color/offical_cookaholics_drawable_tint_1"
-                        android:textSize="20sp" />
+                        android:textColor="#FE8045"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -305,15 +309,6 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:layout_weight="1" />
-
-                    <TextView
-                        android:id="@+id/home_recipeSeeAllWeeklyHottest"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableEnd="@drawable/ic_right_arrow_icon"
-                        android:text="See All"
-                        android:textColor="@color/offical_cookaholics_drawable_tint_1"
-                        android:textSize="20sp" />
 
                 </LinearLayout>
 

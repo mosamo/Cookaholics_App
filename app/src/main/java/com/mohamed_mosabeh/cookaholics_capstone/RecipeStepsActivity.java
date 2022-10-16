@@ -3,6 +3,7 @@ package com.mohamed_mosabeh.cookaholics_capstone;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
@@ -21,15 +22,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.mohamed_mosabeh.auth.AnonymousAuth;
 import com.mohamed_mosabeh.cookaholics_capstone.other_fragments.EmptyFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_steps_fragments.RecipeStepsCommentsFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.recipe_steps_fragments.RecipeStepsContainerFragment;
+import com.mohamed_mosabeh.data_objects.Comment;
+import com.mohamed_mosabeh.data_objects.HighlightedRecipe;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.utils.RecipeInstructionsSwipeAdapter;
+import com.mohamed_mosabeh.utils.recycler_views.CommentRecyclerViewAdapter;
+
+import org.checkerframework.checker.units.qual.A;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class RecipeStepsActivity extends AppCompatActivity {
     
@@ -44,8 +50,10 @@ public class RecipeStepsActivity extends AppCompatActivity {
     
     private RecipeInstructionsSwipeAdapter adapter;
     
+    
     private Recipe recipe;
     private String recipe_id;
+    private HighlightedRecipe highlightDetails;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +69,11 @@ public class RecipeStepsActivity extends AppCompatActivity {
         storage= FirebaseStorage.getInstance(getString(R.string.firebase_storage));
         mAuth = FirebaseAuth.getInstance();
         
-        // Signing in
-        AnonymousAuth.signIn(this, mAuth);
-        
         // View Pager Adapter
         
         // Initiate Fragments
-        bigContainerFragment = new RecipeStepsContainerFragment(this, storage);
-        bigCommentFragment = new RecipeStepsCommentsFragment(this);
+        bigContainerFragment = new RecipeStepsContainerFragment(this, database, storage, recipe_id);
+        bigCommentFragment = new RecipeStepsCommentsFragment(this, database, recipe_id);
         emptyFragment = new EmptyFragment();
         
         // Loading Data
@@ -79,28 +84,43 @@ public class RecipeStepsActivity extends AppCompatActivity {
                 .replace(R.id.ars_bigFrameMain, bigContainerFragment).commit();
     }
     
+    
     private void LoadRecipe() {
         
-        reference = database.getReference("recipes");
+        reference = database.getReference("recipes").child(recipe_id);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot != null) {
+                    
+                        try {
+                            recipe = snapshot.getValue(Recipe.class);
+                            recipe.setId(recipe_id);
     
-                    recipe = snapshot.child(recipe_id).getValue(Recipe.class);
+                            bigContainerFragment.setAvailableData();
+                            bigContainerFragment.checkReceivedData();
+    
+                            bigCommentFragment.setRecipeDetails(recipe);
+    
+                            if (recipe.isHighlighted()) {
+                                reference = database.getReference("highlighted-recipes").child(recipe_id);
+                                reference.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (snapshot != null)
+                                            highlightDetails = snapshot.getValue(HighlightedRecipe.class);
+                                    }
+            
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                
+                                    }
+                                });
+                            }
+                        } catch (NullPointerException npe) {
+                            Log.w("Recipe Steps", "Recipe Terminated");
+                        }
                     
-                    bigContainerFragment.setAvailableData();
-                    bigContainerFragment.checkReceivedData();
-                    
-                    // Timestamp Importing and Parsing
-//                    Long time = recipe.getTimestamp();
-//
-//                    SimpleDateFormat dataFormat = new SimpleDateFormat("dd MMM yyyy");
-//                    String timeString = dataFormat.format(new Date(time));
-//
-//                    txtRecipeTimestamp.setText(timeString);
-                    
-                    // Pager Set up
                 } else {
                     Log.w("Recipe Steps Data", "No Data Found");
                 }
@@ -145,5 +165,9 @@ public class RecipeStepsActivity extends AppCompatActivity {
     
     public Recipe getRecipe() {
         return recipe;
+    }
+    
+    public HighlightedRecipe getHighlightDetails() {
+        return highlightDetails;
     }
 }

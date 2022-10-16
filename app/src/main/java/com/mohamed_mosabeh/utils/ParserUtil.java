@@ -12,6 +12,6 @@ public class ParserUtil {
             }
             return str;
         }
-        return "\n\t\tNo Tags";
+        return "No Tags";
     }
 }
