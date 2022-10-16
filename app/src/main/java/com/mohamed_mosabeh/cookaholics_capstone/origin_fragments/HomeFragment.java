@@ -429,4 +429,6 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
             parent.alternativeFragments("filtered_by");
         }
     }
+    
+    //* *//
 }
