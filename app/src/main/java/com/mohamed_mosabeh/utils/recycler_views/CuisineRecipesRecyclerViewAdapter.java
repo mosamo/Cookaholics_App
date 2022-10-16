@@ -10,22 +10,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.data_objects.Cuisine;
+import com.mohamed_mosabeh.utils.click_interfaces.RecyclerCategoryClickInterface;
+import com.mohamed_mosabeh.utils.click_interfaces.RecyclerCuisineClickInterface;
 
 import java.util.ArrayList;
 
 public class CuisineRecipesRecyclerViewAdapter extends RecyclerView.Adapter<CuisineRecipesRecyclerViewAdapter.CuisineRecipesViewHolder> {
     
     ArrayList<Cuisine> cuisines;
+    private final RecyclerCuisineClickInterface mClickInterface;
     
-    public CuisineRecipesRecyclerViewAdapter(ArrayList<Cuisine> cuisines) {
+    public CuisineRecipesRecyclerViewAdapter(ArrayList<Cuisine> cuisines, RecyclerCuisineClickInterface clickInterface) {
         this.cuisines = cuisines;
+        this.mClickInterface = clickInterface;
     }
     
     @NonNull
     @Override
-    public CuisineRecipesRecyclerViewAdapter.CuisineRecipesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CuisineRecipesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_recipes_flag_square, parent, false);
-        CuisineRecipesRecyclerViewAdapter.CuisineRecipesViewHolder viewHolder = new CuisineRecipesRecyclerViewAdapter.CuisineRecipesViewHolder(view);
+        CuisineRecipesRecyclerViewAdapter.CuisineRecipesViewHolder viewHolder = new CuisineRecipesRecyclerViewAdapter.CuisineRecipesViewHolder(view, mClickInterface);
         return viewHolder;
     }
     
@@ -48,11 +52,23 @@ public class CuisineRecipesRecyclerViewAdapter extends RecyclerView.Adapter<Cuis
         TextView cuisineCountry;
         
         
-        public CuisineRecipesViewHolder(@NonNull View itemView) {
+        public CuisineRecipesViewHolder(@NonNull View itemView, RecyclerCuisineClickInterface clickInterface) {
             super(itemView);
             
             cuisineName = itemView.findViewById(R.id.scrip_scripText);
             cuisineCountry = itemView.findViewById(R.id.scrip_scripTextAbove);
+            
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (clickInterface != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            clickInterface.onItemCuisineClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
     

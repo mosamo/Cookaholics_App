@@ -105,14 +105,18 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <TextView
+            <Button
                 android:id="@+id/rec_SeeAllNewRecipes"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_right_arrow_icon"
+                android:paddingTop="0dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="0dp"
                 android:text="See All"
-                android:textColor="@color/offical_cookaholics_drawable_tint_1"
-                android:textSize="20sp" />
+                android:textColor="#FE8045"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -167,14 +171,18 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <TextView
+            <Button
                 android:id="@+id/rec_SeeAllTags"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_right_arrow_icon"
+                android:paddingTop="0dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="0dp"
                 android:text="See All"
-                android:textColor="@color/offical_cookaholics_drawable_tint_1"
-                android:textSize="20sp" />
+                android:textColor="#FE8045"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -229,14 +237,18 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <TextView
+            <Button
                 android:id="@+id/rec_SeeAllCuisine"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_right_arrow_icon"
+                android:paddingTop="0dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="0dp"
                 android:text="See All"
-                android:textColor="@color/offical_cookaholics_drawable_tint_1"
-                android:textSize="20sp" />
+                android:textColor="#FE8045"
+                android:textSize="16sp" />
 
         </LinearLayout>
 

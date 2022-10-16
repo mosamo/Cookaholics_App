@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -67,7 +68,6 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     private RecyclerView.Adapter categoryAdapter = new CategoryMainRecyclerViewAdapter(categories, this);
     private CategoryMainRecyclerViewAdapter mCategoryAdapter = (CategoryMainRecyclerViewAdapter) categoryAdapter;
     
-    private TextView SeeAllWeeklyHottestTextView;
     private TextView featuredRecipeComment;
     private TextView featuredRecipeCurator;
     private TextView featuredRecipeNameLabel;
@@ -81,6 +81,8 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     
     private HighlightedRecipe featuredRecipe;
     private Bitmap featuredImage;
+    
+    private Button btnSeeAllCategories;
     
     private OriginActivity parent;
     
@@ -104,13 +106,12 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         return view;
     }
     
-    private void SetUpViews(View parent) {
-        WeeklyRecycler = parent.findViewById(R.id.home_weeklyRecyclerView);
-        CategoryRecycler = parent.findViewById(R.id.home_categoriesRecyclerView);
-        SeeAllWeeklyHottestTextView = parent.findViewById(R.id.home_recipeSeeAllWeeklyHottest);
-        WeeklyHottestProgress = parent.findViewById(R.id.home_weeklyHottestProgress);
-        CategoriesProgress = parent.findViewById(R.id.home_categoriesProgress);
-        CardView featuredMainContainer = parent.findViewById(R.id.home_CardRecipeOfTheWeek);
+    private void SetUpViews(View viewParent) {
+        WeeklyRecycler = viewParent.findViewById(R.id.home_weeklyRecyclerView);
+        CategoryRecycler = viewParent.findViewById(R.id.home_categoriesRecyclerView);
+        WeeklyHottestProgress = viewParent.findViewById(R.id.home_weeklyHottestProgress);
+        CategoriesProgress = viewParent.findViewById(R.id.home_categoriesProgress);
+        CardView featuredMainContainer = viewParent.findViewById(R.id.home_CardRecipeOfTheWeek);
         featuredMainContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,19 +122,25 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                 }
             }
         });
-        featuredRecipeComment = parent.findViewById(R.id.home_featuredRecipeComment);
-        featuredRecipeCurator = parent.findViewById(R.id.home_featuredRecipeCurator);
-        FeaturedProgressBar = parent.findViewById(R.id.home_featuredProgressBar);
-        FeaturedCommentProgressBar = parent.findViewById(R.id.home_featuredRecipeCommentProgressBar);
+        featuredRecipeComment = viewParent.findViewById(R.id.home_featuredRecipeComment);
+        featuredRecipeCurator = viewParent.findViewById(R.id.home_featuredRecipeCurator);
+        FeaturedProgressBar = viewParent.findViewById(R.id.home_featuredProgressBar);
+        FeaturedCommentProgressBar = viewParent.findViewById(R.id.home_featuredRecipeCommentProgressBar);
         
-        FeaturedRecipeImageView = parent.findViewById(R.id.home_featuredRecipeImage);
+        FeaturedRecipeImageView = viewParent.findViewById(R.id.home_featuredRecipeImage);
         if (featuredImage != null) {
             FeaturedRecipeImageView.setImageBitmap(featuredImage);
         }
         
-        featuredRecipeNameLabel = parent.findViewById(R.id.home_FeaturedRecipeNameLabel);
-    
-    
+        featuredRecipeNameLabel = viewParent.findViewById(R.id.home_FeaturedRecipeNameLabel);
+        btnSeeAllCategories = viewParent.findViewById(R.id.home_recipeSeeAllCategories);
+        btnSeeAllCategories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                parent.alternativeFragments("more_categories");
+            }
+        });
+        
         ViewUtil.IfDataExistsHideProgressBar(recipes.size(), WeeklyHottestProgress);
         ViewUtil.IfDataExistsHideProgressBar(categories.size(), CategoriesProgress);
         
@@ -419,7 +426,9 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     @Override
     public void onItemCategoryClick(int position) {
         if (categories.size() > 0) {
-            Toast.makeText(parent, categories.get(position).getName(), Toast.LENGTH_SHORT).show();;
+            String value = categories.get(position).getName();
+            parent.setFilteredFragmentParameter("category", value, "home");
+            parent.alternativeFragments("filtered_by");
         }
     }
 }
