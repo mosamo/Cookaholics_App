@@ -22,10 +22,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.mohamed_mosabeh.cookaholics_capstone.OriginActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
-import com.mohamed_mosabeh.cookaholics_capstone.TestActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.MoreRecipesBaseInterface;
 import com.mohamed_mosabeh.data_objects.Recipe;
-import com.mohamed_mosabeh.utils.ViewUtils;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
 import com.mohamed_mosabeh.utils.recycler_views.CompactRecipesRecyclerViewAdapter;
 
@@ -79,8 +77,10 @@ public class FilteredByTagFragment extends Fragment implements MoreRecipesBaseIn
             
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Recipe recipe = snapshot.getValue(Recipe.class);
-                    if (recipe.getTags().contains(mWantedTag))
-                        recipes.add(recipe);
+                    if (recipe.getTags() != null) {
+                        if (recipe.getTags().contains(mWantedTag))
+                            recipes.add(recipe);
+                    }
                 }
     
                 if (loadingTextview != null) {

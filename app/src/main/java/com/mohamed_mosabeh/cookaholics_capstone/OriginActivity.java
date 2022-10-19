@@ -21,6 +21,7 @@ import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.RecipesFragment
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.SearchFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 public class OriginActivity extends AppCompatActivity {
@@ -179,8 +180,12 @@ public class OriginActivity extends AppCompatActivity {
 
     public void signOut(View view) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser().isAnonymous()) {
-            auth.getCurrentUser().delete();
+        try {
+            if (auth.getCurrentUser().isAnonymous()) {
+                auth.getCurrentUser().delete();
+            }
+        } catch (NullPointerException nullPointerException) {
+            Log.i("Sign out", "Not anonymous");
         }
         auth.signOut();
         startActivity(new Intent(OriginActivity.this, PortalActivity.class));
