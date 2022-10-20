@@ -3,7 +3,6 @@ package com.mohamed_mosabeh.cookaholics_capstone;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,6 +16,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -125,6 +125,19 @@ public class SubmitActivity extends AppCompatActivity {
         fetchFormSetupData();
     }
     
+    
+    
+    
+    public void mReturnToForm() {
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(
+                        R.anim.slide_from_right,  // enter
+                        R.anim.slide_out_left,    // exit
+                        R.anim.slide_from_right,  // pop enter
+                        R.anim.slide_out_left)    // pop exit
+                .replace(R.id.rsub_fragment, recipeFormFragment).commit();
+    }
+    
     private void fetchFormSetupData() {
         // Acquiring Cuisines Data
         DatabaseReference referenceCuisine = database.getReference("cuisines");
@@ -196,7 +209,7 @@ public class SubmitActivity extends AppCompatActivity {
         
         // check if validation returns true
         for (Boolean valid : validationResults) {
-            if (!valid) {
+            if (valid == false) {
                 btnSubmit.setEnabled(true);
                 return;
             }
@@ -245,19 +258,12 @@ public class SubmitActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         
         String displayName = "Anonymous";
-        try {
-            if (user.getDisplayName() != null && !user.getDisplayName().isEmpty())
-                displayName = user.getDisplayName();
-        } catch (NullPointerException npe ) {
-            Log.i("Submit Activity", "No user name");
-        }
+        if (user.getDisplayName() != null && !user.getDisplayName().isEmpty())
+            displayName = user.getDisplayName();
         
         String user_id = "no-id";
-        try {
+        if (user.getUid() != null )
             user_id = user.getUid();
-        } catch (Exception e) {
-            Log.w("Submit Activity", "Couldn't acquire uid");
-        }
         
         recipe.setDisplay_name(displayName);
         recipe.setUser_id(user_id);
@@ -519,10 +525,10 @@ public class SubmitActivity extends AppCompatActivity {
     private void mControlButtonStatus(Button button, boolean status) {
         if (status) {
             button.setEnabled(true);
-            button.setBackgroundColor(ContextCompat.getColor(this, R.color.comfort_blue));
+            button.setBackgroundColor(getResources().getColor(R.color.comfort_blue));
         } else {
             button.setEnabled(false);
-            button.setBackgroundColor(ContextCompat.getColor(this, R.color.comfort_grey));
+            button.setBackgroundColor(getResources().getColor(R.color.comfort_grey));
         }
     }
     
