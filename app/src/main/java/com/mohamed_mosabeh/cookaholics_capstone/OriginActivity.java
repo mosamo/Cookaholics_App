@@ -99,19 +99,23 @@ public class OriginActivity extends AppCompatActivity {
 
         /** following fragments fetches data at runtime, so we it won't lock up the app by fetching data immediately
          * therefore we can safely initialize it in advance **/
-         filteredByParametersFragment = new FilteredByParametersFragment(this, database);
-         filteredByTagFragment = new FilteredByTagFragment(this, database);
+        filteredByParametersFragment = new FilteredByParametersFragment(this, database);
+        filteredByTagFragment = new FilteredByTagFragment(this, database);
 
+        homeFragment = new HomeFragment(this, database, storage);
+        switchFragment(homeFragment);
     }
     
     private void switchFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(
-                        R.anim.slide_from_right,  // enter
-                        R.anim.slide_out_left,    // exit
-                        R.anim.slide_from_right,  // pop enter
-                        R.anim.slide_out_left)    // pop exit
-                .replace(R.id.flFragment, fragment).commit();
+        if (!fragment.isRemoving()) {
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_from_right,  // enter
+                            R.anim.slide_out_left,    // exit
+                            R.anim.slide_from_right,  // pop enter
+                            R.anim.slide_out_left)    // pop exit
+                    .replace(R.id.flFragment, fragment).commit();
+        }
     }
     
     public void alternativeFragments(String type) {

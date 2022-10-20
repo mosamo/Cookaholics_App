@@ -64,7 +64,9 @@ public class AccountFragment extends Fragment {
 
         mDatabase.child("users").child(auth.getUid()).child("imageUrl").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                Glide.with(getContext()).load(String.valueOf(task.getResult().getValue())).centerCrop().placeholder(com.facebook.R.drawable.com_facebook_profile_picture_blank_square).into(profileImage);
+                if (getActivity() != null) {
+                    Glide.with(getContext()).load(String.valueOf(task.getResult().getValue())).centerCrop().placeholder(com.facebook.R.drawable.com_facebook_profile_picture_blank_square).into(profileImage);
+                }
             }
         });
 
@@ -95,19 +97,20 @@ public class AccountFragment extends Fragment {
                         setView(input).
                         setPositiveButton("Submit", (dialog, which) ->
                                 {
-                                    Glide.with(getContext()).load(input.getText().toString()).centerCrop().error(com.facebook.R.drawable.com_facebook_profile_picture_blank_square).listener(new RequestListener<Drawable>() {
-                                        @Override
-                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                            Toast.makeText(getContext(), "Input is not valid... Please try again", Toast.LENGTH_SHORT).show();
-                                            return false;
-                                        }
+                                    if (getActivity() != null)
+                                        Glide.with(getContext()).load(input.getText().toString()).centerCrop().error(com.facebook.R.drawable.com_facebook_profile_picture_blank_square).listener(new RequestListener<Drawable>() {
+                                            @Override
+                                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                Toast.makeText(getContext(), "Input is not valid... Please try again", Toast.LENGTH_SHORT).show();
+                                                return false;
+                                            }
 
-                                        @Override
-                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                            mDatabase.child("users").child(auth.getUid()).child("imageUrl").setValue(input.getText().toString());
-                                            return false;
-                                        }
-                                    }).into(profileImage);
+                                            @Override
+                                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                mDatabase.child("users").child(auth.getUid()).child("imageUrl").setValue(input.getText().toString());
+                                                return false;
+                                            }
+                                        }).into(profileImage);
                                 }
                         ).setNegativeButton("Cancel", null).show();
             }
