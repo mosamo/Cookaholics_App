@@ -2,7 +2,6 @@ package com.mohamed_mosabeh.cookaholics_capstone;
 
 import android.os.Bundle;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 
 

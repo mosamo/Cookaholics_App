@@ -1,8 +1,14 @@
 package com.mohamed_mosabeh.cookaholics_capstone;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,10 +24,6 @@ import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.AccountFragment
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HomeFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HottestFragment;
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.RecipesFragment;
-import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.SearchFragment;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
 
 public class OriginActivity extends AppCompatActivity {
     
@@ -33,7 +35,6 @@ public class OriginActivity extends AppCompatActivity {
     // Main Fragments
     private HomeFragment homeFragment;
     private RecipesFragment recipesFragment;
-    private SearchFragment searchFragment = new SearchFragment();
     private AccountFragment accountFragment = new AccountFragment();
     private HottestFragment hottestFragment = new HottestFragment();
     
@@ -57,7 +58,7 @@ public class OriginActivity extends AppCompatActivity {
             startActivity(new Intent(OriginActivity.this, PortalActivity.class));
             finish();
         }
-        
+
         storage = FirebaseStorage.getInstance(getString(R.string.firebase_storage));
         database = FirebaseDatabase.getInstance(getString(R.string.asia_database));
 
@@ -72,9 +73,6 @@ public class OriginActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.account:
                     switchFragment(accountFragment);
-                    return true;
-                case R.id.browse:
-                    switchFragment(searchFragment);
                     return true;
                 case R.id.recipes:
                     if (recipesFragment != null) {
@@ -98,17 +96,12 @@ public class OriginActivity extends AppCompatActivity {
             }
             return false;
         });
-    
-    
-    
+
         /** following fragments fetches data at runtime, so we it won't lock up the app by fetching data immediately
          * therefore we can safely initialize it in advance **/
          filteredByParametersFragment = new FilteredByParametersFragment(this, database);
          filteredByTagFragment = new FilteredByTagFragment(this, database);
-//
-//        // default fragment
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.flFragment, homeFragment).commit();
+
     }
     
     private void switchFragment(Fragment fragment) {
@@ -177,10 +170,18 @@ public class OriginActivity extends AppCompatActivity {
         }
     }
 
+    public void launchSearchActivity(View view) {
+        startActivity(new Intent(OriginActivity.this, SearchActivity.class));
+    }
+
     public void signOut(View view) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser().isAnonymous()) {
-            auth.getCurrentUser().delete();
+        try {
+            if (auth.getCurrentUser().isAnonymous()) {
+                auth.getCurrentUser().delete();
+            }
+        } catch (NullPointerException nullPointerException) {
+            Log.i("Sign out", "Not anonymous");
         }
         auth.signOut();
         startActivity(new Intent(OriginActivity.this, PortalActivity.class));

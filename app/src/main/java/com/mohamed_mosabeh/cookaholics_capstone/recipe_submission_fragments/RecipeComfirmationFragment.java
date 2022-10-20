@@ -2,9 +2,6 @@ package com.mohamed_mosabeh.cookaholics_capstone.recipe_submission_fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +10,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.SubmitActivity;
-import com.mohamed_mosabeh.data_objects.Recipe;
 
 public class RecipeComfirmationFragment extends Fragment {
     

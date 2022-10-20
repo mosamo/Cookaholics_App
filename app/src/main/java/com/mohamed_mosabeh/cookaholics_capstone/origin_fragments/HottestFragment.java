@@ -1,14 +1,9 @@
 package com.mohamed_mosabeh.cookaholics_capstone.origin_fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,6 +30,7 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
+import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.utils.ParserUtil;
 import com.mohamed_mosabeh.utils.recycler_views.PopularCardRecipesRecyclerViewAdapter;
@@ -93,6 +94,16 @@ public class HottestFragment extends Fragment {
         HT_Text = parent.findViewById(R.id.wideCard2_text);
         HT_ImageView = parent.findViewById(R.id.imageView_wideCard2);
         HT_CardView = parent.findViewById(R.id.wideCard2);
+        HT_CardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (HottestTagRecipe != null) {
+                    Intent intent = new Intent(getActivity(), RecipeStepsActivity.class);
+                    intent.putExtra("recipe_id", HottestTagRecipe.getId());
+                    startActivity(intent);
+                }
+            }
+        });
         HT_ProgressBar = parent.findViewById(R.id.wideCard2_progressBar);
         HT_ImageProgress = parent.findViewById(R.id.progressBar_imageView);
         WHR_Label = parent.findViewById(R.id.rec_lblRecipe);
@@ -101,6 +112,16 @@ public class HottestFragment extends Fragment {
         WHR_Text = parent.findViewById(R.id.wideCard_text);
         WHR_ImageView = parent.findViewById(R.id.imageView_wideCard);
         WHR_CardView = parent.findViewById(R.id.wideCard);
+        WHR_CardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (WeekHottestRecipe != null) {
+                    Intent intent = new Intent(getActivity(), RecipeStepsActivity.class);
+                    intent.putExtra("recipe_id", WeekHottestRecipe.getId());
+                    startActivity(intent);
+                }
+            }
+        });
         WHR_ProgressBar = parent.findViewById(R.id.wideCard_progressBar);
         WHR_ImageProgress = parent.findViewById(R.id.imageView_progressBar);
         HottestRecipesRecycler = parent.findViewById(R.id.rec_HottestRecipesRecycler);

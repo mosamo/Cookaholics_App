@@ -1,6 +1,5 @@
 package com.mohamed_mosabeh.utils.recycler_views;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mohamed_mosabeh.cookaholics_capstone.R;
-import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.utils.ParserUtil;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;

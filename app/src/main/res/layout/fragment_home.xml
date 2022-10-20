@@ -54,12 +54,13 @@
                         android:textSize="20sp" />
 
                     <Button
-                        android:id="@+id/rec_RecipeSubmission"
+                        android:id="@+id/rec_RecipeSearch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:layout_marginRight="8dp"
-                        android:text="account" />
+                        android:onClick="launchSearchActivity"
+                        android:text="Search" />
 
                 </LinearLayout>
 

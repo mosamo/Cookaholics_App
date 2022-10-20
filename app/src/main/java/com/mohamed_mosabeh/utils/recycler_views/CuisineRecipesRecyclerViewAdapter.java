@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.data_objects.Cuisine;
-import com.mohamed_mosabeh.utils.click_interfaces.RecyclerCategoryClickInterface;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerCuisineClickInterface;
 
 import java.util.ArrayList;

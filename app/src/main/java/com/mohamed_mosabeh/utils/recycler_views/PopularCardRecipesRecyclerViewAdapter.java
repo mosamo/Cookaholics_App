@@ -113,9 +113,9 @@ public class PopularCardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<
         
         public CardRecipesPopularViewHolder(@NonNull View itemView) {
             super(itemView);
-    
+
             cardLikes = itemView.findViewById(R.id.txtLikes);
-            cardName = itemView.findViewById(R.id.recipesCard_name);
+            cardName = itemView.findViewById(R.id.recipeCard_name);
             cardMinutes = itemView.findViewById(R.id.recipeCard_minutes);
             cardServings = itemView.findViewById(R.id.recipeCard_servings);
             cardImage = itemView.findViewById(R.id.imageView_recipeCard);

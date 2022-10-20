@@ -17,11 +17,6 @@
         android:title="Home"/>
 
     <item
-        android:id="@+id/browse"
-        android:icon="@drawable/ic_glass_foreground"
-        android:title="Browse" />
-
-    <item
         android:id="@+id/account"
         android:icon="@drawable/ic_person_foreground"
         android:title="Account" />

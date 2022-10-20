@@ -1,17 +1,17 @@
 package com.mohamed_mosabeh.cookaholics_capstone.recipe_steps_fragments;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -288,7 +288,7 @@ public class RecipeStepsContainerFragment extends Fragment {
                 btn.setEnabled(false);
                 btn.setText("Loading");
                 btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                btn.setBackgroundColor(getResources().getColor(R.color.comfort_grey));
+                btn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.comfort_grey));
                 break;
             case (2): // turn on
                 btn.setEnabled(true);
@@ -296,7 +296,7 @@ public class RecipeStepsContainerFragment extends Fragment {
                 btn.setText("Like");
                 userDidNotLike = true;
                 btn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_icon, 0, 0);
-                btn.setBackgroundColor(getResources().getColor(R.color.purple_500));
+                btn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
                 break;
             case (3): // turn on undo
                 btn.setEnabled(true);
@@ -304,7 +304,7 @@ public class RecipeStepsContainerFragment extends Fragment {
                 btn.setText("Undo");
                 userDidNotLike = false;
                 btn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_like_icon, 0, 0);
-                btn.setBackgroundColor(getResources().getColor(R.color.purple_500));
+                btn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
                 break;
         }
     }
@@ -316,21 +316,21 @@ public class RecipeStepsContainerFragment extends Fragment {
                 btn.setEnabled(false);
                 btn.setText("Loading");
                 btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                btn.setBackgroundColor(getResources().getColor(R.color.comfort_grey));
+                btn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.comfort_grey));
                 break;
             case (2): // turn on
                 btn.setEnabled(true);
                 btn.setText("report");
                 btn.setTag("fresh");
                 btn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_report_flag, 0, 0);
-                btn.setBackgroundColor(getResources().getColor(R.color.purple_500));
+                btn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
                 break;
             case (3): // turn on undo
                 btn.setEnabled(true);
                 btn.setTag("stale");
                 btn.setText("Undo");
                 btn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_report_flag, 0, 0);
-                btn.setBackgroundColor(getResources().getColor(R.color.purple_500));
+                btn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
                 break;
         }
     }

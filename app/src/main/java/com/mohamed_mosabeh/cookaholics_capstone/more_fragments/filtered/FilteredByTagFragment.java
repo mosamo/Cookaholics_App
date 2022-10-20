@@ -1,18 +1,18 @@
 package com.mohamed_mosabeh.cookaholics_capstone.more_fragments.filtered;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,10 +22,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.mohamed_mosabeh.cookaholics_capstone.OriginActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
-import com.mohamed_mosabeh.cookaholics_capstone.TestActivity;
+import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.MoreRecipesBaseInterface;
 import com.mohamed_mosabeh.data_objects.Recipe;
-import com.mohamed_mosabeh.utils.ViewUtils;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
 import com.mohamed_mosabeh.utils.recycler_views.CompactRecipesRecyclerViewAdapter;
 
@@ -79,8 +78,14 @@ public class FilteredByTagFragment extends Fragment implements MoreRecipesBaseIn
             
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Recipe recipe = snapshot.getValue(Recipe.class);
-                    if (recipe.getTags().contains(mWantedTag))
-                        recipes.add(recipe);
+                    ArrayList<String> tags = recipe.getTags();
+                    if (tags != null && !tags.isEmpty())
+                        for (int i = 0; i < tags.size(); i++) {
+                            if (tags.get(i).equals(mWantedTag)) {
+                                recipes.add(recipe);
+                                recipe.setId(snapshot.getKey());
+                            }
+                        }
                 }
     
                 if (loadingTextview != null) {
@@ -156,6 +161,10 @@ public class FilteredByTagFragment extends Fragment implements MoreRecipesBaseIn
     
     @Override
     public void onItemRecipeClick(int position) {
-    
+        if (!recipes.isEmpty()) {
+            Intent intent = new Intent(getActivity(), RecipeStepsActivity.class);
+            intent.putExtra("recipe_id", recipes.get(position).getId());
+            startActivity(intent);
+        }
     }
 }

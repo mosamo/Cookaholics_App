@@ -1,9 +1,5 @@
 package com.mohamed_mosabeh.cookaholics_capstone;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,7 +12,11 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -125,19 +125,6 @@ public class SubmitActivity extends AppCompatActivity {
         fetchFormSetupData();
     }
     
-    
-    
-    
-    public void mReturnToForm() {
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(
-                        R.anim.slide_from_right,  // enter
-                        R.anim.slide_out_left,    // exit
-                        R.anim.slide_from_right,  // pop enter
-                        R.anim.slide_out_left)    // pop exit
-                .replace(R.id.rsub_fragment, recipeFormFragment).commit();
-    }
-    
     private void fetchFormSetupData() {
         // Acquiring Cuisines Data
         DatabaseReference referenceCuisine = database.getReference("cuisines");
@@ -209,7 +196,7 @@ public class SubmitActivity extends AppCompatActivity {
         
         // check if validation returns true
         for (Boolean valid : validationResults) {
-            if (valid == false) {
+            if (!valid) {
                 btnSubmit.setEnabled(true);
                 return;
             }
@@ -247,24 +234,31 @@ public class SubmitActivity extends AppCompatActivity {
                         R.anim.slide_from_right,  // pop enter
                         R.anim.slide_out_left)    // pop exit
                 .replace(R.id.rsub_fragment, comfirmationUIFragment).commit();
-        
+
         comfirmationUIFragment.setLoadingText("Uploading Recipe Data..");
-        
+
         // Submit to database;
         DatabaseReference reference = database.getReference("recipes");
         String id = reference.push().getKey();
         uploadedRecipeId = id;
-        
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        
+
         String displayName = "Anonymous";
-        if (user.getDisplayName() != null && !user.getDisplayName().isEmpty())
-            displayName = user.getDisplayName();
-        
+        try {
+            if (user.getDisplayName() != null && !user.getDisplayName().isEmpty())
+                displayName = user.getDisplayName();
+        } catch (NullPointerException npe) {
+            Log.i("Submit Activity", "No user name");
+        }
+
         String user_id = "no-id";
-        if (user.getUid() != null )
+        try {
             user_id = user.getUid();
-        
+        } catch (Exception e) {
+            Log.w("Submit Activity", "Couldn't acquire uid");
+        }
+
         recipe.setDisplay_name(displayName);
         recipe.setUser_id(user_id);
         
@@ -525,10 +519,10 @@ public class SubmitActivity extends AppCompatActivity {
     private void mControlButtonStatus(Button button, boolean status) {
         if (status) {
             button.setEnabled(true);
-            button.setBackgroundColor(getResources().getColor(R.color.comfort_blue));
+            button.setBackgroundColor(ContextCompat.getColor(this, R.color.comfort_blue));
         } else {
             button.setEnabled(false);
-            button.setBackgroundColor(getResources().getColor(R.color.comfort_grey));
+            button.setBackgroundColor(ContextCompat.getColor(this, R.color.comfort_grey));
         }
     }
     

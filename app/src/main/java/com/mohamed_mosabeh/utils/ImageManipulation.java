@@ -1,18 +1,15 @@
 package com.mohamed_mosabeh.utils;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -60,9 +57,16 @@ public class ImageManipulation {
             return false;
         }
     }
-    
+
+    @SuppressWarnings("deprecation")
     public Bitmap UriToBitmap(Uri uri) throws IOException {
-        Bitmap bitmap = MediaStore.Images.Media.getBitmap(activity.getApplicationContext().getContentResolver(), uri);
+        Bitmap bitmap = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            ImageDecoder.Source source = ImageDecoder.createSource(activity.getApplicationContext().getContentResolver(), uri);
+            bitmap = ImageDecoder.decodeBitmap(source);
+        } else {
+            bitmap = MediaStore.Images.Media.getBitmap(activity.getApplicationContext().getContentResolver(), uri);
+        }
         return bitmap;
     }
     

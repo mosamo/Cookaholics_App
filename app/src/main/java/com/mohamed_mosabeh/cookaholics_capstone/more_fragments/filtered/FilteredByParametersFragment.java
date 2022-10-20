@@ -3,17 +3,16 @@ package com.mohamed_mosabeh.cookaholics_capstone.more_fragments.filtered;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,17 +24,11 @@ import com.mohamed_mosabeh.cookaholics_capstone.OriginActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.MoreRecipesBaseInterface;
-import com.mohamed_mosabeh.data_objects.Comment;
 import com.mohamed_mosabeh.data_objects.Recipe;
-import com.mohamed_mosabeh.utils.click_interfaces.RecyclerCategoryClickInterface;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
-import com.mohamed_mosabeh.utils.recycler_views.CategoryMainRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.CompactRecipesRecyclerViewAdapter;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class FilteredByParametersFragment extends Fragment implements RecyclerRecipeClickInterface, MoreRecipesBaseInterface {
     
@@ -88,8 +81,7 @@ public class FilteredByParametersFragment extends Fragment implements RecyclerRe
         commentsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-            
-            
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Recipe r = snapshot.getValue(Recipe.class);
                     recipes.add(r);
