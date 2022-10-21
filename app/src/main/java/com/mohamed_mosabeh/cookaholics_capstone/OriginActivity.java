@@ -26,7 +26,7 @@ import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HottestFragment
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.RecipesFragment;
 
 public class OriginActivity extends AppCompatActivity {
-    
+
     private FirebaseDatabase database;
     private FirebaseStorage storage;
 
@@ -99,32 +99,29 @@ public class OriginActivity extends AppCompatActivity {
 
         /** following fragments fetches data at runtime, so we it won't lock up the app by fetching data immediately
          * therefore we can safely initialize it in advance **/
-         filteredByParametersFragment = new FilteredByParametersFragment(this, database);
-         filteredByTagFragment = new FilteredByTagFragment(this, database);
-    
-         homeFragment = new HomeFragment(this, database, storage);
-         switchFragment(homeFragment);
+        filteredByParametersFragment = new FilteredByParametersFragment(this, database);
+        filteredByTagFragment = new FilteredByTagFragment(this, database);
+
+        homeFragment = new HomeFragment(this, database, storage);
+        switchFragment(homeFragment);
     }
-    
+
     private void switchFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(
-                        R.anim.slide_from_right,  // enter
-                        R.anim.slide_out_left,    // exit
-                        R.anim.slide_from_right,  // pop enter
-                        R.anim.slide_out_left)    // pop exit
-                .replace(R.id.flFragment, fragment).commit();
+        if (!fragment.isRemoving()) {
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_from_right,  // enter
+                            R.anim.slide_out_left,    // exit
+                            R.anim.slide_from_right,  // pop enter
+                            R.anim.slide_out_left)    // pop exit
+                    .replace(R.id.flFragment, fragment).commit();
+        }
     }
     
     public void alternativeFragments(String type) {
         switch (type) {
             case "home":
-                if (homeFragment != null) {
                     switchFragment(homeFragment);
-                } else {
-                    homeFragment = new HomeFragment(this, database, storage);
-                    switchFragment(homeFragment);
-                }
                 break;
             case "recipes":
                 if (recipesFragment != null) {
