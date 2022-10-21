@@ -58,6 +58,7 @@ public class HottestFragment extends Fragment {
     private ProgressBar HT_ImageProgress;
     private ProgressBar HT_ProgressBar;
     private String HT_String;
+    private Bitmap HT_Image;
 
     private ArrayList<Recipe> HottestRecipes = new ArrayList<>();
     private RecyclerView HottestRecipesRecycler;
@@ -74,6 +75,7 @@ public class HottestFragment extends Fragment {
     private ProgressBar WHR_ImageProgress;
     private ProgressBar WHR_ProgressBar;
     private DataSnapshot WHR_DataSnapshot;
+    private Bitmap WHR_Image;
 
     public HottestFragment() {
     }
@@ -93,6 +95,9 @@ public class HottestFragment extends Fragment {
         HT_Name = parent.findViewById(R.id.wideCard2_name);
         HT_Text = parent.findViewById(R.id.wideCard2_text);
         HT_ImageView = parent.findViewById(R.id.imageView_wideCard2);
+        if (HT_Image != null) {
+            HT_ImageView.setImageBitmap(HT_Image);
+        }
         HT_CardView = parent.findViewById(R.id.wideCard2);
         HT_CardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +116,9 @@ public class HottestFragment extends Fragment {
         WHR_Name = parent.findViewById(R.id.wideCard_name);
         WHR_Text = parent.findViewById(R.id.wideCard_text);
         WHR_ImageView = parent.findViewById(R.id.imageView_wideCard);
+        if (WHR_Image != null) {
+            WHR_ImageView.setImageBitmap(WHR_Image);
+        }
         WHR_CardView = parent.findViewById(R.id.wideCard);
         WHR_CardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -245,6 +253,7 @@ public class HottestFragment extends Fragment {
                         HT_ProgressBar.setVisibility(View.GONE);
                         HT_CardView.setVisibility(View.VISIBLE);
                         SetUpWideCard2(HottestTagRecipe);
+                        fetchHottestTagImage();
                     }
 
                     @Override
@@ -295,6 +304,7 @@ public class HottestFragment extends Fragment {
                     WHR_ProgressBar.setVisibility(View.GONE);
                     WHR_CardView.setVisibility(View.VISIBLE);
                     SetUpWideCard(WeekHottestRecipe);
+                    fetchWeekHottestRecipeImage();
                 } else {
                     Query hottestRecipe = reference.orderByChild("likes").limitToLast(1);
                     hottestRecipe.addValueEventListener(new ValueEventListener() {
@@ -333,7 +343,7 @@ public class HottestFragment extends Fragment {
     }
 
     private void SetUpWideCard(Recipe recipe) {
-        if (WHR_DataSnapshot != null && recipe != null) {
+        if (recipe != null) {
             if (!WHR_DataSnapshot.exists()) {
                 WHR_Label.setText("Most Liked Recipe");
             } else {
@@ -342,80 +352,92 @@ public class HottestFragment extends Fragment {
             WHR_Tags.setText(ParserUtil.parseTags(recipe.getTags()));
             WHR_Text.setText("This " + recipe.getCuisine() + " " + recipe.getCategory() + " recipe is liked by many!");
             WHR_Name.setText(recipe.getName());
-
-            if (!recipe.getIcon().equals("no-image")) {
-                try {
-                    final File tempfile = File.createTempFile(recipe.getId() + "_icon", "png");
-                    final StorageReference storageRef = storage.getReference().child(recipe.getIcon());
-                    storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
-                            WHR_ImageProgress.setVisibility(View.GONE);
-                            WHR_ImageView.setImageBitmap(bitmap);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w("Firebase Storage", "Couldn't Fetch File: " + e.getMessage());
-
-                            // Kill Progress
-                            WHR_ImageProgress.setVisibility(View.GONE);
-                            WHR_ImageView.setImageResource(R.drawable.placeholder);
-                        }
-                    });
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                WHR_ImageProgress.setVisibility(View.GONE);
+            if (recipe.getIcon().equals("no-image")) {
                 WHR_ImageView.setImageResource(R.drawable.placeholder);
+                WHR_ImageProgress.setVisibility(View.GONE);
+            } else if (WHR_Image != null) {
+                WHR_ImageView.setImageBitmap(WHR_Image);
+                WHR_ImageProgress.setVisibility(View.GONE);
             }
         }
     }
 
     private void SetUpWideCard2(Recipe recipe) {
-        HT_Name.setText("#" + HT_String);
-        if (!HottestTagRecipes.isEmpty())
-            HT_Text.setText(recipe.getName() + " is a popular " + recipe.getCuisine() + " " + recipe.getCategory() + " recipe using this tag!");
-        else
-            HT_Text.setText("Something went wrong... Existing recipes don't have this tag.");
-
         if (recipe != null) {
-            if (recipe.getIcon() != null && !HottestTagRecipes.isEmpty()) {
-                try {
-                    final File tempfile = File.createTempFile(recipe.getId() + "_icon", "png");
-                    final StorageReference storageRef = storage.getReference().child(recipe.getIcon());
-                    storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
-                            HT_ImageProgress.setVisibility(View.GONE);
-                            HT_ImageView.setImageBitmap(bitmap);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w("Firebase Storage", "Couldn't Fetch File: " + e.getMessage());
-
-                            // Kill Progress
-                            HT_ImageProgress.setVisibility(View.GONE);
-                            HT_ImageView.setImageResource(R.drawable.placeholder);
-                        }
-                    });
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                HT_ImageProgress.setVisibility(View.GONE);
+            HT_Name.setText("#" + HT_String);
+            if (!HottestTagRecipes.isEmpty())
+                HT_Text.setText(recipe.getName() + " is a popular " + recipe.getCuisine() + " " + recipe.getCategory() + " recipe using this tag!");
+            else
+                HT_Text.setText("Something went wrong... Existing recipes don't have this tag.");
+            if (recipe.getIcon().equals("no-image")) {
                 HT_ImageView.setImageResource(R.drawable.placeholder);
+                HT_ImageProgress.setVisibility(View.GONE);
+            } else if (HT_Image != null) {
+                HT_ImageView.setImageBitmap(HT_Image);
+                HT_ImageProgress.setVisibility(View.GONE);
             }
+        }
+    }
+
+    private void fetchHottestTagImage() {
+        try {
+            final File tempfile = File.createTempFile(HottestTagRecipe.getId() + "_icon", "png");
+            final StorageReference storageRef = storage.getReference().child(HottestTagRecipe.getIcon());
+            storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    HT_Image = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
+                    try {
+                        HT_ImageView.setImageBitmap(HT_Image);
+                        HT_ImageProgress.setVisibility(View.GONE);
+                    } catch (NullPointerException npe) {
+                        Log.w("HottestTagImage", npe.getMessage());
+                    } catch (Exception e) {
+                        Log.w("HottestTagImage", e.getMessage());
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    HT_Image = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder);
+                    Log.w("Firebase Storage", "Couldn't Fetch File: " + e.getMessage());
+                }
+            });
+        } catch (IOException e) {
+            Log.w("File Download Issue", e.getMessage());
+        } catch (Exception e) {
+            Log.w("File Download Issue", e.getMessage());
+        }
+    }
+
+    private void fetchWeekHottestRecipeImage() {
+        try {
+            final File tempfile = File.createTempFile(WeekHottestRecipe.getId() + "_icon", "png");
+            final StorageReference storageRef = storage.getReference().child(WeekHottestRecipe.getIcon());
+            storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    WHR_Image = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
+                    try {
+                        WHR_ImageView.setImageBitmap(WHR_Image);
+                        WHR_ImageProgress.setVisibility(View.GONE);
+                    } catch (NullPointerException npe) {
+                        Log.w("WeekHottestRecipeImage", npe.getMessage());
+                    } catch (Exception e) {
+                        Log.w("WeekHottestRecipeImage", e.getMessage());
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    WHR_Image = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder);
+                    Log.w("Firebase Storage", "Couldn't Fetch File: " + e.getMessage());
+                }
+            });
+        } catch (IOException e) {
+            Log.w("File Download Issue", e.getMessage());
+        } catch (Exception e) {
+            Log.w("File Download Issue", e.getMessage());
         }
     }
 
