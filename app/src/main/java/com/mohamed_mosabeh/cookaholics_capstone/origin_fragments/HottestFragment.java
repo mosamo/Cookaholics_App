@@ -33,6 +33,8 @@ import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.utils.ParserUtil;
+import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
+import com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.PopularCardRecipesRecyclerViewAdapter;
 
 import java.io.File;
@@ -44,7 +46,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
-public class HottestFragment extends Fragment {
+public class HottestFragment extends Fragment implements RecyclerRecipeClickInterface {
 
     private FirebaseDatabase database;
     private FirebaseStorage storage;
@@ -62,7 +64,8 @@ public class HottestFragment extends Fragment {
 
     private ArrayList<Recipe> HottestRecipes = new ArrayList<>();
     private RecyclerView HottestRecipesRecycler;
-    private RecyclerView.Adapter HottestRecipesAdapter;
+    private RecyclerView.Adapter recipeAdapter = new PopularCardRecipesRecyclerViewAdapter(HottestRecipes, this);
+    private PopularCardRecipesRecyclerViewAdapter HottestRecipesAdapter = (PopularCardRecipesRecyclerViewAdapter) recipeAdapter;;
     private ProgressBar HottestRecipesProgressBar;
 
     private Recipe WeekHottestRecipe;
@@ -137,6 +140,12 @@ public class HottestFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        HottestRecipesAdapter.getRecipeHolderMap().clear();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         if (database == null) {
@@ -166,7 +175,6 @@ public class HottestFragment extends Fragment {
             layoutManager.setReverseLayout(true);
             layoutManager.setStackFromEnd(true);
             HottestRecipesRecycler.setLayoutManager(layoutManager);
-            HottestRecipesAdapter = new PopularCardRecipesRecyclerViewAdapter(hottest_recipes, storage);
             HottestRecipesRecycler.setAdapter(HottestRecipesAdapter);
             HottestRecipesProgressBar.setVisibility(View.GONE);
         }
@@ -194,7 +202,7 @@ public class HottestFragment extends Fragment {
                     recipe.setId(snapshot.getKey());
                     HottestRecipes.add(recipe);
                 }
-
+                fetchHottestRecipesImages(HottestRecipes);
                 HottestRecipesRecyclerSetUp(HottestRecipes);
             }
 
@@ -235,7 +243,6 @@ public class HottestFragment extends Fragment {
                             ArrayList<String> tags = recipe.getTags();
                             if (tags != null && !tags.isEmpty())
                                 for (int j = 0; j < tags.size(); j++) {
-                                    System.out.println(tags.get(j));
                                     HT_String = hottestTagSnapshot.getValue().toString();
                                     HT_String = HT_String.substring(1, HT_String.indexOf("="));
                                     if (tags.get(j).equals(HT_String)) {
@@ -441,6 +448,54 @@ public class HottestFragment extends Fragment {
         }
     }
 
+    private void fetchHottestRecipesImages(ArrayList<Recipe> recipes) {
+        for (Recipe recipe : recipes) {
+            if (!recipe.getIcon().equals("no-image")) {
+                try {
+                    final File tempfile = File.createTempFile(recipe.getId() + "_icon", "png");
+                    final StorageReference storageRef = storage.getReference().child(recipe.getIcon());
+                    storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
+                            recipe.setPicture(bitmap);
+                            try {
+                                HottestRecipesAdapter.getRecipeHolderMap().get(recipe).cardImage.setImageBitmap(bitmap);
+                                HottestRecipesAdapter.KillProgressBar(HottestRecipesAdapter.getRecipeHolderMap().get(recipe).cardProgress);
+                            } catch (NullPointerException es) {
+                                Log.i("Recipes Recycler", "Cannot bind Recipes");
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.placeholder);
+                            try {
+                                HottestRecipesAdapter.getRecipeHolderMap().get(recipe).cardImage.setImageBitmap(bitmap);
+                                HottestRecipesAdapter.KillProgressBar(HottestRecipesAdapter.getRecipeHolderMap().get(recipe).cardProgress);
+                            } catch (NullPointerException ef) {
+                                Log.i("Recipes Recycler", "Cannot bind Recipes");
+                            }
+                            Log.w("Firebase Storage", "Couldn't Fetch File: " + e.getMessage() + " " + recipe.getIcon());
+                        }
+                    });
+                } catch (IOException e) {
+                    Log.w("File Download Issue", e.getMessage());
+                } catch (Exception e) {
+                    Log.w("File Download Issue", e.getMessage());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onItemRecipeClick(int position) {
+        if (!HottestRecipes.isEmpty()) {
+            Intent intent = new Intent(getActivity(), RecipeStepsActivity.class);
+            intent.putExtra("recipe_id", HottestRecipes.get(position).getId());
+            startActivity(intent);
+        }
+    }
 }
 
 class SortByLikes implements Comparator<Recipe> {

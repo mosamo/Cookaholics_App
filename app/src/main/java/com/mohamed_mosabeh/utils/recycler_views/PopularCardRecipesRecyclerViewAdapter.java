@@ -1,7 +1,5 @@
 package com.mohamed_mosabeh.utils.recycler_views;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,105 +11,89 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.data_objects.Recipe;
+import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class PopularCardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<PopularCardRecipesRecyclerViewAdapter.CardRecipesPopularViewHolder> {
+public class PopularCardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<PopularCardRecipesRecyclerViewAdapter.PopularCardRecipesViewHolder> {
 
-    ArrayList<Recipe> recipes;
-    FirebaseStorage storage;
+    private ArrayList<Recipe> recipes;
 
-    public PopularCardRecipesRecyclerViewAdapter(ArrayList<Recipe> recipes, FirebaseStorage storage) {
+    private final RecyclerRecipeClickInterface recyclerClickInterface;
+
+    private Map<Recipe, PopularCardRecipesViewHolder> recipeHolderMap = new HashMap<>();
+
+    public PopularCardRecipesRecyclerViewAdapter(ArrayList<Recipe> recipes, RecyclerRecipeClickInterface recyclerClickInterface) {
         this.recipes = recipes;
-        this.storage = storage;
+        this.recyclerClickInterface = recyclerClickInterface;
     }
-    
+
+    public Map<Recipe, PopularCardRecipesViewHolder> getRecipeHolderMap() {
+        return recipeHolderMap;
+    }
+
+    public void KillProgressBar(ProgressBar p) {
+        try {
+            p.setVisibility(View.GONE);
+        } catch (NullPointerException npe) {
+            Log.i("View Not Found", "View not initiated yet!");
+        }
+    }
+
     @NonNull
     @Override
-    public CardRecipesPopularViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PopularCardRecipesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_popular_recipes_card, parent, false);
-        CardRecipesPopularViewHolder viewHolder = new CardRecipesPopularViewHolder(view);
+        PopularCardRecipesViewHolder viewHolder = new PopularCardRecipesViewHolder(view, recyclerClickInterface);
         return viewHolder;
     }
-    
+
     @Override
-    public void onBindViewHolder(@NonNull CardRecipesPopularViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PopularCardRecipesViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
-        
-        
+
         holder.cardName.setText(recipe.getName());
         holder.cardLikes.setText(Integer.toString(recipe.getLikes()));
         holder.cardMinutes.setText(recipe.getDuration() + " Minutes");
 
         String servingsPlural = recipe.getServings() > 1 ? " Servings" : " Serving";
         holder.cardServings.setText(recipe.getServings() + servingsPlural);
-    
-        if (!recipe.getIcon().equals("no-image")) {
-            try {
-                final File tempfile = File.createTempFile(recipes.get(position).getId()+"_icon", "png");
-                final StorageReference storageRef = storage.getReference().child(recipe.getIcon());
-                storageRef.getFile(tempfile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(tempfile.getAbsolutePath());
-                        holder.cardImage.setImageBitmap(bitmap);
-                        
-                        ProgressBar p = holder.cardProgress;
-                        ((ViewGroup) p.getParent()).removeView(p);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Firebase Storage", "Couldn't Fetch File: " + e.getMessage());
-                        
-                        // Kill Progress
-                        ProgressBar p = holder.cardProgress;
-                        ((ViewGroup) p.getParent()).removeView(p);
-                        holder.cardImage.setImageResource(R.drawable.placeholder);
-                    }
-                });
-                
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            // Kill Progress
-            ProgressBar p = holder.cardProgress;
-            ((ViewGroup) p.getParent()).removeView(p);
+
+        if (recipe.getIcon().equals("no-image")) {
+            // If there is no Image: put placeholder
             holder.cardImage.setImageResource(R.drawable.placeholder);
+            KillProgressBar(holder.cardProgress);
+        } else if (recipe.getPicture() != null) {
+            // If there is an Image: put it
+            holder.cardImage.setImageBitmap(recipe.getPicture());
+            KillProgressBar(holder.cardProgress);
         }
+
+        recipeHolderMap.put(recipe, holder);
     }
-    
+
     @Override
     public int getItemCount() {
         return recipes.size();
     }
-    
-    public static class CardRecipesPopularViewHolder extends RecyclerView.ViewHolder {
-    
+
+    public static class PopularCardRecipesViewHolder extends RecyclerView.ViewHolder {
+
         TextView cardName;
         TextView cardLikes;
-        
+
         TextView cardMinutes;
         TextView cardServings;
-        
-        ImageView cardImage;
-        
-        ProgressBar cardProgress;
-        
-        
-        public CardRecipesPopularViewHolder(@NonNull View itemView) {
+
+        public ImageView cardImage;
+        public ProgressBar cardProgress;
+
+
+        public PopularCardRecipesViewHolder(@NonNull View itemView, RecyclerRecipeClickInterface mClickInterface) {
             super(itemView);
 
             cardLikes = itemView.findViewById(R.id.txtLikes);
@@ -120,7 +102,18 @@ public class PopularCardRecipesRecyclerViewAdapter extends RecyclerView.Adapter<
             cardServings = itemView.findViewById(R.id.recipeCard_servings);
             cardImage = itemView.findViewById(R.id.imageView_recipeCard);
             cardProgress = itemView.findViewById(R.id.recipeCard_progressBar);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mClickInterface != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            mClickInterface.onItemRecipeClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
-    
+
 }
