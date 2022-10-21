@@ -26,7 +26,7 @@ import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HottestFragment
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.RecipesFragment;
 
 public class OriginActivity extends AppCompatActivity {
-    
+
     private FirebaseDatabase database;
     private FirebaseStorage storage;
 
@@ -105,7 +105,7 @@ public class OriginActivity extends AppCompatActivity {
         homeFragment = new HomeFragment(this, database, storage);
         switchFragment(homeFragment);
     }
-    
+
     private void switchFragment(Fragment fragment) {
         if (!fragment.isRemoving()) {
             getSupportFragmentManager().beginTransaction()
