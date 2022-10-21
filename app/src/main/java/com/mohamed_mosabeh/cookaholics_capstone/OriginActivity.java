@@ -121,7 +121,12 @@ public class OriginActivity extends AppCompatActivity {
     public void alternativeFragments(String type) {
         switch (type) {
             case "home":
+                if (homeFragment != null) {
                     switchFragment(homeFragment);
+                } else {
+                    homeFragment = new HomeFragment(this, database, storage);
+                    switchFragment(homeFragment);
+                }
                 break;
             case "recipes":
                 if (recipesFragment != null) {
