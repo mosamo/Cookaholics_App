@@ -95,9 +95,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             holder.nameTxt.setText(spanString);
-        } else {
-            //Utils.show(ctx, "Search string empty");
         }
+        /* else {
+        *    //Utils.show(ctx, "Search string empty");
+        }*/
 
         holder.setItemClickListener(pos -> SearchUtils.sendRecipeToActivity(c, r,
                 RecipeStepsActivity.class));
@@ -109,4 +110,3 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     }
 
 }
-//end

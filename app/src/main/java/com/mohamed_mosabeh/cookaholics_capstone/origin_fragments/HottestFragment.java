@@ -33,8 +33,8 @@ import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.data_objects.Recipe;
 import com.mohamed_mosabeh.utils.ParserUtil;
+import com.mohamed_mosabeh.utils.SortByLikes;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
-import com.mohamed_mosabeh.utils.recycler_views.CardRecipesRecyclerViewAdapter;
 import com.mohamed_mosabeh.utils.recycler_views.PopularCardRecipesRecyclerViewAdapter;
 
 import java.io.File;
@@ -43,7 +43,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
 public class HottestFragment extends Fragment implements RecyclerRecipeClickInterface {
@@ -65,7 +64,7 @@ public class HottestFragment extends Fragment implements RecyclerRecipeClickInte
     private ArrayList<Recipe> HottestRecipes = new ArrayList<>();
     private RecyclerView HottestRecipesRecycler;
     private RecyclerView.Adapter recipeAdapter = new PopularCardRecipesRecyclerViewAdapter(HottestRecipes, this);
-    private PopularCardRecipesRecyclerViewAdapter HottestRecipesAdapter = (PopularCardRecipesRecyclerViewAdapter) recipeAdapter;;
+    private PopularCardRecipesRecyclerViewAdapter HottestRecipesAdapter = (PopularCardRecipesRecyclerViewAdapter) recipeAdapter;
     private ProgressBar HottestRecipesProgressBar;
 
     private Recipe WeekHottestRecipe;
@@ -166,10 +165,10 @@ public class HottestFragment extends Fragment implements RecyclerRecipeClickInte
     private void SetUpRecyclers() {
         SetUpWideCard(WeekHottestRecipe);
         SetUpWideCard2(HottestTagRecipe);
-        HottestRecipesRecyclerSetUp(HottestRecipes);
+        HottestRecipesRecyclerSetUp();
     }
 
-    private void HottestRecipesRecyclerSetUp(ArrayList<Recipe> hottest_recipes) {
+    private void HottestRecipesRecyclerSetUp() {
         if (getActivity() != null) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
             layoutManager.setReverseLayout(true);
@@ -203,7 +202,7 @@ public class HottestFragment extends Fragment implements RecyclerRecipeClickInte
                     HottestRecipes.add(recipe);
                 }
                 fetchHottestRecipesImages(HottestRecipes);
-                HottestRecipesRecyclerSetUp(HottestRecipes);
+                HottestRecipesRecyclerSetUp();
             }
 
             @Override
@@ -495,13 +494,5 @@ public class HottestFragment extends Fragment implements RecyclerRecipeClickInte
             intent.putExtra("recipe_id", HottestRecipes.get(position).getId());
             startActivity(intent);
         }
-    }
-}
-
-class SortByLikes implements Comparator<Recipe> {
-    // Method
-    // Sorting in ascending order
-    public int compare(Recipe a, Recipe b) {
-        return a.getLikes() - b.getLikes();
     }
 }

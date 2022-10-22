@@ -48,7 +48,7 @@ public class SearchActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu options from the res/menu/menu_editor.xml file.
+        // Inflates menu options
         // This adds menu items to the app bar.
         getMenuInflater().inflate(R.menu.search_page_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -107,4 +107,3 @@ public class SearchActivity extends AppCompatActivity implements
     }
 
 }
-//end

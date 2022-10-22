@@ -31,33 +31,12 @@ public class SearchUtils {
         Toast.makeText(c, message, Toast.LENGTH_SHORT).show();
     }
 
-    public static void openActivity(Context c, Class clazz) {
-        Intent intent = new Intent(c, clazz);
-        c.startActivity(intent);
-    }
-
-    /**
-     * This method will allow us send a serialized recipe object to a specified
-     * activity
-     */
+    // This method will send a recipe object to a specified activity.
     public static void sendRecipeToActivity(Context c, Recipe recipe,
                                             Class clazz) {
         Intent i = new Intent(c, clazz);
         i.putExtra("recipe_id", recipe.getId());
         c.startActivity(i);
-    }
-
-    /**
-     * This method will allow us receive a serialized recipe, deserialize it and return it,.
-     */
-    public static Recipe receiveRecipe(Intent intent, Context c) {
-        try {
-            return (Recipe) intent.getSerializableExtra("recipe_id");
-        } catch (Exception e) {
-            e.printStackTrace();
-            show(c, "ERROR: " + e.getMessage());
-        }
-        return null;
     }
 
     public static void showProgressBar(ProgressBar pb) {
@@ -93,7 +72,7 @@ public class SearchUtils {
                 DataCache.clear();
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        //Now get Recipe Objects and populate our arraylist.
+                        // This gets recipe objects to populate array list.
                         Recipe recipe = ds.getValue(Recipe.class);
                         recipe.setId(ds.getKey());
                         if (recipe.getName().toLowerCase().startsWith(searchTerm.toLowerCase())) {
@@ -128,7 +107,7 @@ public class SearchUtils {
                 DataCache.clear();
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        //Now get Recipe Objects and populate our arraylist.
+                        // This gets recipe objects to populate array list.
                         Recipe recipe = ds.getValue(Recipe.class);
                         recipe.setId(ds.getKey());
                         DataCache.add(recipe);
@@ -152,4 +131,3 @@ public class SearchUtils {
     }
 
 }
-//end
