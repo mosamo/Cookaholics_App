@@ -1,5 +1,6 @@
 package com.mohamed_mosabeh.cookaholics_capstone.origin_fragments;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mohamed_mosabeh.cookaholics_capstone.ImageUploadActivity;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 
 public class AccountFragment extends Fragment {
@@ -37,6 +39,19 @@ public class AccountFragment extends Fragment {
 
     public AccountFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ImageButton profileImage = inflatedView.findViewById(R.id.profileImage);
+        mDatabase.child("users").child(auth.getUid()).child("imageUrl").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (getActivity() != null) {
+                    Glide.with(getContext()).load(String.valueOf(task.getResult().getValue())).centerCrop().placeholder(com.facebook.R.drawable.com_facebook_profile_picture_blank_square).into(profileImage);
+                }
+            }
+        });
     }
 
     @Override
@@ -93,9 +108,15 @@ public class AccountFragment extends Fragment {
                 FirebaseUser auth = FirebaseAuth.getInstance().getCurrentUser();
                 EditText input = new EditText(getContext());
                 new MaterialAlertDialogBuilder(getContext()).
-                        setTitle("Submit an image link to change your profile image").
+                        setTitle("Would you like to change your profile picture?").
+                        setMessage("Click 'Upload' to pick an image from gallery." +
+                                " Otherwise, submit an image link.").
                         setView(input).
-                        setPositiveButton("Submit", (dialog, which) ->
+                        setNeutralButton("Upload", (dialog, which) ->
+                        {
+                            startActivity(new Intent(getActivity(), ImageUploadActivity.class));
+                        }
+                        ).setPositiveButton("Submit", (dialog, which) ->
                                 {
                                     if (getActivity() != null)
                                         Glide.with(getContext()).load(input.getText().toString()).centerCrop().error(com.facebook.R.drawable.com_facebook_profile_picture_blank_square).listener(new RequestListener<Drawable>() {

@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.mohamed_mosabeh.cookaholics_capstone.more_fragments.MoreCategoriesFragment;
@@ -26,6 +27,9 @@ import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.HottestFragment
 import com.mohamed_mosabeh.cookaholics_capstone.origin_fragments.RecipesFragment;
 
 public class OriginActivity extends AppCompatActivity {
+
+    private FirebaseUser auth;
+    private DatabaseReference mDatabase;
 
     private FirebaseDatabase database;
     private FirebaseStorage storage;
@@ -45,15 +49,15 @@ public class OriginActivity extends AppCompatActivity {
     private MoreTagsFragment moreTags;
     private FilteredByParametersFragment filteredByParametersFragment;
     private FilteredByTagFragment filteredByTagFragment;
-    
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_origin);
 
-        FirebaseUser auth = FirebaseAuth.getInstance().getCurrentUser();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        auth = FirebaseAuth.getInstance().getCurrentUser();
         if (auth == null){
             startActivity(new Intent(OriginActivity.this, PortalActivity.class));
             finish();
@@ -106,7 +110,7 @@ public class OriginActivity extends AppCompatActivity {
         switchFragment(homeFragment);
     }
 
-    private void switchFragment(Fragment fragment) {
+    public void switchFragment(Fragment fragment) {
         if (!fragment.isRemoving()) {
             getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(

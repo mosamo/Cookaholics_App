@@ -33,13 +33,16 @@ android {
 }
 
 dependencies {
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.jayway.jsonpath:json-path:2.7.0'
     implementation 'com.facebook.android:facebook-android-sdk:latest.release'
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
     implementation 'com.google.android.gms:play-services-location:21.0.0'
     implementation platform('com.google.firebase:firebase-bom:30.4.1')
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment:2.5.2'
     implementation 'androidx.navigation:navigation-ui:2.5.2'
@@ -47,7 +50,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:20.1.0'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-storage:20.1.0'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.7.0'
     // note to self following are github user libraries
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
