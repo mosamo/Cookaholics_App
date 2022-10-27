@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
@@ -12,18 +14,19 @@ import android.util.Base64;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 
 import org.apache.commons.io.FileUtils;
 
@@ -79,9 +82,15 @@ public class ImageUploadActivity extends AppCompatActivity {
                         if (result.getData() != null) {
                             Uri uri = result.getData().getData();
                             try {
-                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(
-                                        this.getContentResolver(),
-                                        uri);
+                                Bitmap bitmap;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                    ImageDecoder.Source source = ImageDecoder.createSource(this.getContentResolver(), uri);
+                                    bitmap = ImageDecoder.decodeBitmap(source);
+                                } else {
+                                    bitmap = MediaStore.Images.Media.getBitmap(
+                                            this.getContentResolver(),
+                                            uri);
+                                }
                                 mDatabase.child("temp").child(auth.getUid()).child("base64").setValue(bitmapToString(bitmap));
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -92,23 +101,19 @@ public class ImageUploadActivity extends AppCompatActivity {
 
         imageChooser();
 
-        mDatabase.child("temp").child(auth.getUid()).child("base64").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    String base64 = snapshot.getValue().toString();
-                    Bitmap bitmap = stringToBitmap(base64);
-                    File file = new File(directory, "image.jpeg");
-                    bitmapToFile(bitmap, file);
-                } else {
-                    mDatabase.child("temp").child(auth.getUid()).child("base64").removeEventListener(this);
-                }
-            }
+        TaskCompletionSource<DataSnapshot> dbSource = new TaskCompletionSource<>();
+        Task<DataSnapshot> dbTask = dbSource.getTask();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
+        mDatabase.child("temp").child(auth.getUid()).child("base64").get().addOnCompleteListener(task -> {
+            String base64 = task.getResult().getValue().toString();
+            Bitmap bitmap = stringToBitmap(base64);
+            File file = new File(directory, "image.jpeg");
+            bitmapToFile(bitmap, file);
+            dbSource.setResult(task.getResult());
         });
+
+        Task<Void> completeTask = Tasks.whenAll(dbTask);
+        completeTask.addOnCompleteListener(task -> completeTask.isComplete());
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -129,8 +134,12 @@ public class ImageUploadActivity extends AppCompatActivity {
         try (Response response = client.newCall(request).execute()) {
             String json = response.body().string();
             Object document = Configuration.defaultConfiguration().jsonProvider().parse(json);
-            String link = JsonPath.read(document, "$.data.link");
-            mDatabase.child("users").child(auth.getUid()).child("imageUrl").setValue(link);
+            try {
+                String link = JsonPath.read(document, "$.data.link");
+                mDatabase.child("users").child(auth.getUid()).child("imageUrl").setValue(link);
+            } catch (PathNotFoundException e) {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
