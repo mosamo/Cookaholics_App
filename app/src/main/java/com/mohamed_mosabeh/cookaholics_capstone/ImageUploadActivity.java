@@ -8,22 +8,28 @@ import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Base64;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
@@ -87,6 +93,7 @@ public class ImageUploadActivity extends AppCompatActivity {
                                     ImageDecoder.Source source = ImageDecoder.createSource(this.getContentResolver(), uri);
                                     bitmap = ImageDecoder.decodeBitmap(source);
                                 } else {
+                                    //noinspection deprecation
                                     bitmap = MediaStore.Images.Media.getBitmap(
                                             this.getContentResolver(),
                                             uri);
@@ -101,48 +108,63 @@ public class ImageUploadActivity extends AppCompatActivity {
 
         imageChooser();
 
-        TaskCompletionSource<DataSnapshot> dbSource = new TaskCompletionSource<>();
-        Task<DataSnapshot> dbTask = dbSource.getTask();
+        TaskCompletionSource<DataSnapshot> dataSnapshotSource = new TaskCompletionSource<>();
+        Task<DataSnapshot> dataSnapshotTask = dataSnapshotSource.getTask();
+        mDatabase.child("temp").child(auth.getUid()).child("base64").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                dataSnapshotSource.setResult(snapshot);
+            }
 
-        mDatabase.child("temp").child(auth.getUid()).child("base64").get().addOnCompleteListener(task -> {
-            String base64 = task.getResult().getValue().toString();
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                dataSnapshotSource.setException(error.toException());
+            }
+        });
+
+        TaskCompletionSource<Void> delaySource = new TaskCompletionSource<>();
+        Task<Void> delayTask = delaySource.getTask();
+        new Handler(Looper.getMainLooper()).postDelayed(() -> delaySource.setResult(null), 1000);
+
+        Task<Void> completeTask = Tasks.whenAll(dataSnapshotTask,delayTask);
+        completeTask.addOnSuccessListener(task -> {
+            String base64 = dataSnapshotTask.getResult().getValue().toString();
             Bitmap bitmap = stringToBitmap(base64);
             File file = new File(directory, "image.jpeg");
             bitmapToFile(bitmap, file);
-            dbSource.setResult(task.getResult());
-        });
 
-        Task<Void> completeTask = Tasks.whenAll(dbTask);
-        completeTask.addOnCompleteListener(task -> completeTask.isComplete());
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+            RequestBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("title", "title")
+                    .addFormDataPart("image", "image",
+                            RequestBody.create(FileUtils.getFile(directory + "/image.jpeg"), MEDIA_TYPE_JPEG))
+                    .build();
 
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("title", "title")
-                .addFormDataPart("image", "image",
-                        RequestBody.create(FileUtils.getFile(directory + "/image.jpeg"), MEDIA_TYPE_JPEG))
-                .build();
+            Request request = new Request.Builder()
+                    .header("Authorization", "Client-ID " + IMGUR_CLIENT_ID)
+                    .url("https://api.imgur.com/3/image")
+                    .post(requestBody)
+                    .build();
 
-        Request request = new Request.Builder()
-                .header("Authorization", "Client-ID " + IMGUR_CLIENT_ID)
-                .url("https://api.imgur.com/3/image")
-                .post(requestBody)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            String json = response.body().string();
-            Object document = Configuration.defaultConfiguration().jsonProvider().parse(json);
-            try {
-                String link = JsonPath.read(document, "$.data.link");
-                mDatabase.child("users").child(auth.getUid()).child("imageUrl").setValue(link);
-            } catch (PathNotFoundException e) {
+            try (Response response = client.newCall(request).execute()) {
+                String json = response.body().string();
+                Object document = Configuration.defaultConfiguration().jsonProvider().parse(json);
+                try {
+                    String link = JsonPath.read(document, "$.data.link");
+                    mDatabase.child("users").child(auth.getUid()).child("imageUrl").setValue(link);
+                } catch (PathNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            finally {
+                finish();
+            }
+        });
     }
 
     public Bitmap stringToBitmap(String string) {
