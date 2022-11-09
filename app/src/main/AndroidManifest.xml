@@ -46,11 +46,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Cookaholics_Capstone.NoActionBar"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
             <meta-data
                 android:name="android.app.lib_name"
@@ -58,7 +53,13 @@
         </activity> <!-- let's remove Exports later (set export to false) -Mohamed -->
         <activity
             android:name=".SplashScreenActivity"
-            android:exported="true" />
+            android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity
             android:name=".RecipeStepsActivity"
             android:exported="true"
