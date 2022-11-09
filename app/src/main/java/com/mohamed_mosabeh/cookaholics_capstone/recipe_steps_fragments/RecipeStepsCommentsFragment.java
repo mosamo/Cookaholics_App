@@ -32,7 +32,7 @@ import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.data_objects.Comment;
 import com.mohamed_mosabeh.data_objects.HighlightedRecipe;
 import com.mohamed_mosabeh.data_objects.Recipe;
-import com.mohamed_mosabeh.utils.ParserUtil;
+import com.mohamed_mosabeh.utils.ParserUtils;
 import com.mohamed_mosabeh.utils.ViewUtils;
 import com.mohamed_mosabeh.utils.recycler_views.CommentRecyclerViewAdapter;
 
@@ -342,7 +342,7 @@ public class RecipeStepsCommentsFragment extends Fragment {
                 recipeDescription.setText(r.getDescription());
                 recipeServings.setText(r.getServings() > 1 ? r.getServings() + " Servings" : r.getServings() + " Serving");
                 recipeDuration.setText(r.getDuration() > 1 ? r.getDuration() + " Minutes" : r.getDuration() + " Minute");
-                recipeTags.setText(ParserUtil.parseTags(r.getTags()));
+                recipeTags.setText(ParserUtils.parseTags(r.getTags()));
                 recipeUsername.setText(r.getDisplay_name());
                 recipeLikes.setText("Likes: " + r.getLikes());
                 

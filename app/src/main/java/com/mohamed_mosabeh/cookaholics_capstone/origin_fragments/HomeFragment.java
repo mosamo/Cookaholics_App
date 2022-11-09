@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -36,6 +37,8 @@ import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.data_objects.Category;
 import com.mohamed_mosabeh.data_objects.HighlightedRecipe;
 import com.mohamed_mosabeh.data_objects.Recipe;
+import com.mohamed_mosabeh.utils.ParserUtils;
+import com.mohamed_mosabeh.utils.SortByLikesComparator;
 import com.mohamed_mosabeh.utils.ViewUtils;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerCategoryClickInterface;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
@@ -45,6 +48,7 @@ import com.mohamed_mosabeh.utils.recycler_views.CategoryMainRecyclerViewAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class HomeFragment extends Fragment implements RecyclerRecipeClickInterface, RecyclerCategoryClickInterface {
@@ -99,6 +103,8 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         
         SetUpViews(view);
+    
+        ViewUtils.getSnackBar(parent, String.valueOf(ParserUtils.getLastWeekTimestamp()));
         
         return view;
     }
@@ -226,8 +232,8 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     
     private void getWeeklyRecipesData() {
         DatabaseReference reference = database.getReference("recipes");
-        Query latestEightRecipes = reference.orderByChild("timestamp").limitToLast(8);
-        latestEightRecipes.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query allWeeklyRecipesQuery = reference.orderByChild("timestamp").startAt(ParserUtils.getLastWeekTimestamp());
+        allWeeklyRecipesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
     
@@ -239,7 +245,17 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                     recipes.add(recipe);
                 }
     
-    
+                // Sort Recipe by Likes using Comparator (reverse fixes order)
+                Collections.sort(recipes, new SortByLikesComparator());
+                Collections.reverse(recipes);
+                
+                // Keep first 8 Recipes only
+                try {
+                    recipes = (ArrayList<Recipe>) recipes.subList(0, 8);
+                } catch (IndexOutOfBoundsException exception) {
+                    Log.i("Home Fragment", "Recipe List Cropping: less than 8 recipes found!");
+                }
+                
                 ViewUtils.IfDataExistsHideProgressBar(recipes.size(), WeeklyHottestProgress);
                 fetchRecipesImages(recipes);
                 WeeklyRecyclerSetUp();

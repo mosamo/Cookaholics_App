@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.data_objects.Recipe;
-import com.mohamed_mosabeh.utils.ParserUtil;
+import com.mohamed_mosabeh.utils.ParserUtils;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class CompactRecipesRecyclerViewAdapter extends RecyclerView.Adapter<Comp
         holder.cardCategory.setText(recipe.getCategory());
         holder.labelTop.setText(labelOnTop);
     
-        holder.cardTagLists.setText(ParserUtil.parseTags(recipe.getTags()).equals("No Tags") ? "" : ParserUtil.parseTags(recipe.getTags()));
+        holder.cardTagLists.setText(ParserUtils.parseTags(recipe.getTags()).equals("No Tags") ? "" : ParserUtils.parseTags(recipe.getTags()));
     
         holder.highlightedFrame.setVisibility(recipe.isHighlighted() ? View.VISIBLE : View.GONE);
     }

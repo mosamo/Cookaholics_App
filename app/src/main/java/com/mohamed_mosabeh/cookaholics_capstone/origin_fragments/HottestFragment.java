@@ -32,8 +32,8 @@ import com.google.firebase.storage.StorageReference;
 import com.mohamed_mosabeh.cookaholics_capstone.R;
 import com.mohamed_mosabeh.cookaholics_capstone.RecipeStepsActivity;
 import com.mohamed_mosabeh.data_objects.Recipe;
-import com.mohamed_mosabeh.utils.ParserUtil;
-import com.mohamed_mosabeh.utils.SortByLikes;
+import com.mohamed_mosabeh.utils.ParserUtils;
+import com.mohamed_mosabeh.utils.SortByLikesComparator;
 import com.mohamed_mosabeh.utils.click_interfaces.RecyclerRecipeClickInterface;
 import com.mohamed_mosabeh.utils.recycler_views.PopularCardRecipesRecyclerViewAdapter;
 
@@ -301,7 +301,7 @@ public class HottestFragment extends Fragment implements RecyclerRecipeClickInte
                         week_recipes.add(recipe);
                     }
 
-                    Collections.sort(week_recipes, new SortByLikes());
+                    Collections.sort(week_recipes, new SortByLikesComparator());
 
                     int last = week_recipes.size() - 1;
 
@@ -355,7 +355,7 @@ public class HottestFragment extends Fragment implements RecyclerRecipeClickInte
             } else {
                 WHR_Label.setText("Recipe of the Week");
             }
-            WHR_Tags.setText(ParserUtil.parseTags(recipe.getTags()));
+            WHR_Tags.setText(ParserUtils.parseTags(recipe.getTags()));
             WHR_Text.setText("This " + recipe.getCuisine() + " " + recipe.getCategory() + " recipe is liked by many!");
             WHR_Name.setText(recipe.getName());
             if (recipe.getIcon().equals("no-image")) {

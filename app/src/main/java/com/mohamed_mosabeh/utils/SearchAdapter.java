@@ -73,7 +73,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         //bind data to widgets
         holder.nameTxt.setText(r.getName());
         holder.descriptionTxt.setText(r.getDescription());
-        holder.tagsTxt.setText(ParserUtil.parseTags(r.getTags()));
+        holder.tagsTxt.setText(ParserUtils.parseTags(r.getTags()));
 
         if (position % 2 == 0) {
             holder.itemView.setBackgroundColor(Color.parseColor("#d3d3d3"));
