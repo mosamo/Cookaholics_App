@@ -103,9 +103,9 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         
         SetUpViews(view);
-    
-        ViewUtils.getSnackBar(parent, String.valueOf(ParserUtils.getLastWeekTimestamp()));
-        
+
+        //ViewUtils.getSnackBar(parent, String.valueOf(ParserUtils.getLastWeekTimestamp()));
+
         return view;
     }
     
@@ -383,6 +383,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     }
     
     private void WeeklyRecyclerSetUp() {
+
         if (WeeklyRecycler != null) {
             try {
                 WeeklyRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -391,6 +392,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
                 Log.w("Recycler Exception", e.getMessage());
             }
         }
+
     }
     
     private void CategoryRecyclerSetUp() {
