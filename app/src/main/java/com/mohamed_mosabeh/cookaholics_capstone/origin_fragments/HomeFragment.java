@@ -52,6 +52,7 @@ import java.util.Collections;
 
 
 public class HomeFragment extends Fragment implements RecyclerRecipeClickInterface, RecyclerCategoryClickInterface {
+    // Home
     
     private FirebaseDatabase database;
     private FirebaseStorage storage;
