@@ -104,7 +104,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
         
         SetUpViews(view);
     
-        ViewUtils.getSnackBar(parent, String.valueOf(ParserUtils.getLastWeekTimestamp()));
+        //ViewUtils.getSnackBar(parent, String.valueOf(ParserUtils.getLastWeekTimestamp()));
         
         return view;
     }
@@ -383,6 +383,7 @@ public class HomeFragment extends Fragment implements RecyclerRecipeClickInterfa
     }
     
     private void WeeklyRecyclerSetUp() {
+        
         if (WeeklyRecycler != null) {
             try {
                 WeeklyRecycler.setLayoutManager(new LinearLayoutManager(parent.getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));

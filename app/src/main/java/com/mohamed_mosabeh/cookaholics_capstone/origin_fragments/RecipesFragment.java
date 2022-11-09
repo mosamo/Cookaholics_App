@@ -46,6 +46,7 @@ import com.mohamed_mosabeh.utils.recycler_views.TagsRecipesRecyclerViewAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class RecipesFragment extends Fragment implements RecyclerRecipeClickInterface, RecyclerCuisineClickInterface, RecyclerTagClickInterface {
     
@@ -182,6 +183,8 @@ public class RecipesFragment extends Fragment implements RecyclerRecipeClickInte
                     recipe.setId(snapshot.getKey());
                     new_recipes.add(recipe);
                 }
+                
+                Collections.reverse(new_recipes);
     
                 ViewUtils.IfDataExistsHideProgressBar(new_recipes.size(), NewRecipesProgressBar);
             
