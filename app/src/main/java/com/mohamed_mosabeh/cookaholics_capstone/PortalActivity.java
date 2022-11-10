@@ -16,6 +16,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mohamed_mosabeh.utils.ViewUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,13 +47,14 @@ public class PortalActivity extends AppCompatActivity {
                             intent.putExtra("name", user.getDisplayName());
                             intent.putExtra("email", user.getEmail());
                             startActivity(intent);
-                            Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_SHORT).show();
+                            ViewUtils.getSnackBar(PortalActivity.this, "Test");
+//                            Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_SHORT).show();
                             finish();
                         } else {
                             // Choose authentication providers
                             List<AuthUI.IdpConfig> providers = Arrays.asList(
-                                    new AuthUI.IdpConfig.AnonymousBuilder().build(),
-                                    new AuthUI.IdpConfig.EmailBuilder().build(),
+                                    //new AuthUI.IdpConfig.AnonymousBuilder().build(),
+                                    //new AuthUI.IdpConfig.EmailBuilder().build(),
                                     new AuthUI.IdpConfig.GoogleBuilder().build(),
                                     new AuthUI.IdpConfig.FacebookBuilder().build(),
                                     new AuthUI.IdpConfig.TwitterBuilder().build(),
