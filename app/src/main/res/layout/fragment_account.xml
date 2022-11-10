@@ -25,6 +25,7 @@
         android:textColorHint="#FF7F50"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/created"
         app:layout_constraintTop_toBottomOf="@+id/accountType" />
@@ -39,6 +40,7 @@
         android:textColorHint="#FF7F50"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/liked"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/accountType" />
@@ -48,6 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Recipes Created"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/created"
         app:layout_constraintStart_toStartOf="@+id/created" />
 
@@ -56,6 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Recipes Liked"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/liked"
         app:layout_constraintStart_toStartOf="@+id/liked" />
 
@@ -90,7 +94,7 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Notes"
+        android:text="About Me:"
         app:layout_constraintBottom_toTopOf="@+id/notes"
         app:layout_constraintStart_toStartOf="@+id/notes" />
 
