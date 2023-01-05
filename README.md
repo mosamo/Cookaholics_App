@@ -1,12 +1,16 @@
 # Cookaholics Android Application
 
-Cookaholics is a educational utility Application. 
-It is a platform where users can share, browse, rate and submit recipes. 
-By utilizing android studio and firebase API, we can create a powerful, yet light-weight application that provides a useful service.
+Cookaholics is an educational social platform. 
+It is an application where users can share, browse, rate and submit recipes. 
+Utilizing android studio and firebase API, we can create a powerful, yet light-weight application that provides a useful service.
 
 ---
 
-#### Mosabeh's Principles for Android Development: (please follow them when commiting code to this repository)
+Report Link: https://docs.google.com/document/d/1fMXI7f0I3qvgKv-y-rRyBcXs6gXuRz8HgufTmHh8tko/
+
+---
+
+#### Group Agreement
 
 - **DO NOT** Use User-Created Libraries from Github. 
 >   Most user-created libraries in Github are Licensed, even if some of them are only attribution licenses, we still can't use them as we have to maintain full autonomy of this project.
