@@ -10,10 +10,7 @@ Report Link: https://docs.google.com/document/d/1fMXI7f0I3qvgKv-y-rRyBcXs6gXuRz8
 
 ---
 
-#### Group Agreement
 
-- **DO NOT** Use User-Created Libraries from Github. 
->   Most user-created libraries in Github are Licensed, even if some of them are only attribution licenses, we still can't use them as we have to maintain full autonomy of this project.
 - **DO NOT** Use Deprecated Methods or API
 > This will only create more problems down the road, and will require you to make different versions of your work for newer devices. 
 - **DO NOT** Use Android Libraries that are only exclusive to New Devices
